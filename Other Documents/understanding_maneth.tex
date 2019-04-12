@@ -1,0 +1,76 @@
+% !TeX spellcheck = de_DE
+\documentclass[a4paper]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pdflscape}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{todonotes}
+\setlength{\parindent}{0pt}
+
+\usepackage{biblatex}
+\addbibresource{references.bib}
+
+
+%\geometry{a4paper, top=25mm, left=30mm, right=20mm, bottom=30mm,
+%headsep=10mm, footskip=12mm}
+
+\newcommand{\itab}[1]{\hspace{0em}\rlap{#1}}
+\newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
+
+
+\title{Understanding Maneth}
+\author{Philip Frerk}
+\date{\today}
+ 
+
+\begin{document}
+\maketitle
+
+\section{Node IDs}
+
+\begin{itemize}
+	\item Die Node IDs werden nicht explizit gespeichert, wenn komprimiert wird. D.h. sie 'verschwinden', wenn ein Knoten durch das Anwenden eines Musters wegfällt
+	\item Sie können durch eine vordefinierte Reihenfolge beim Ersetzen der Vorkommen eines Musters wiederhergestellt werden
+	\item Kanten werden nach lexikographischer Reihenfolge ihrer Labels besucht
+	
+	Wenn die lexikographische Reihenfolge zweier Kanten gleich ist, dann wird die lex. Reihenfolge der Attachments genommen (wenn die auch gleich ist, dann ist auch die Reihenfolge egal).
+\end{itemize}
+
+\begin{tabular}{|c|c|}
+	\hline 
+	Schon gemacht & Noch nicht gemacht  \\ 
+	\hline 
+	RDF Compression (Specific properties en,  Types ru, Types es, Types de with en\\, Identica, Jamendo)&  Andere Datasets (zB Semantic web dog food), Unterschiedliche Komprresionsraten in den Datasets, Gründe untersuchen?\\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+	&  \\ 
+	\hline 
+\end{tabular} 
+
+
+
+
+
+
+
+\end{document}

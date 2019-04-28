@@ -3,16 +3,51 @@
 
 This chapter deals with the comparison between HDT and GRP. The main aim is to determine which of the two compressors achieves a lower compression ratio.
 
-In Ch.~\ref{sec:theory} some basic concepts of the compressors will be discussed again and hypotheses will be made how the compression rate behaves in relation to a certain structuring of RDF data. 
+First, in Ch.~\ref{sec:definitions} some necessary definitions are introduced.
+
+In Ch.~\ref{sec:theory} some basic concepts of the compressors will be discussed again and hypotheses will be made how the compression ratio behaves in relation to a certain structuring of RDF data. 
 
 In Ch.~\ref{sec:data_creation} it will be considered how data can be generated that is structured in the way stated in Ch.~\ref{sec:theory}.
 
 Finally in Ch.~\ref{sec:evalHDT} an empirical evaluation of the compression ratios for HDT and GRP for that synthetic RDF data will be done. The evaluation will show that the hypotheses stated in Ch.~\ref{sec:theory} are correct.
 
+\section{Definitions}\label{sec:definitions}
+
+This chapter includes some basic definitions that will be used later on.
+
+\subsection{Compression Ratio}
+
+One of the key metrics for a compressor is its compression ratio. The compression ratio depends on the input data and is defined as follows
+
+\begin{align*}
+\text{compression ratio} = \dfrac{\text{compressed size}}{\text{original size}} \in (0,1]
+\end{align*}
+
+The compression ratio is typically in the $(0,1]$ interval, since the compressed data will not be larger than the original data (there are cases where this happens, but it does not happen in the compressors considered here). Obviously, the compressed data cannot have a size of 0 or less.
+
+Normally the compression ratio is measured at the file size level (in byte). If a different measure is used, it will be mentioned at that point.
+
+\subsection{(De-)Compression Time}
+
+Another key metric of a compressor is its (de-)compression time. This metric also depends on the input data and indicates the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds.
+
+%\section{Concept}
+%
+%Fig.~\ref{fig:benchmark_overview} shows the aspects of a benchmark of two compressors. There are parameters that can be set during the evaluation (they start with $p$) and measures that represent the performance of the algorithms (they start with $m$).
+%
+%The compressors get an input $p_{input}$, which in this case is in RDF graph. They each produce an output $m_{output}$, the compressed data. For compression and decompression there will be run times, which we call $m_{runtime} $. In addition, there are certain parameters $p_{alg}$ that can be set in the algorithms that change the behavior of the algorithm. \todo{hier kommt noch nicht performance von queries vor}
+%
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=1\textwidth]{figures/approach/Benchmark}
+%	\caption{The different aspects of a compression process. $p_{input},p_{alg}$ are parameters that can be changed. $m_{output},m_{runtime}$ are measures of the algorithm's performance.}
+%	\label{fig:benchmark_overview}
+%\end{figure}
+
 \section{Theory}\label{sec:theory}
 The obvious question is now whether there are certain properties/features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
 
-\subsection{Relation between data structure and compression ratio}
+\subsection{Relation Between Structure of Data and Compression Ratio}
 
 First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is shown again. There you can see that the size of the data becomes smaller if there are only a few subjects. This is the case because the bit-array $B_p$ contains a 1 every time a new subject is considered. For example, if there is only one subject, then $B_p$ consists only of zeros.
 
@@ -23,11 +58,11 @@ First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is sh
 	\label{fig:hdt_overview_1}
 \end{figure}
 
-For GRP that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it is more dependent on the data's structure than HDT. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here. But a simple insight is that GRP's compression ratio will be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on the repeating edge labels. That fact will be considered in the evaluation.
+For GRP that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it is more dependent on the data's structure than HDT. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here. But a simple insight is that GRP's compression ratio will be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating edge labels. That fact will be considered in the evaluation.
 
 \subsection{Dictionary Size}
 
-As already explained in Ch.~\ref{ch:related_work}, HDT divides an RDF file into its header, dictionary and triples component. This partially also true for GRP except that GRP does not create a header. But it also assigns an ID to every URI or literal and then only works with these IDs. Unfortunately the authors of~\cite{maneth} did not work on efficient storing of the dictionary. In GRP the size for the dictionary component is just ignored. Therefore we have to add this size in order to compare GRP with HDT in a fair way. To achieve that we just add the same size to the compressed size of GRP that HDT would need to store the dictionary.
+As already explained in Ch.~\ref{ch:related_work}, HDT divides an RDF file into its header, dictionary and triples component. This is partially also true for GRP except that GRP does not create a header. But it also assigns an ID to every URI or literal and then only works with these IDs. Unfortunately the authors of~\cite{maneth} did not work on efficient storing of the dictionary. In GRP the size for the dictionary component is just ignored. Therefore we have to add this size in order to compare GRP with HDT in a fair way. To achieve that we just add the same size to the compressed size of GRP that HDT would need to store the dictionary.
 
 \section{Synthetic Data Creation}\label{sec:data_creation}
 
@@ -42,9 +77,9 @@ The task now is to create a series of RDF graphs that first correspond to the hu
 	\label{fig:star_pattern}
 \end{figure}
 
-It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length. Since the RDF graph also has the same number of triples, the files are of the same size. Since the evaluation compares the compression ratios for the different RDF files, it is important that all files are the same size to ensure a fair comparison.
+It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length. Since the RDF graph also has the same number of triples, the files are of the same size. Since the evaluation compares the compression ratios for the different RDF files, it is important that all files are of the same size to ensure a fair comparison.
 
-A section of such a file (for $G1$) is shown in Fig.~\ref{fig:rdfFile}. In this example, there is only one predicate for all triples. The number of predicates is always one at first. The amount of predicates has a similar effect on both compressors and is therefore omitted at first. But in Ch.~\ref{sec:evalHDT} that effect will be discussed in more detail.
+A section of such a file (for $G1$) is shown in Fig.~\ref{fig:rdfFile}. In that example, there is only one distinct predicate for all triples. The number of predicates is always one at first. The amount of predicates has a similar effect on both compressors and is therefore omitted at first. But in Ch.~\ref{sec:evalHDT} that effect will be discussed in more detail.
 
 Apart from that, blank nodes and literals are not used here. For both compressors, blank nodes and literals are being handled analogously to URI nodes. Therefore they are not needed at this point, in order to show the behavior of HDT and GRP in the above described scenario.
 
@@ -70,7 +105,7 @@ Fig.~\ref{fig:ratiosHDTWithoutDict} shows the compression ratio for HDT (without
 	\caption{The compression ratios for HDT without and with dictionary sizes.}
 \end{figure}
 
-Next the compression ratio of GRP is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict} (without dictionary sizes). Here you can see that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect on the compression ratio is bigger for GRP than for HDT (standard deviation is twice as high for GRP as for HDT). A grammar-based compression is therefore more dependent on the structure of the input data.
+Next the compression ratio of GRP is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict} (without dictionary sizes). Here one can see that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect on the compression ratio is bigger for GRP than for HDT (standard deviation is twice as high for GRP as for HDT). A grammar-based compression is therefore more dependent on the structure of the input data.
 
 When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this curve behaves almost exactly like the one from Fig.~\ref{fig:ratiosHDTWithDict}, since the size of the dictionary accounts for most of the compressed data size.
 

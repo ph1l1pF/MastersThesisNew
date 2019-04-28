@@ -235,8 +235,80 @@ Here is an overview of what the different results show:
 			\item GRP is an edge-based compressor as it replaces edges. In contrast, Dürksen's algorithm is node-based. It could be investigated which one leads to a higher compr. ratio.
 			\item \enquote{For future work, there are several paths to follow. It would be interesting to consider a RePair compression scheme for graphs that is based on node replacement (NR) graph grammars (see e.g. [48]). NR graph grammars can compress some graphs, e.g. cliques, much stronger than HR grammars. On the other hand, rules of NR grammars are more complex due to the additional con- nection relation and thus more expensive to store.} [Maneth]
 	\end{itemize}
+\end{itemize}
 
-	
+\section{OWL}
+
+Interesting OWL Constructs
+\begin{itemize}
+	\item SymmetricProperty (evtl alles materialsieren), TransitiveProperty (wahrscheinlich alles ent-materialisieren)
+	\item equivalentProperty: Establish mapping from prop to List<Prop>, in all triples where some p in List<Prop> occurs, replace it with prop => more repeating predicates!
+\end{itemize}
+
+\section{Results Materialisation}
+ File: mappingbased-properties\_en.ttl (first 500k triples)
+ 
+ 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/evalMat/ratios}
+	\caption{Compr. ratios: Original, inverse, symmetric, transitive}
+	\label{fig:ratios}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/evalMat/sizes}
+	\caption{Original file sizes: Original, inverse, symmetric, transitive}
+	\label{fig:sizes}
+\end{figure}
+
+Symmetric: http://dbpedia.org/ontology/spouse
+\\\\
+Transitive:
+
+0 = "http://dbpedia.org/ontology/isPartOf"
+
+1 = "http://dbpedia.org/ontology/province"
+
+2 = "http://dbpedia.org/ontology/locatedInArea"
+
+3 = "http://dbpedia.org/ontology/city"
+
+4 = "http://dbpedia.org/ontology/district"
+
+5 = "http://dbpedia.org/ontology/county"
+
+6 = "http://dbpedia.org/ontology/settlement"
+\\\\
+Inverse:
+
+"http://dbpedia.org/ontology/doctoralStudent" -> "http://dbpedia.org/ontology/doctoralAdvisor"
+
+"http://dbpedia.org/ontology/mother" -> "http://dbpedia.org/ontology/child"
+
+"http://dbpedia.org/ontology/father" -> "http://dbpedia.org/ontology/child"
+
+ "http://dbpedia.org/ontology/child" -> "http://dbpedia.org/ontology/mother"
+ 
+ "http://dbpedia.org/ontology/follows" -> "http://dbpedia.org/ontology/followedBy"
+ 
+ "http://dbpedia.org/ontology/followedBy" -> "http://dbpedia.org/ontology/follows"
+ 
+ "http://dbpedia.org/ontology/doctoralAdvisor" -> "http://dbpedia.org/ontology/doctoralStudent"
+ 
+ "http://dbpedia.org/ontology/spouse" -> "http://dbpedia.org/ontology/spouse"
+
+
+
+\section{Fragen an Michael}
+
+\begin{itemize}
+	\item Materialiserung scheint nicht viel zu bringen. Nur ein symmetrisches Prädikat?? \\
+	Andere Möglichkeit: Alles entmaterialisieren und dann zeigen dass man weniger speichern muss, auch wenn man die Ontologie abspeichert. 
+	\item Blank nodes: Konvertierung von string nach int wahrscheinlich nicht nötig, da in der Impl von dem dict sowieso nur Zahlen gespeichert werden.\\
+	Speichern von Blank node IDs evtl gar nicht nötig??
+	\item Literale: Kompr. mit Huffman; einen Huffman Code für alle Literale
 \end{itemize}
 
 

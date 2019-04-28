@@ -93,12 +93,9 @@ This chapter deals with GraphRePair, the compressor from~\cite{maneth}.
 
 \subsubsection{Foundations}
 
-\begin{itemize}
-	%\item For a natural number $n\in \mathbb{N}$,  $[n]=\{1,...,n\}$ is defined as the set of all natural numbers from 1 to $n$
-	\item For a set $M$, $M^+=\{x_1 \cdot x_2 \cdot ... \cdot x_n | x_1,x_2,..,x_n \in M \}$ is defined as the set of all non-empty strings of $M$ where $\cdot$ stands for the concatenation of two symbols.
-	$M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the empty string $\epsilon$ 
-	\item 
-\end{itemize}
+For a set $M$, $M^+=\{x_1 \cdot x_2 \cdot ... \cdot x_n | x_1,x_2,..,x_n \in M \}$ is defined as the set of all non-empty strings of $M$ where $\cdot$ stands for the concatenation of two symbols.
+$M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the empty string $\epsilon$ 
+
 
 
 A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping, $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes.
@@ -192,7 +189,7 @@ Since the graph has also edge labels, an adjacency matrix and its corresponding 
 \end{figure}
 
 
-The remaining productions of the grammar are encodes differently, because they are usually quite small compared to the start production. Here so-called $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.
+The remaining productions of the grammar are encodes differently, because they are usually quite small compared to the start production. Here so-called $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}
 
 
 

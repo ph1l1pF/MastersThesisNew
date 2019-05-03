@@ -12,6 +12,7 @@
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{todonotes}
+\usepackage{subfig}% multi-part figures with separate captions per part
 \setlength{\parindent}{0pt}
 
 \usepackage{biblatex}
@@ -312,11 +313,44 @@ Inverse:
 \end{itemize}
 
 
+\section{Neue Ideen}
+\begin{itemize}
+	\item Literale UND blank nodes: Datein auswerten und jeweils aufführen wie Groß der rel. Anteil der Literale bzw. blank nodes ist. Bei Literalen auch die durschnittl. Länge angeben, da diese große Auswirkungen hat
+	\item Aufwand zum Speichern des Huffman Codes
+	\item Laufzeitunterschiede aufführen
+	
+	\item bei HDT symm. Prädkate nutzen um star pattern zu erzeugen
+	\item 
+\end{itemize}
+
+\section{Results Dictionary Optimization}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{../Benchmark/img/evalLit/ratios_dog}
+	\caption{Compression ratios for Semantic Web Dog Food Files}
+	\label{fig:ratiosdog}
+\end{figure}
 
 
 
 
+\begin{figure}[h]
+	\centering
+	\subfloat[Compression ratios]{\includegraphics[width=0.5\textwidth]{../Benchmark/img/evalLit/ratios_dog}\label{}}
+	\hfill
+	\subfloat[Relative amounts of literals]{\includegraphics[width=0.5\textwidth]{img/evalLit/litPerc_dog}\label{}}
+	\caption{Relation between amount of literals and improvement of compression ratio (Files from Semantic Web Dog Food).}
+\end{figure}
 
+\begin{figure}[h]
+	\centering
+	\subfloat[Compression ratios]{\includegraphics[width=0.5\textwidth]{../Benchmark/img/evalLit/ratios_dog}\label{}}
+	\hfill
+	\subfloat[Average Length of Literals literals]{\includegraphics[width=0.5\textwidth]{img/evalLit/litLength_dog}\label{}}
+	\caption{Relation between average length of literals and improvement of compression ratio (Files from Semantic Web Dog Food).}
+\end{figure}
 
 
 

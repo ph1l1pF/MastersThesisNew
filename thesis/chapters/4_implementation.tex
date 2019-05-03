@@ -1,0 +1,103 @@
+% !TeX spellcheck = en_US
+\chapter{Implementation}\label{ch:implementation}
+
+
+\section{GRP vs HDT}\label{sec:implementationGRPvsHDT}
+
+In this chapter, it will be explained how the comparison between HDT and GRP is implemented.
+
+\subsection{Synthetic Data Creation}\label{sec:data_creation}
+
+As has just explained, HDT can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So it gets worse the further away the graph is from this pattern. This corresponds to the authority pattern, where there are few objects but many subjects.
+
+The task now is to create a series of RDF graphs that first correspond to the hub pattern and then continue to change in the direction of the authority pattern. This is illustrated in Fig.~\ref{fig:star_pattern}. In this scenario all graphs ($G_1$ to $G_m$) have the same size, i.e. the same number of nodes and edges. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This goes on and on until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/GRPvsHDT/starpattern.pdf}
+	\caption{Step-by-step transition from hub pattern to authority pattern. The number of nodes $n$ is the same for each graph. The number of edges is also the same for each graph.}
+	\label{fig:star_pattern}
+\end{figure}
+
+It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length. Since the RDF graph also has the same number of triples, the files are of the same size. Since the evaluation compares the compression ratios for the different RDF files, it is important that all files are of the same size to ensure a fair comparison.
+
+A section of such a file (for $G1$) is shown in Fig.~\ref{fig:rdfFile}. In that example, there is only one distinct predicate for all triples. The number of predicates is always one at first. The amount of predicates has a similar effect on both compressors and is therefore omitted at first. But in Ch.~\ref{sec:evalHDT} that effect will be discussed in more detail.
+
+Apart from that, blank nodes and literals are not used here. For both compressors, blank nodes and literals are being handled analogously to URI nodes. Therefore they are not needed at this point, in order to show the behavior of HDT and GRP in the above described scenario.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/GRPvsHDT/file.png}
+	\caption{Excerpt from the generated RDF file for $G_1$ (see Fig.~\ref{fig:star_pattern}). Each triple has the same length.}
+	\label{fig:rdfFile}
+\end{figure}
+
+\section{Compression Ratio Improvements}\label{sec:implementationComprRatioImprovements}
+
+\subsection{Ontology Knowledge}\label{sec:implementationOntKnowledge}
+
+\subsubsection{Symmetric Properties}
+
+In order to remove or add symmetric properties SPARQL can be used. The code of listing~\ref{lst:symmetricInsert} will be used to do that:
+
+\begin{lstlisting}[captionpos=b, caption=SPARQL query for adding triples with the symmetric property p, label=lst:symmetricInsert,
+basicstyle=\ttfamily,frame=single]
+INSERT {?o ?p ?s}
+WHERE{
+	{?o ?p ?s}
+	MINUS {?o ?p ?s}
+}
+\end{lstlisting}
+
+That update has to be executed for each symmetric property $p$. In the case where one wants to remove the second, a delete update would have to executed.
+
+\subsection{Dictionary Improvements}\label{sec:implementationDictImprovements}
+
+\subsubsection{Blank Nodes}\label{sec:implementationBlankNodes}
+
+\subsubsection{Literals}\label{sec:implementationLiterals}
+
+There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started with the root node. That method creates an unambiguous bit representation of the tree, since each node has either two or no children.
+
+\begin{algorithm}
+	\caption{EncodeNode (TreeNode node)}\label{alg:HuffmanEncode}
+	\begin{algorithmic}[1]
+		\If{node is leaf}
+		\State writeBit(1)
+		\State writeCharacter(node.character)
+		\Else
+		\State writeBit(0)
+		\State EncodeNode(node.leftChild)
+		\State EncodeNode(node.rightChild)
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/4_rdf_specific_features/huffman}
+	\caption{An example of a Huffman Tree.}
+	\label{fig:huffmantree}
+\end{figure}
+
+
+Alternatively, there are pre-computed Huffman trees for natural languages such as English. There they have already investigated which letter occurs how often in English texts and in this way a generally valid Huffman code has been established. The advantage is that one does not have to save the Huffman tree and does not have to calculate it oneself, which saves runtime. The disadvantage, however, is that the tree is not optimal for the text to be compressed, as it is more general. Another problem in our case is that the literals contain a lot of special characters that are not taken into account in prefabricated Huffman codes. Also, in Ch.~\ref{sec:evaluationDictImprovements} it will turn out that saving the Huffman tree does not require much additional memory. Therefore, we choose to calculate the Huffman code ourselves to compress the literals. All literals of the input graph have to be traversed in the beginning to compute the character frequencies.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

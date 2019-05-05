@@ -1,11 +1,13 @@
 % !TeX spellcheck = en_US
 \chapter{Evaluation}\label{ch:evaluation}
 
-This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach}.
+This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach} and~\ref{ch:implementation}.
 
 \section{Experimental Setup}
 
 For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation mentioned in~\cite{maneth} has been used (written in Scala). It is not open source and has been given to us by the authors of~\cite{maneth}.
+
+\subsection{Datasets}
 
 \section{HDT vs GRP}\label{sec:evaluationHDTvsGRP}
 
@@ -76,6 +78,89 @@ In addition one can notice that GRP's run time fluctuates more than that of HDT.
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
+
+
+\subsubsection{Literals}
+
+As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as one hopes for a better compression than the with the prefix-based compression of HDT.
+
+Now the results of the evaluation are presented. First, the Semantic Web Dog Food data set is used. This is well suited for an evaluation, since both literals and URIS are included as objects. Fig.~\ref{fig:dogfoodcomprratios} shows the compression rates for a subset of the data (DF0 - DF9). 
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/dogFoodComprRatios}
+	\caption{Compression ratios for Semantic Weg Dog Food Files. Comparison between Normal HDT and HDT + Huffman.}
+	\label{fig:dogfoodcomprratios}
+\end{figure}
+
+One can see that the use of the Huffman code only brings a small improvement in some cases. In some cases Normal HDT even compresses better than HDT with Huffman.
+
+This is because these data do not have a very high proportion of literals and literals are also rather short. This can be seen in Fig.~\ref{fig:dogfood}, where Fig.\ref{fig:dogfoodcomprratiosSub} lists compression rates again and Fig.\ref{fig:dogfoodliteralanalysis} shows the relative proportion of literals and the average length of a literal. The proportion of literals in the triples is never higher than 17.5\% and the highest average literal length is about 12. So these are single words rather than whole texts. Only in cases where both the proportion and the literal length are relatively high, an improvement can be seen (e.g. with DF9).
+
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Compression ratios for Normal HDT and HDT + Huffman]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
+	\hfill
+	\subfloat[Relative amounts of literals and average literal length.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dogFoodLiteralAnalysis}\label{fig:dogfoodliteralanalysis}}
+	\caption{Relation between literal percentage and literal length (right) and compression ratios (left) for Semantic Web Dog Food Data.}
+	\label{fig:dogfood}
+\end{figure}
+
+Now the DBPedia data set is considered, because it has a different structure of data. Here, graphs are considered which contain the abstracts of Wikipedia, because these are longer texts. In addition there are abstracts in different languages, so you can see if some languages are better suited for Huffman than others.
+
+Fig.~\ref{fig:dbAbstractscomprratiosSub} shows the compression rates for the abstracts. The abbreviations stand for the languages in which the abstracts are written. It can be seen that Huffman significantly improves the compression rates here. The reason for this can be seen in Fig.~\ref{fig:dbAbstractsliteralanalysis}, where the average literal length is illustrated. The relative proportion of literals is not shown this time, since it is 100\% for all files. The average literal length varies between languages, but is generally much higher than in Semantic Web Dog Food. Therefore, the improvement is much greater here.
+
+Another phenomenon can also be seen here: Although the English file contains by far the longest literals, the improvement by Huffman here is not as big as, for example, in the Bulgarian file. In the English case, the Huffman code is less effective because there are fewer different characters than in the other languages. Huffman is generally more efficient on large alphabets, according to~\cite{huffman}.
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Compression ratios for Normal HDT and HDT + Huffman]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dbAbstractsComprRatios}\label{fig:dbAbstractscomprratiosSub}}
+	\hfill
+	\subfloat[Average literal length.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dbAbstractsLiteralAnalysis}\label{fig:dbAbstractsliteralanalysis}}
+	\caption{Relation between literal length (right) and compression ratios (left) for DBPedia Abstracts (Abbreviations denote the languages the abstracts are written in).}
+	\label{fig:dbAbstracts}
+\end{figure}
+
+As mentioned above, saving the Huffman code means almost no additional storage effort. The average fraction of the Huffman code is about 0.1\% and was therefore not displayed in the visualizations.
+
+
+Since the calculation of the Huffman code increases the runtime of the whole compression, it is now considered how big this effect is. Fig.~\ref{fig:dbAbstractsRuntimes} shows the run times for the compression of the DBPedia abstract data. Here the runtime has been increased very much. This is because HDT can normally compress very little with this data because of the many long literals and is therefore finished quite quickly. With Huffman one can compress much better and it takes quite a long time.
+
+In Fig.~\ref{fig:dogFoodRuntimes} you can see the run times for the Semantic Web Dog Food data, where the run times are only slightly longer, because Huffman hardly improves the compression.
+
+So it can be said that the use of a standard Huffman code could be worthwhile because of the otherwise high runtime. At this point, however, the evaluation with such a standard code was omitted, since such existing codes do not contain all the special characters that occur in RDF data.
+
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Run times for DBPedia abstracts.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dbAbstractsRuntimes}\label{fig:dbAbstractsRuntimes}}
+	\hfill
+	\subfloat[Run times for Semantic Web Dog Food files.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dogFoodRuntimes}\label{fig:dogFoodRuntimes}}
+	\caption{Run times for Normal HDT and HDT + Huffman.}
+	\label{fig:huffmanRuntimes}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

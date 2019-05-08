@@ -60,7 +60,7 @@ For GRP that feature analysis is more complex. Since GRP constructs grammar rule
 As already explained in Ch.~\ref{ch:related_work}, HDT divides an RDF file into its header, dictionary and triples component. This is partially also true for GRP except that GRP does not create a header. But it also assigns an ID to every URI or literal and then only works with these IDs. Unfortunately the authors of~\cite{maneth} did not work on efficient storing of the dictionary. In GRP the size for the dictionary component is just ignored. Therefore we have to add this size in order to compare GRP with HDT in a fair way. To achieve that we just add the same size to the compressed size of GRP that HDT would need to store the dictionary.
 
 
-\section{Compression Ratio Improvements}\label{sec:approachComprRatioImprovements}
+\section{Compression Improvements}\label{sec:approachComprRatioImprovements}
 
 Ch.~\ref{sec:evaluationHDTvsGRP} will show that GRP always achieves a better compression ratio than HDT. Since according to~\cite{maneth} a graph compressed with GRP is less suitable for neighborhood queries (i.e. typical SPARQL queries) than an uncompressed graph, we will concentrate in the following on further improving the compression ratio. So we do not compare the query speeds between HDT and GRP.
 
@@ -83,16 +83,31 @@ Generally it can be said that GRP can compress a graph better if $elr$ is lower,
 
 \subsubsection{Symmetric Properties}
 
-There is a predicate in OWL called \enquote{owl:SymmetricProperty} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples really exists in the graph. The idea now is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. Das liegt daran, dass man durch das Hinzufügen $elr$ kleiner macht, was grundsätzlich schon mal zu einer besseren Kompressionsrate führen kann. Gleichzeitig sollte es dabei aber nicht zu einer ungünstigen Struktur kommen:
+There is a predicate in~\cite{owl} called \enquote{owl:SymmetricProperty} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples really exists in the graph. The idea now is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because you make $elr$ smaller by adding it, which can lead to a better compression ratio. At the same time you should not get an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be replaced both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 1 and 2 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 1 and 2 have already been connected before.
 
-\todo{bild und erklärung}
+
+\begin{figure}[h]
+	\centering
+	\subfloat[A sub graph to which the edge from node 3 to node 2 was added.]{\includegraphics[width=0.45\textwidth]{figures/approach/symmetricMat}\label{fig:symmetricMat}}
+	\hfill
+	\subfloat[The digram that can be found twice in the graph of Fig.~\ref{fig:symmetricMat}]{\includegraphics[width=0.45\textwidth]{figures/approach/symmetricMatDigram}\label{fig:symmetricMatDigram}}
+	\caption{Visualization of the benefits of adding symmetric edges to the graph. $p$ is symmetric, $p_1$ is not symmetric.}
+	\label{}
+\end{figure}
+
+\subsubsection{Inverse Properties}
+
+A further concept of~\cite{owl} is  \enquote{owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. However, it can happen that only one of the triples really exists. The approach is now similar to the symmetric properties. One can argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes have been connected before.
 
 
 \subsubsection{Transitive Properties}
 
-\subsubsection{Inverse Properties}
 
-\subsubsection{Equivalent Properties}
+\subsubsection{Equal Properties}
+
+In OWL there are the predicates \enquote{owl:equivalentProperty} and \enquote{owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. But the latter one is expressing equality. If there is $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $elr$ and, at the same time, not change the structure of the graph. But it is questionable if such cases exist in reality.
+
+
 
 
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}

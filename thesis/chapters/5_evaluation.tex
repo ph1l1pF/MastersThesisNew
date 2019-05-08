@@ -9,8 +9,17 @@ For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://githu
 
 \subsection{Datasets}
 
-\section{HDT vs GRP}\label{sec:evaluationHDTvsGRP}
+In this chapter, an overview about the different datasets, that were evaluated, is given.
 
+\subsubsection{Semantic Web Dog Food}
+
+Semantic Web Dog Food~\footnote{http://www.scholarlydata.org/dumps/} is a collection of RDF files from the RDF researchers community. It contains data about their conferences and workshops.
+
+\subsubsection{DBPedia}
+
+DBPedia~\footnote{https://wiki.dbpedia.org/Downloads2015-04} is an RDF version of the knowledge from Wikipedia. It contains many different data files of a quite big size, with some of them having hundreds of millions of triples. Also, DBPedia includes an ontology that is used for the evaluation.
+
+\section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
 Fig.~\ref{fig:ratiosHDTWithoutDict} shows the compression ratio for HDT (without dictionary size). As expected, the ratio gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary has a much bigger effect, since the compression ratio is now much larger and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that the dictionary size gets bigger when the graph is further away from the star pattern. The dictionary implementation of HDT seems to be more inefficient when there are about as many subject as objects. 
 
@@ -73,7 +82,7 @@ In addition one can notice that GRP's run time fluctuates more than that of HDT.
 
 
 
-\section{Compression Ratio Improvements}
+\section{Compression Improvements}
 
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
 
@@ -126,7 +135,6 @@ Another phenomenon can also be seen here: Although the English file contains by 
 
 As mentioned above, saving the Huffman code means almost no additional storage effort. The average fraction of the Huffman code is about 0.1\% and was therefore not displayed in the visualizations.
 
-
 Since the calculation of the Huffman code increases the runtime of the whole compression, it is now considered how big this effect is. Fig.~\ref{fig:dbAbstractsRuntimes} shows the run times for the compression of the DBPedia abstract data. Here the runtime has been increased very much. This is because HDT can normally compress very little with this data because of the many long literals and is therefore finished quite quickly. With Huffman one can compress much better and it takes quite a long time.
 
 In Fig.~\ref{fig:dogFoodRuntimes} you can see the run times for the Semantic Web Dog Food data, where the run times are only slightly longer, because Huffman hardly improves the compression.
@@ -143,10 +151,9 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 	\label{fig:huffmanRuntimes}
 \end{figure}
 
+\subsubsection{Blank Nodes}
 
-
-
-
+\subsubsection{Literals and Blank Nodes Combined}
 
 
 

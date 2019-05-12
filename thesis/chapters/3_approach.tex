@@ -102,6 +102,15 @@ A further concept of~\cite{owl} is  \enquote{owl:inverseOf}, which is defined fo
 
 \subsubsection{Transitive Properties}
 
+In~\cite{owl}, a predicate can be denoted as transitive (\enquote{owl:transitiveProperty}). Let $p$ be transitive. If the triples $(x,p,y),(y,p,z)$ exist then $(x,p,z)$ should also exist. Consequently, this holds also for arbitrarily long path from $x$ to $z$, as illustrated in Fig.~\ref{fig:transitiveMat}. The shown graph shall again be seen as some sub graph. The approach is to remove the triple $(1,p,n)$. This is sensible, as it give the nodes 1 and $n$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those are involved (they are not shown in Fig.~\ref{fig:transitiveMat}).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{figures/approach/transitiveMat}
+	\caption{A sub graph with the transitive predicate $p$.}
+	\label{fig:transitiveMat}
+\end{figure}
+
 
 \subsubsection{Equal Properties}
 

@@ -9,7 +9,7 @@ For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://githu
 
 \subsection{Datasets}
 
-In this chapter, an overview about the different datasets, that were evaluated, is given.
+In this chapter, an overview about the different datasets, that have been used for the evaluation, is given.
 
 \subsubsection{Semantic Web Dog Food}
 
@@ -88,13 +88,14 @@ In addition one can notice that GRP's run time fluctuates more than that of HDT.
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 
+At this point  about the evaluation of the approaches from Ch.~\ref{sec:implementationDictImprovements}. First the Huffman compression of literals is evaluated and then the compression of blank node IDs. Finally, both approaches combined will be evaluated.\todo{wurde das gemacht?}
+
 
 \subsubsection{Literals}
 
 As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as one hopes for a better compression than the with the prefix-based compression of HDT.
 
 Now the results of the evaluation are presented. First, the Semantic Web Dog Food data set is used. This is well suited for an evaluation, since both literals and URIS are included as objects. Fig.~\ref{fig:dogfoodcomprratios} shows the compression rates for a subset of the data (DF0 - DF9). 
-
 
 
 \begin{figure}

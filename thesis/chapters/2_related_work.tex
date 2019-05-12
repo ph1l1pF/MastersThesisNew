@@ -1,11 +1,11 @@
 % !TeX spellcheck = en_US
 \chapter{Related Work}\label{ch:related_work}
 
-This chapter gives an introduction to the domain RDF and introduces the different compression algorithms discussed in this thesis.
+This chapter gives an introduction to RDF and presents the different compression algorithms discussed in the thesis.
 
 \section{RDF}\label{sec:rdf}
 
-RDF is a format for structured data on the web. It can be formally described as follows. Let the following sets be infinite and mutually disjoint:
+RDF~(\cite{rdf}) is a framework for structured data on the web. It can be formally described as follows. Let the following sets be infinite and mutually disjoint:
 
 \begin{itemize}
 	\item $U$ (URI references, typically represent unique entities or properties)
@@ -13,17 +13,17 @@ RDF is a format for structured data on the web. It can be formally described as 
 	\item $L$ (Literals, represent fixed values, e.g. numbers or strings)
 \end{itemize}
 
-An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays the statement that the subject $s$ is related to the object $o$ via the predicate $p$. So a subject can anything but a literal. A predicate can only be a URI and an object can be anything.
+An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays the statement that the subject $s$ is related to the object $o$ via the predicate $p$. So a subject can be anything but a literal. A predicate can only be a URI and an object can be anything.
 
 \section{HDT}\label{related_work_hdt}
 
-HDT~(\cite{hdt}) is the best known approach to compressing RDF data because it is directly tailored to RDF. The idea behind it is to make RDF's extensive representation more compact, thus reducing memory size. In the normal RDF format  (e.g. turtle), each triple is written down after another. This does not only require much space, but is also not good for query performance, since each single triple has to be traversed within a query execution.
+HDT~(\cite{hdt}) is a well known approach to compressing RDF data because it is directly tailored to RDF and the data compressed by it is still accessible for queries. The idea behind it is to make RDF's extensive representation more compact, thus reducing memory size. Usually, in many plain text formats for RDF (e.g. N-Triples~\footnote{https://www.w3.org/TR/n-triples/}) each triple is written down after another. This does not only require much space, but is also not good for query performance, since each single triple has to be traversed within a query execution.
 
-It is easy to see that a more compact representation can be achieved by cleverly grouping the triples. That is exactly what HDT does. Imagine for example some triples that all have the same subject $s$. These would then be written in turtle format as follows:
+It is easy to see that a more compact representation can be achieved by cleverly grouping the triples. That is exactly what HDT does. Imagine for example some triples that all have the same subject $s$. These would then be written in N-Triples as follows:
 
 \begin{align*}
 (s,p_1,o_{11}),...,(s,p_1,o_{1_{n1}}),(s,p_2,o_{2_1}),...,\\
-	(s,p_2,o_{2_{n2}}),...,(s,p_k,o_{kn_k})
+	(s,p_2,o_{2_{n2}}),...,(s,p_k,o_{k_{n_k}})
 \end{align*}
 
 In HDT the triples are then grouped by $s$.
@@ -33,11 +33,11 @@ s \to [(p_1,(o_{1_1},...,o_{1_{n_1}})),(p_2,(o_{2_1},...,o_{2_{n_2}})),...,\\
  (p_k , (o_{k_{n_k}} ))]
 \end{align*}
 
-Since all triples have the same subject $s$, it does not have to be written down at the beginning of each triple anymore. On the second level the triples are then grouped according to the predicates. So all triples with the predicate $p_1$ come first, then all with the predicate $p_2$ and so on. Finally only the different objects have to be enumerated since the subject and predicate are already implicitly given. You will now see how HDT implements this mechanism.
+Since all triples have the same subject $s$, it does not have to be written down at the beginning of each triple anymore. On the second level the triples are then grouped according to the predicates. So all triples with the predicate $p_1$ come first, then all with the predicate $p_2$ and so on. Finally only the different objects have to be enumerated since the subject and predicate are already implicitly given. It will now be explained how HDT implements this mechanism.
 
-First, all URIs and literals (which are usually quite long) are mapped to unique IDs (integers). From now on these IDs will be used. You can see the triples with the IDs in Fig.~\ref{fig:hdt_overview} on the left ('Plain Triples'). 
+First, all URIs and literals (which are usually quite long) are mapped to unique IDs (integers). From now on these IDs will be used. One can see the triples with the IDs in Fig.~\ref{fig:hdt_overview} on the left ('Plain Triples'). 
 
-The above mentioned grouped representation is called 'Compact Triples' and can be seen in Fig.~\ref{fig:hdt_overview} in the middle. In the array 'Predicates' you can see the IDs of the predicates. A '0' means that from now on a new subject comes. For example, the first two entries in the 'Predicates' are linked to the first subject, since there is a '0' in the third position in the array. 
+The above mentioned grouped representation is called 'Compact Triples' and can be seen in Fig.~\ref{fig:hdt_overview} in the middle. In the array 'Predicates' one can see the IDs of the predicates. A '0' means that from now on a new subject comes. For example, the first two entries in the 'Predicates' are linked to the first subject. At position 3 in 'Predicates', there is a '0'. Therefore, the following predicates are linked to the next subject (subject 2 in this case).
 
 This works analogously for the objects, in the array 'Objects' the IDs of the objects are listed, and a '0' here means that from then on a new predicate comes. For instance, the first entry in 'Objects' is a '6', so the first derived triple would be $(1,2,6)$. The second entry of 'Objects' is a '0' since there is a change from predicate '2' to '3' in 'Predicates'.
 
@@ -47,7 +47,7 @@ That works analogously for the objects where $S_o$ has the same content as 'Obje
 
 The advantage of 'Bitmap Triples' is that queries can be executed faster on this representation. Also, the compressed size is slightly smaller than with 'Compact Triples'. Therefore, 'Bitmap Triples' are always used in the current version of HDT.
 
-HDT has also procedures for answering queries, but those will not be mentioned here, because they are not relevant for the thesis.~\cite{hdt}
+HDT has also procedures for answering queries, but those will not be mentioned here, because they are not relevant for the thesis.~\cite{hdt} \todo{warum nicht?}
 
 \begin{figure}[h]
 	\centering
@@ -59,7 +59,7 @@ HDT has also procedures for answering queries, but those will not be mentioned h
 
 \section{Grammar-based Graph Compression}\label{related_work_grammar_based}
 
-In this section we will discuss two different approaches to grammar-based graph compression. First, ~\cite{mattdk} is introduced and briefly explained why the approach is less suitable for this thesis. Then~\cite{maneth}, which the thesis will focus on, is introduced.
+In this section we will discuss two different approaches to grammar-based graph compression. First, ~\cite{mattdk} is introduced and briefly explained why the approach is less suitable for RDF. Then~\cite{maneth}, which the thesis will focus on, is introduced.
 
 \subsection{Dürksen's Algorithm}
 
@@ -78,7 +78,7 @@ Dürksen's algorithm does not seem to be suitable for RDF, because it is based o
 
 In addition, Dürksen's algorithm is not yet in a mature state, i.e. there is only a rudimentary implementation that does not work reliably for large graphs. In addition, work is currently underway to find a compact representation of such a compressed graph in order to save the data with little memory.~\cite{mattdk}
 
-For these reasons we will focus on the compressor GraphRePair, which is presented in chapter~\ref{ch:GRP}.
+For these reasons the thesis will focus on the compressor GraphRePair, which is presented in chapter~\ref{ch:GRP}.
 
 \begin{figure}[h]
 	\centering
@@ -98,7 +98,7 @@ $M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the emp
 
 
 
-A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping, $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes.
+A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping assigning start and end nodes to all edges. $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes.
 
 %The rank of an edge $e$ is defined as $rank(e)=|att(e)|$.
 
@@ -111,7 +111,7 @@ An example for a hypergraph is illustrated in Fig.~\ref{fig:hypergraph}. Formall
 \begin{figure}
 	\centering
 	\includegraphics[width=0.3\linewidth]{figures/relatedwork/hypergraph}
-	\caption{A hyper graph as defined in~\cite{maneth}. The black nodes 1 and 3 are external nodes whereas the white node 2 is internal. $e_3$ (with the label A) is a hyper edge.}
+	\caption{A hyper graph as defined in~\cite{maneth}. The black nodes 1 and 3 (consider the numbers within the nodes) are external nodes whereas the white node 2 is internal. $e_3$ (with the label A) is a hyper edge while $e_1$ and $e_2$ (labeled with \textit{a} and \textit{b}, respectively) are normal edges.} The numbers 2, 1 and 3 around $e_3$ denote the order of the nodes attached to $e_3$.
 	\label{fig:hypergraph}
 \end{figure}
 
@@ -133,6 +133,8 @@ Condition 1 ensures that all nodes in $d$ are incident to one of the two edges o
 
 
 \subsubsection{Digram Occurrence}
+
+Digram occurrences are concrete instances of a digram.
 
 Let $g$ be a hyper graph and $d$ be a digram with the two edges $e_1^d,e_2^d$. Let $o=\{e_1,e_2\} \subseteq E_g$ and let $V_o$ be the set of nodes incident with edges in $o$. Then $o$ is an occurrence of $d$ in $g$ if there exits a bijection $b:V_o \to V_d$ so that for $i\in \{1,2\} $ and $v\in V_o$ all following conditions hold:
 
@@ -173,7 +175,7 @@ After GRP has constructed a grammar for some graph, this grammar has to be store
 
 The start production is encoded using $k^2$ trees which is illustrated in Fig.~\ref{fig:encoding}. 
 
-First the matrix is extends with zeros to the next power of two. Then it is partitioned into $k^2$ equally large partitions ($k=2$ here).
+First the adjacency matrix is extends with zeros to the next power of two. Then it is partitioned into $k^2$ equally large partitions ($k=2$ here).
 
 The tree's root now represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedures continues until there is zero-leaf for each path of the tree.
 

@@ -4,11 +4,11 @@
 \section{Motivation}
 The majority of data on the Internet is unstructured because it is mainly text. That makes it difficult for machines to extract knowledge from the data and answer specific queries. In the context of the Semantic Web, an attempt is made to build a knowledge base using structured data. Here the data is stored as graphs. A graph is an often used data structure which consists of nodes and edges. The edges connect the different nodes. This thesis will focus on knowledge graphs, which are about expressing knowledge or facts. A possible format for such graphs is the Resource Description Framework (RDF)\footnote{\label{foot:2}https://www.w3.org/RDF/}, in which a graph is represented by triples of the form $ (subject, predicate, object) $, where $ subject $ and $object$ are nodes and $predicate$ is an edge of the graph. A triple is typically used to express a certain fact.
 
-In reality, such knowledge graphs can become very large with millions or even billions of nodes and edges. \todo{hier evtl Beispiele von knowledge bases} The following three use cases can then become very hard or even infeasible: storage, transmission and processing. One way to circumvent this problem is to use compression.
+In reality, such knowledge graphs can become very large with millions or even billions of nodes and edges. \todo{hier evtl Beispiele von knowledge bases} The following three use cases can then become very hard or even infeasible: storage, transmission and processing. One way to circumvent this problem is to use compression. There are many existing compressors which work for all kinds of data, but the problem is that the compressed data is then not accessible (e.g. for querying). Also their compression might not be so strong, since they are not tailored to the features of RDF.
 
 The currently most popular compressor for RDF data is HDT~\cite{hdt}. Here the data is made smaller by a compact representation of the triples. 
 
-There is a completely different compression technique which is called grammar-based compression. This method has so far been tested very little for RDF graphs. As the name suggests, such a compression is based on the principle of a formal grammar, with productions that can be nested among each other. There are not yet many grammar-based compression algorithms for graphs. One of the best known is GraphRePair~\cite{maneth}. This is a compressor that works for any type of graph and is therefore also applicable for RDF. Why the algorithm is particularly suitable for RDF will be explained later on.
+There is a completely different compression technique which is called grammar-based compression. This method has so far been tested very little for RDF graphs. As the name suggests, such a compression is based on the principle of a formal grammar, with productions that can be nested among each other. There are not yet many grammar-based compression algorithms for graphs. One of the best known is GraphRePair~\cite{maneth}. This is a compressor that works for any type of graph and is therefore also applicable for RDF.
 
 In this thesis it shall be investigated to what extent grammar-based compression is applicable for RDF and whether it delivers even better results than HDT.
 
@@ -23,11 +23,11 @@ As already mentioned, there are essentially three use cases for RDF data:
 	\item Processing/Consumption
 \end{enumerate}
 
-The idea is that you can make all these use cases easier / possible by compression, especially if one is dealing with very large amounts of data. In the first two use cases, compression can be helpful by reducing the size of the data. Thus the data can be stored more compactly and above all can be transferred faster, which occurs frequently in reality and can become a problem due to possibly slow transfer speeds \todo{here possibly concrete numbers}.
+The idea is that one can make all these use cases easier / possible by compression, especially if one is dealing with very large amounts of data. In the first two use cases, compression can be helpful by reducing the size of the data. Thus the data can be stored more compactly and above all can be transferred faster, which occurs frequently in reality and can become a problem due to possibly slow transfer speeds \todo{here possibly concrete numbers}.
 
 The third use case (Processing/Consumption) is about reading or writing access to data. The more common case of read access is typically the execution of queries on RDF data. For example, you want to find out which other nodes a given node is connected to. But there are other examples which will be explained in the course of the thesis. A compression algorithm can help in this respect by making it possible to answer such queries directly on the compressed graphs. This may even be faster than on the original data due to the reduced size.
 
-The aim of the thesis is to compare the two compressors (HDT and GRP) with regard to these use cases and finally determine which approach works better for which use cases.
+The aim of the thesis is to compare the two compressors (HDT and GRP) with regard to these use cases and finally determine which approach works better for which use cases.\todo{wurde wirklich auf alle use cases eingegangen?}
 
 
 

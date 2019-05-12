@@ -1,6 +1,7 @@
 % !TeX spellcheck = en_US
 \chapter{Implementation}\label{ch:implementation}
 
+This chapter will explain how the different approaches of Ch.~\ref{ch:approach} have been implemented.
 
 \section{GRP vs HDT}\label{sec:implementationGRPvsHDT}
 
@@ -38,6 +39,10 @@ This chapter introduces the implementation details of Ch.~\ref{sec:approachCompr
 
 \subsection{Ontology Knowledge}\label{sec:implementationOntKnowledge}
 
+This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} was used.
+
+The implementation works in such a way that the individual features are first executed on separate graphs. So there is a graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, there is also a graph on which all manipulations are performed. In this way one sees first, what the manipulations bring individually and in the end also, what they all achieve in combination.
+
 \subsubsection{Symmetric Properties}
 
 In order to remove or add symmetric properties SPARQL can be used. The code of listing~\ref{lst:symmetricInsert} will be used to do that:
@@ -46,12 +51,33 @@ In order to remove or add symmetric properties SPARQL can be used. The code of l
 basicstyle=\ttfamily,frame=single]
 INSERT {?o ?p ?s}
 WHERE{
-	{?o ?p ?s}
+	{?s ?p ?o}
 	MINUS {?o ?p ?s}
 }
 \end{lstlisting}
 
 That update has to be executed for each symmetric property $p$. In the case where one wants to remove the second, a delete update would have to executed.
+
+The removal of triples with symmetric predicates works analogously with a delete. But here one has to be careful not to delete both directions, this can be done by using a filter.
+
+\subsubsection{Inverse Properties}
+
+\todo{machen}
+
+\subsubsection{Transitive Properties}
+
+Here one wants to remove the triple $(s,p,o)$ if there exists a path from $s$ to $o$ via the predicate $p$ of a length of at least two edges. That can be achieved by Listing~\ref{lst:transitiveRemove} in which a property path is used in the first line of the where-clause to denote the just mentioned path.
+
+Of course, it is also possible to add the triple $(s,p,o)$ if it does not exist. That can be done similarly with an insert.
+
+\begin{lstlisting}[captionpos=b, caption=SPARQL query for removing triples with the transitive property p, label=lst:transitiveRemove,
+basicstyle=\ttfamily,frame=single]
+DELETE { ?s ?p ?o }
+WHERE { 
+	?s ?p/?p+ ?o. 
+	?s ?p ?o 
+}
+\end{lstlisting}
 
 \subsection{Dictionary Improvements}\label{sec:implementationDictImprovements}
 
@@ -66,8 +92,10 @@ The other possibility is to omit blank node ID completely. That can be achieved 
 Both approaches have been implemented and will be evaluated in Ch.~\ref{sec:evaluationDictImprovements}.
 
 \subsubsection{Literals}\label{sec:implementationLiterals}
-\todo{das passt vom Text her nicht}
-There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started with the root node. That method creates an unambiguous bit representation of the tree, since each node has either two or no children.
+
+As already mentioned in Ch.~\ref{sec:approachDictImprovements}, the literals will be compressed using a Huffman code. To achieve that, HDT is changed such that is does not compress the literals by prefix trees, but rather gives the literals to a \enquote{Huffman Handler}, which compresses all literals and finally stores them in a binary format.
+
+In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started with the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one and the current node's character in case the current node is leaf. Otherwise it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
 
 \begin{algorithm}
 	\caption{EncodeNode (TreeNode node)}\label{alg:HuffmanEncode}

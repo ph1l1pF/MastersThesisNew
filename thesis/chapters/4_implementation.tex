@@ -37,17 +37,70 @@ Apart from that, blank nodes and literals are not used here. For both compressor
 
 This chapter introduces the implementation details of Ch.~\ref{sec:approachComprRatioImprovements}. It starts with the applying the ontology in order to achieve a better compression ratio and then continues with dictionary compression  improvements.
 
+\subsection{Datasets}\label{sec:implementationDatasets}
+
+In this chapter, an overview about the different datasets, that have been used for the evaluation, is given. Although the datasets are used in Ch.~\ref{ch:evaluation}, they are presented here, since some implementation details are dependent on the data.
+
+\subsubsection{Semantic Web Dog Food}
+
+Semantic Web Dog Food~\footnote{http://www.scholarlydata.org/dumps/} is a collection of RDF files from the RDF researchers community. It contains data about their conferences and workshops.
+
+\subsubsection{DBPedia}
+
+DBPedia~\footnote{https://wiki.dbpedia.org/Downloads2015-04} is an RDF version of the knowledge from Wikipedia. It contains many different data files of a quite big size, with some of them having hundreds of millions of triples. Also, DBPedia includes an ontology that is used for the evaluation.
+
+\subsubsection{Wordnet}
+
+Wordnet contains knowledge about the English language. Words that have the same meaning are grouped in to the same \enquote{synset}. Those sets are the nodes in an RDF graph and relations between them are edges/properties.
+
 \subsection{Ontology Knowledge}\label{sec:implementationOntKnowledge}
 
-This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} was used.
 
-The implementation works in such a way that the individual features are first executed on separate graphs. So there is a graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, there is also a graph on which all manipulations are performed. In this way one sees first, what the manipulations bring individually and in the end also, what they all achieve in combination.
+
+This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} is used.
+
+
+\subsubsection{Overall Process}
+Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. The several parts of the process will be discussed in the next chapters. Fig.~\ref{fig:overallprocess} shows s how it is implemented. First, the original graph or sub graph (the reason for sub graphs is explained below) is given to GRP. That part is marked blue in Fig.~\ref{fig:overallprocess} and will it will deliver the first result.
+
+In the next step, relevant properties have to be determined and the original graph will be manipulated. Then the manipulated graph is given to GRP. In addition, the relevant ontology triples have to be compressed and stored as well. Otherwise, the original graph could not be restored. Both graphs are then compressed by GRP and that delivers result 2 (gray parts in Fig.~\ref{fig:overallprocess}).
+
+Finally, both results have to be compared. Here, the output sizes have to be compared instead of the compression ratios, because the ratio of result 2 would be relative to the manipulated graph. But a comparison to the original RDF graph is needed in order to evaluate whether the manipulations are beneficial.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/4_implementation/overallProcess}
+	\caption{Overall process for the evaluation of applying ontology knowledge.}
+	\label{fig:overallprocess}
+\end{figure}
+
+The process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. 
+
+In this way one sees first, what the manipulations bring individually and in the end also, what they all achieve in combination.
+
+
+\subsubsection{Gathering Relevant Properties}
+First, all relevant properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
+
+\[
+\text{<myProperty> <rdf:type> <owl:SymmetricProperty> .}
+\]
+
+This triple states that \textit{myProperty} is symmetric. It works analogously for inverse or transitive properties. 
+
+However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now one can check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
+
+In Wordnet, transitive properties are explicitly given, but symmetric and inverse are not. It is necessary to determine them by understanding the meaning of Wordnet's relations. Properties connect different \enquote{synsets}. One of those properties is antonymy, which is like an opposite-relation between words. Therefore, the property can be seen as symmetric.
+
+\todo{inverse bei wordnet}
+
+After all symmetric properties have been found (they are shown in Ch.~\ref{ch:evaluation}), manipulations to the graph have to be executed.
 
 \subsubsection{Symmetric Properties}
 
 In order to remove or add symmetric properties SPARQL can be used. The code of listing~\ref{lst:symmetricInsert} will be used to do that:
 
-\begin{lstlisting}[captionpos=b, caption=SPARQL query for adding triples with the symmetric property p, label=lst:symmetricInsert,
+\begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the symmetric property p., label=lst:symmetricInsert,
 basicstyle=\ttfamily,frame=single]
 INSERT {?o ?p ?s}
 WHERE{
@@ -62,7 +115,16 @@ The removal of triples with symmetric predicates works analogously with a delete
 
 \subsubsection{Inverse Properties}
 
-\todo{machen}
+Assume that $ p1 $ and $ p2 $ are inverse properties. Listing~\ref{lst:inverseInsert} is used to add the triple $(o,p1,s)$ if $(s,p2,o)$ already exists. That update has to be made in both directions ( $(p1,p2)$ and $(p2,p1)$ ), in case the other direction exists. If one wants to remove triples instead of adding them, a delete has to be performed which is similar.
+
+\begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the inverse properties p1 and p2., label=lst:inverseInsert,
+basicstyle=\ttfamily,frame=single]
+INSERT {?o ?p1 ?s}
+WHERE{
+	{?s ?p2 ?o}
+	MINUS {?o ?p1 ?s}
+}
+\end{lstlisting}
 
 \subsubsection{Transitive Properties}
 
@@ -70,7 +132,7 @@ Here one wants to remove the triple $(s,p,o)$ if there exists a path from $s$ to
 
 Of course, it is also possible to add the triple $(s,p,o)$ if it does not exist. That can be done similarly with an insert.
 
-\begin{lstlisting}[captionpos=b, caption=SPARQL query for removing triples with the transitive property p, label=lst:transitiveRemove,
+\begin{lstlisting}[captionpos=b, caption=SPARQL update for removing triples with the transitive property p., label=lst:transitiveRemove,
 basicstyle=\ttfamily,frame=single]
 DELETE { ?s ?p ?o }
 WHERE { 
@@ -78,6 +140,25 @@ WHERE {
 	?s ?p ?o 
 }
 \end{lstlisting}
+
+\subsubsection{Sub Graphs}
+
+Real datasets are quite big and it can happen that there are only a few relevant properties (symmetric/inverse/transitive). Even if there are many of those properties it can be that they do not occur often in the data. In that case, the effect of manipulating the data can not have a big impact on the compression ratio. However, one still wants to investigate if the effect is possibly there. Therefore, it is necessary to form a smaller graph in which those relevant properties occur often. So, a procedure to build a sub graph is needed.
+
+First, all triples $t_1,...,t_n$ are collected which contain one of the relevant properties. It would now be possible to randomly add a number of remaining triples in order to get a more diversified graph. But that would result in a graph far away from the original and would probably not contain structural patterns from the original one.
+
+Therefore, we choose to add triples that are directly connect to the subjects or objects of $t_1,...,t_n$. By doing that, a real sub graph is extracted out of the original graph.
+
+The procedure is illustrated in Fig.~\ref{fig:subgraph}. There $p$ is the only relevant property. Consequently, the green triples are collected in the first step. The red triples are collected in the second step, because they are connected to triples from the first step.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\linewidth]{figures/4_implementation/subgraph}
+	\caption{Extraction of a sub graph (marked by dashed line).}
+	\label{fig:subgraph}
+\end{figure}
+
+
 
 \subsection{Dictionary Improvements}\label{sec:implementationDictImprovements}
 

@@ -47,12 +47,12 @@ That works analogously for the objects where $S_o$ has the same content as 'Obje
 
 The advantage of 'Bitmap Triples' is that queries can be executed faster on this representation. Also, the compressed size is slightly smaller than with 'Compact Triples'. Therefore, 'Bitmap Triples' are always used in the current version of HDT.
 
-HDT has also procedures for answering queries, but those will not be mentioned here, because they are not relevant for the thesis.~\cite{hdt} \todo{warum nicht?}
+HDT has also procedures for answering queries, but those will not be mentioned here, because the thesis will focus on HDT's compression ability.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{figures/relatedwork/hdt1}
-	\caption{Three different representations of triples in HDT}
+	\caption{Three different representations of triples in HDT, figure from~\cite{hdt}.}
 	\label{fig:hdt_overview}
 \end{figure}
 
@@ -94,9 +94,7 @@ This chapter deals with GraphRePair, the compressor from~\cite{maneth}.
 \subsubsection{Foundations}
 
 For a set $M$, $M^+=\{x_1 \cdot x_2 \cdot ... \cdot x_n | x_1,x_2,..,x_n \in M \}$ is defined as the set of all non-empty strings of $M$ where $\cdot$ stands for the concatenation of two symbols.
-$M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the empty string $\epsilon$ 
-
-
+$M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the empty string $\epsilon$.
 
 A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping assigning start and end nodes to all edges. $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes.
 
@@ -115,7 +113,7 @@ An example for a hypergraph is illustrated in Fig.~\ref{fig:hypergraph}. Formall
 	\label{fig:hypergraph}
 \end{figure}
 
-External nodes are black and the numbers below them indicate indices for their position in $ext$. Analogously,  hyper edges ($e_3$ in this case) have indices indicating the order of the attached nodes.~\cite{maneth}
+External nodes are black and the numbers below them indicate indexes for their position in $ext$. Analogously,  hyper edges ($e_3$ in this case) have indexes indicating the order of the attached nodes.~\cite{maneth}
 
 \subsubsection{Digram}
 

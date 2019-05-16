@@ -7,18 +7,6 @@ This chapter is about the evaluation of the several approaches presented in Ch.~
 
 For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation mentioned in~\cite{maneth} has been used (written in Scala). It is not open source and has been given to us by the authors of~\cite{maneth}.
 
-\subsection{Datasets}
-
-In this chapter, an overview about the different datasets, that have been used for the evaluation, is given.
-
-\subsubsection{Semantic Web Dog Food}
-
-Semantic Web Dog Food~\footnote{http://www.scholarlydata.org/dumps/} is a collection of RDF files from the RDF researchers community. It contains data about their conferences and workshops.
-
-\subsubsection{DBPedia}
-
-DBPedia~\footnote{https://wiki.dbpedia.org/Downloads2015-04} is an RDF version of the knowledge from Wikipedia. It contains many different data files of a quite big size, with some of them having hundreds of millions of triples. Also, DBPedia includes an ontology that is used for the evaluation.
-
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
 Fig.~\ref{fig:ratiosHDTWithoutDict} shows the compression ratio for HDT (without dictionary size). As expected, the ratio gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary has a much bigger effect, since the compression ratio is now much larger and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that the dictionary size gets bigger when the graph is further away from the star pattern. The dictionary implementation of HDT seems to be more inefficient when there are about as many subject as objects. 
@@ -84,7 +72,40 @@ In addition one can notice that GRP's run time fluctuates more than that of HDT.
 
 \section{Compression Improvements}
 
+This chapter is about evaluating the compression improvements. It starts with applying ontology knowledge and then continues with dictionary compression improvement. In contrast to Ch.~\ref{sec:evaluationHDTvsGRP}, real data will be evaluated here to see how much influence the improvements have.
+
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
+
+\subsubsection{Occurrence of Properties}
+Now it will be presented how much of those symmetric/inverse/transitive properties exist in real data. For that we will use the datasets presented in Ch.~\ref{sec:implementationDatasets}. 
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+	\hline 
+	Dataset & Symmetric & Inverse & Transitive \\ 
+	\hline 
+	DBPedia &  &  &  \\ 
+	\hline 
+	Wordnet &  &  &  \\ 
+	\hline 
+	&  &  &  \\ 
+	\hline 
+\end{tabular}
+\captionof{table}{The relevant properties for applying ontology knowledge found in real datasets.}	
+\label{tab:properties}
+\end{center}
+
+Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in real datasets (DBPedia and Wordnet). (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low, especially for symmetric and inverse properties. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties can be necessary to observe a real effect of the data manipulations. Nevertheless, first the normal datasets will be used to evaluate the manipulations.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/ontOccurrences}
+	\caption{Relative amount of transitive/symmetric/inverse properties in real datasets.}
+	\label{fig:ontoccurrences}
+\end{figure}
+
+
+
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 
@@ -155,6 +176,9 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 \subsubsection{Blank Nodes}
 
 \subsubsection{Literals and Blank Nodes Combined}
+
+\subsection{Ontology and Dictionary}
+\todo{evtl beides anwenden,wahrscheinl. ist ont Anteil so gering dass man es auf Grafik nicht sehen kann}
 
 
 

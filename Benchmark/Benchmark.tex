@@ -302,17 +302,6 @@ Inverse:
 
 
 
-\section{Fragen an Michael}
-
-\begin{itemize}
-	\item Materialiserung scheint nicht viel zu bringen. Nur ein symmetrisches Prädikat?? \\
-	Andere Möglichkeit: Alles entmaterialisieren und dann zeigen dass man weniger speichern muss, auch wenn man die Ontologie abspeichert. 
-	\item Blank nodes: Konvertierung von string nach int wahrscheinlich nicht nötig, da in der Impl von dem dict sowieso nur Zahlen gespeichert werden.\\
-	Speichern von Blank node IDs evtl gar nicht nötig??
-	\item Literale: Kompr. mit Huffman; einen Huffman Code für alle Literale
-\end{itemize}
-
-
 \section{Neue Ideen}
 \begin{itemize}
 	\item Literale UND blank nodes: Datein auswerten und jeweils aufführen wie Groß der rel. Anteil der Literale bzw. blank nodes ist. Bei Literalen auch die durschnittl. Länge angeben, da diese große Auswirkungen hat
@@ -342,7 +331,16 @@ Inverse:
 	\caption{Relation between amount of literals and improvement of compression ratio (Files from Semantic Web Dog Food).}
 \end{figure}
 
+\section{Fragen an Michael}
 
+\begin{itemize}
+	\item warum hypernym und hyponym nicht invers? (nur nomen Teil)
+	\item bei transitive scheint wegnehmen der Kante viel zu bringen, aber der Fall tritt nie auf
+	\item eval von ont Manipulationen: erstmal auf original daten: (fast) gar kein Effekt\\
+	dann auf Sub Graphen: Effekt viel größer
+	\item alle features auf einmal evaluieren: Sub graph mit allen relevanten properties
+	\item Eval: Kombi aus dict und ont geht wohl nicht wirklich, weil in den ont-relevanten Daten keine langen Literale vorkommen (blank nodes auch eher nicht)
+\end{itemize}
 
 Wordnet: (hypernym und hyponym inverse), antonym symmetrisch
 
@@ -350,7 +348,11 @@ open data: URIs aufrufen
 
 
 
+DBPEdia: persondata (nur personen rausnehmen: da kommen die relevanten Properties vor)
 
+Eine person nehmen und von dort aus teilgraphen erzeugen
+
+persondata erweitern mit abstracts und birthplace koord.
 
 
 

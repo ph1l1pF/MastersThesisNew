@@ -83,10 +83,10 @@ In this way one sees first, what the manipulations bring individually and in the
 First, all relevant properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
 
 \[
-\text{<myProperty> <rdf:type> <owl:SymmetricProperty> .}
+\text{<myProperty> <rdf:type> <owl:SymmetricProperty> .} 
 \]
 
-This triple states that \textit{myProperty} is symmetric. It works analogously for inverse or transitive properties. 
+This triple states that \textit{myProperty} is symmetric. The concept is analogous for inverse or transitive properties. 
 
 However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now one can check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
 

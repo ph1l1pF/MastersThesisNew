@@ -17,7 +17,7 @@ An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays
 
 \section{HDT}\label{related_work_hdt}
 
-HDT~(\cite{hdt}) is a well known approach to compressing RDF data because it is directly tailored to RDF and the data compressed by it is still accessible for queries. The idea behind it is to make RDF's extensive representation more compact, thus reducing memory size. Usually, in many plain text formats for RDF (e.g. N-Triples~\footnote{https://www.w3.org/TR/n-triples/}) each triple is written down after another. This does not only require much space, but is also not good for query performance, since each single triple has to be traversed within a query execution.
+HDT~(\cite{hdt}) is an approach for compressing RDF data which is directly tailored to RDF and the data compressed by it is still accessible for queries. The idea behind it is to make RDF's extensive representation more compact, thus reducing memory size. Usually, in many plain text formats for RDF (e.g. N-Triples~\footnote{https://www.w3.org/TR/n-triples/}) each triple is written down after another. This does not only require much space, but is also not good for query performance, since each single triple has to be traversed within a query execution.
 
 It is easy to see that a more compact representation can be achieved by cleverly grouping the triples. That is exactly what HDT does. Imagine for example some triples that all have the same subject $s$. These would then be written in N-Triples as follows:
 
@@ -49,6 +49,8 @@ The advantage of 'Bitmap Triples' is that queries can be executed faster on this
 
 HDT has also procedures for answering queries, but those will not be mentioned here, because the thesis will focus on HDT's compression ability.
 
+\todo{dict compr erkären}
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{figures/relatedwork/hdt1}
@@ -61,9 +63,11 @@ HDT has also procedures for answering queries, but those will not be mentioned h
 
 In this section we will discuss two different approaches to grammar-based graph compression. First, ~\cite{mattdk} is introduced and briefly explained why the approach is less suitable for RDF. Then~\cite{maneth}, which the thesis will focus on, is introduced.
 
+In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually small patterns are searched for, since one can usually find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.
+
 \subsection{Dürksen's Algorithm}
 
-An approach to grammar-based compression of graphs was developed in~\cite{mattdk}. Here the authors assume a hyper graph with node and edge labels. Such a graph can be seen in Fig.~\ref{fig:transformation} on the left. To simplify the compression, a so-called transformation is now executed, in which a new node is inserted for each edge $e$, which then has the same label as $e$. The original structure of the graph is obtained by connecting two nodes, which were previously connected by an edge, indirectly by the new node. The result of the transformation is a graph, which only has node labels, but no edge labels. Moreover, hyper edges (edges with more than two incident nodes) are no longer present due to the transformation.
+An approach to grammar-based compression of graphs was developed in~\cite{mattdk}. Here the authors assume a hyper graph with node and edge labels. Such a graph can be seen in Fig.~\ref{fig:transformation} on the left. To simplify the compression, a transformation is now executed, in which a new node is inserted for each edge $e$, which then has the same label as $e$. The original structure of the graph is obtained by connecting two nodes, which were previously connected by an edge, indirectly by the new node. The result of the transformation is a graph, which only has node labels, but no edge labels. Moreover, hyper edges (edges with more than two incident nodes) are no longer present due to the transformation.
 
 \begin{figure}[h]
 	\centering
@@ -72,18 +76,18 @@ An approach to grammar-based compression of graphs was developed in~\cite{mattdk
 	\label{fig:transformation}
 \end{figure}
 
-Thus patterns like in Fig.~\ref{fig:basicdigram} can be replaced. Here it happens twice that a node with the label \textit{X} is connected with a node with the label \textit{Y}. This pattern is then stored in a central location and can be referenced via the label \textit{X'}. Thus only two nodes remain in the compressed graph (with \textit{X'} as label) and the graph was reduced to a smaller size. There are some details which make  this pattern replacement possible, but they are neglected at this point.
+Thus digrams like in Fig.~\ref{fig:basicdigram} can be replaced. Here it is twice the case that a node with the label \textit{X} is connected with a node with the label \textit{Y}. This digram is then stored in a central location and can be referenced via the label \textit{X'}. Thus only two nodes remain in the compressed graph (with \textit{X'} as label) and the graph was reduced to a smaller size. There are some details which make  this digram replacement possible, but they are neglected at this point. The interested reader is referred to~\cite{mattdk}.
 
-Dürksen's algorithm does not seem to be suitable for RDF, because it is based on the fact that there are several nodes with the same label. However, since in RDF a node represents an entity that normally does not occur twice, Dürksen's basic assumption is not fulfilled in RDF.
+Dürksen's algorithm does not seem to be suitable for RDF, because it is based on the fact that there are several nodes with the same label. However, since in RDF a node represents an entity that does not occur twice, Dürksen's basic assumption is not fulfilled in RDF.
 
-In addition, Dürksen's algorithm is not yet in a mature state, i.e. there is only a rudimentary implementation that does not work reliably for large graphs. In addition, work is currently underway to find a compact representation of such a compressed graph in order to save the data with little memory.~\cite{mattdk}
+In addition, Dürksen's algorithm is not yet in a mature state, i.e., there is only a rudimentary implementation that does not work reliably for large graphs. In addition, work is currently underway to find a compact representation of such a compressed graph in order to save the data with little memory.~\cite{mattdk}
 
 For these reasons the thesis will focus on the compressor GraphRePair, which is presented in chapter~\ref{ch:GRP}.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.6\textwidth]{figures/relatedwork/basisdigram}
-	\caption{Replacement of two occurrences of the pattern $X \to Y$ by nodes with the label $X'$.}
+	\caption{Replacement of two occurrences of the digram $X \to Y$ by nodes with the label $X'$.}
 	\label{fig:basicdigram}
 \end{figure}
 
@@ -96,13 +100,7 @@ This chapter deals with GraphRePair, the compressor from~\cite{maneth}.
 For a set $M$, $M^+=\{x_1 \cdot x_2 \cdot ... \cdot x_n | x_1,x_2,..,x_n \in M \}$ is defined as the set of all non-empty strings of $M$ where $\cdot$ stands for the concatenation of two symbols.
 $M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the empty string $\epsilon$.
 
-A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping assigning start and end nodes to all edges. $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes.
-
-%The rank of an edge $e$ is defined as $rank(e)=|att(e)|$.
-
-A hypergraph does not contain multi-edges, which means for two edges $e_1\not=e_2$ it holds $att(e_1)\not=att(e_2) \vee lab(e_1)\not=lab(e_2)$. 
-
-For a hypergraph $g=(V,E,att,lab,ext)$  $V_g, E_g, att_g, lab_g, ext_g$ are used to refer to its components.
+Let $\Sigma$ be an alphabet. A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping assigning start and end nodes to all edges. $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes. A hypergraph does not contain multi-edges, which means for two edges $e_1\not=e_2$ it holds $att(e_1)\not=att(e_2) \vee lab(e_1)\not=lab(e_2)$. For a hypergraph $g=(V,E,att,lab,ext)$  $V_g, E_g, att_g, lab_g, ext_g$ are used to refer to its components.
 
 An example for a hypergraph is illustrated in Fig.~\ref{fig:hypergraph}. Formally the graph can be described as $V=\{1,2,3\}$, $E=\{e_1,e_2,e_3\}$, $att=\{e_1 \mapsto 1 \cdot 2, e_2 \mapsto2 \cdot 3, e_3 \mapsto 2 \cdot 1 \cdot 3 \}$, $lab=\{ e_1\mapsto a, e_2 \mapsto b, e_3 \mapsto A \}$ and $ext=3 \cdot 1$.
 
@@ -113,11 +111,9 @@ An example for a hypergraph is illustrated in Fig.~\ref{fig:hypergraph}. Formall
 	\label{fig:hypergraph}
 \end{figure}
 
-External nodes are black and the numbers below them indicate indexes for their position in $ext$. Analogously,  hyper edges ($e_3$ in this case) have indexes indicating the order of the attached nodes.~\cite{maneth}
+External nodes are black and the numbers below them indicate indexes for their position in $ext$. Analogously,  hyper edges ($e_3$ in this case) have indexes indicating the order of the attached nodes. The utility of external nodes is explained below.~\cite{maneth}
 
-\subsubsection{Digram}
-
-Digrams are like patterns, the same digram can occur multiple times in a graph. Based on that, GRP reduces a graph's size.
+\subsubsection{Digrams in GRP}
 
 A digram $d$ is a hyper graph with $E_d=\{e_1,e_2\}$ so that the following conditions hold:
 
@@ -127,10 +123,10 @@ A digram $d$ is a hyper graph with $E_d=\{e_1,e_2\}$ so that the following condi
 	\item $ext_d \not= \epsilon$
 \end{enumerate}
 
-Condition 1 ensures that all nodes in $d$ are incident to one of the two edges of $d$. Conditions 2 is used to make sure that there is one 'middle node' incident to both edges of $d$. Finally, condition 3 ensures that there are external nodes.~\cite{maneth}
+Condition 1 ensures that all nodes in $d$ are incident to one of the two edges of $d$. Conditions 2 is used to make sure that there is one 'middle node' incident to both edges of $d$. Finally, condition 3 ensures that there are external nodes. External nodes are not a real part of the digram, they represent other nodes of the overall graph which are connected to elements of the digram.~\cite{maneth}
 
 
-\subsubsection{Digram Occurrence}
+\subsubsection{Digram Occurrences in GRP}
 
 Digram occurrences are concrete instances of a digram.
 
@@ -146,7 +142,7 @@ Condition 1 and 2 ensure that the two edges of $o$ form a graph isomorphic to $d
 
 \subsubsection{Algorithm}
 
-Algorithm~\ref{alg:GRP} is the main routine of GraphRePair. The algorithm take a graph as input and returns a grammar whereas $N$ is the set of non terminals, $P$ is the set of productions and $S \in P$ is the start production. It maintains a list of digram occurrences in $g$. As long as this list contains multiple occurrences for one digram the loop will continue. In the loop, the most frequent digram is found and then replaced and the grammar is extended. After a digram replacement the occurrence list has to be updated, because the graph has now changed and former digram occurrences may not exist anymore. Moreover, new digram occurrences can be present now. This occurrence update is a complex process and will not be discussed here, since it is not relevant for the thesis.~\cite{maneth}
+Algorithm~\ref{alg:GRP} is the main routine of GraphRePair. The algorithm take a graph as input and returns a grammar whereas $N$ is the set of non terminals, $P$ is the set of productions and $S \in P$ is the start production. It maintains a list of digram occurrences in $g$. As long as this list contains multiple occurrences for one digram the loop will continue. In the loop, the most frequent digram is found and then replaced and the grammar is extended. After a digram replacement the occurrence list has to be updated, because the graph has changed and former digram occurrences may not exist anymore. Moreover, new digram occurrences can be present. This occurrence update is a complex process and will not be discussed here, since it is not relevant for the thesis.~\cite{maneth}
 
 \begin{algorithm}
 	\caption{GraphRePair (Graph $g=(V,E,att,lab,ext)$)}\label{alg:GRP}
@@ -162,7 +158,7 @@ Algorithm~\ref{alg:GRP} is the main routine of GraphRePair. The algorithm take a
 			\State $P\leftarrow P\cup \{A \to mfd \}$
 			\State Update the occurrence list $L$
 		\EndWhile
-		\State \Return Grammar $G=(N,P,S)$
+		\State \Return Grammar $(N,P,S)$
 	\end{algorithmic}
 \end{algorithm}
 
@@ -171,11 +167,9 @@ Algorithm~\ref{alg:GRP} is the main routine of GraphRePair. The algorithm take a
 
 After GRP has constructed a grammar for some graph, this grammar has to be stored in an efficient way. The start production (the graph) is most often much bigger than the other productions and is therefore encoded differently. 
 
-The start production is encoded using $k^2$ trees which is illustrated in Fig.~\ref{fig:encoding}. 
+The start production is encoded using $k^2$ trees which is illustrated in Fig.~\ref{fig:encoding}. The adjacency matrix of the compressed graph (start rule of the grammar) is considered here. First, that matrix is extended with zeros to the next power of two. Then it is partitioned into $k^2$ equally large partitions ($k=2$ here).
 
-First the adjacency matrix is extends with zeros to the next power of two. Then it is partitioned into $k^2$ equally large partitions ($k=2$ here).
-
-The tree's root now represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedures continues until there is zero-leaf for each path of the tree.
+The tree's root represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedures continues until there is zero-leaf for each path of the tree.
 
 Afterwards, the tree is represented by bit-strings.
 
@@ -187,9 +181,9 @@ Since the graph has also edge labels, an adjacency matrix and its corresponding 
 	\caption{An adjacency matrix, its $k^2$ tree representation and the tree's bit representation.}
 	\label{fig:encoding}
 \end{figure}
+\todo{einfachere Grafik oder alles erklären}
 
-
-The remaining productions of the grammar are encodes differently, because they are usually quite small compared to the start production. Here so-called $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}
+The remaining productions of the grammar are encodes differently, because they are usually quite small compared to the start production. Here, $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}\todo{genauer erklären}
 
 
 

@@ -1,27 +1,51 @@
 % !TeX spellcheck = en_US
 \chapter{Approach}\label{ch:approach}
 
-This chapter contains the solution approaches to the several tasks. It starts with some basic definitions, then continues with the comparison of HDT and GRP. Finally, approaches to improving the compression ratio will be presented.
+This chapter contains the solution approaches to the parts of the thesis. Firstly, a formal model of an RDF compressor is defined. Based on that, the key performance indicators which will be used to measure the performance of the single compressors are introduced.
 
-\section{Definitions}\label{sec:definitions}
+Secondly, the two existing compressors HDT and GRP are compared.
 
-This chapter includes some basic definitions that will be used later on.
+Finally, improvements of the compression will be suggested.
+
+\section{RDF Compressor Model}\label{sec:compressorModel}
+
+This section introduces a formal model for an RDF compressor, that can be applied to both HDT and GRP and is illustrated in Fig.~\ref{fig:compressorModel}.
+
+Let $C \in \{HDT,GRP\}$ be a compressor. $C$ takes an RDF file $in$ as input and produces an output $out=\{out_{graph}, out_{dict}\}$, which contains the compressed RDF graph and the compressed dictionary. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
+
+For a file or set of files $m$, $|m|$ is defined as the size. That size is measured in bytes.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/approach/model}
+	\caption{Visualization of the Compressor Model.}
+	\label{fig:compressorModel}
+\end{figure}
+
 
 \subsection{Compression Ratio}
 
-One of the key metrics for a compressor is its compression ratio. The compression ratio depends on the input data and is defined as follows
+One of the key performance indicators for a compressor $C$ is its compression ratio ($CR_C$). $CR_C$ depends on the input data $in$ and is defined as follows:
 
 \begin{align*}
-\text{compression ratio} = \dfrac{\text{compressed size}}{\text{original size}} \in (0,1]
+CR_{C} = \dfrac{|o|}{ |in|} \in (0,\infty) \text{ with } o\in \{out,out_{graph},out_{dict} \}
 \end{align*}
 
-The compression ratio is typically in the $(0,1]$ interval, since the compressed data will not be larger than the original data (there are cases where this happens, but it does not happen in the compressors considered here). Obviously, the compressed data cannot have a size of 0 or less.
+Sometimes $CR$ is used instead of $CR_C$ if it is clear, which compressor $C$ is considered.
 
-Normally the compression ratio is measured at the file size level (in byte). If a different measure is used, it will be mentioned at that point.
+The compression ratio is in the $(0,\infty)$ interval, since the compressed data can potentially be arbitrarily large. Obviously, the compressed data cannot have a size of 0 or less.
+
+$CR$ is not always measured with respect to the whole output $out$, but sometimes only with respect to $out_{graph} \text{ or } out_{dict}$. This is due to the fact that in some cases it is interesting to only consider the compression of the dictionary or the graph.
+
+As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. That has to be taken into account with regard to $CR$ as those formats implicate different input sizes. When $CR$ of two compressor is compared, their input has to have the same format.
 
 \subsection{(De-)Compression Time}
 
-Another key metric of a compressor is its (de-)compression time. This metric also depends on the input data and indicates the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds.
+Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds.
+
+\subsection{How GRP and HDT fit in the Model}
+
+HDT is compressor made for RDF and therefore produces both  $out_{graph}$ and $out_{dict}$. GRP only produces  $out_{graph}$. In order to compare $CR_{HDT}$ and $CR_{GRP}$ in a fair way we use the same $out_{dict}$ for both algorithms.
 
 %\section{Concept}
 %
@@ -38,9 +62,9 @@ Another key metric of a compressor is its (de-)compression time. This metric als
 
 \section{GRP vs HDT}\label{sec:approachGRPvsHDT}
 
-This chapter deals with the comparison between HDT and GRP. The main aim is to determine which of the two compressors achieves a lower compression ratio.
+In this section, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain properties of RDF graphs are discussed.
 
-The obvious question is now whether there are certain properties/features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
+The question is whether there are certain properties/features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
 
 \subsection{Relation Between Structure of Data and Compression Ratio}
 

@@ -5,9 +5,11 @@ This chapter will explain how the different approaches of Ch.~\ref{ch:approach} 
 
 \section{GRP vs HDT}\label{sec:implementationGRPvsHDT}
 
-In this chapter, it will be explained how the comparison between HDT and GRP is implemented.
+In this section, it will be explained how the comparison between HDT and GRP is implemented.
 
 \subsection{Synthetic Data Creation}\label{sec:data_creation}
+
+\todo{alles neu machen}
 
 As has just explained, HDT can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So it gets worse the further away the graph is from this pattern. This corresponds to the authority pattern, where there are few objects but many subjects.
 
@@ -35,11 +37,11 @@ Apart from that, blank nodes and literals are not used here. For both compressor
 
 \section{Compression Improvements}\label{sec:implementationComprRatioImprovements}
 
-This chapter introduces the implementation details of Ch.~\ref{sec:approachComprRatioImprovements}. It starts with the applying the ontology in order to achieve a better compression ratio and then continues with dictionary compression  improvements.
+This chapter introduces the implementation details of Ch.~\ref{sec:approachComprRatioImprovements}. First, applying ontology knowledge in order to achieve a better compression ratio is discussed. Afterwards, implementation details of the dictionary compression improvements are presented.
 
 \subsection{Datasets}\label{sec:implementationDatasets}
 
-In this chapter, an overview about the different datasets, that have been used for the evaluation, is given. Although the datasets are used in Ch.~\ref{ch:evaluation}, they are presented here, since some implementation details are dependent on the data.
+Here, an overview about the different datasets, that have been used for the evaluation, is given. Although the datasets are used in Ch.~\ref{ch:evaluation}, they are presented here, since some implementation details are dependent on the data.
 
 \subsubsection{Semantic Web Dog Food}
 
@@ -55,22 +57,20 @@ Wordnet contains knowledge about the English language. Words that have the same 
 
 \subsection{Ontology Knowledge}\label{sec:implementationOntKnowledge}
 
-
-
 This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} is used.
 
 
 \subsubsection{Overall Process}
-Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. The several parts of the process will be discussed in the next chapters. Fig.~\ref{fig:overallprocess} shows s how it is implemented. First, the original graph or sub graph (the reason for sub graphs is explained below) is given to GRP. That part is marked blue in Fig.~\ref{fig:overallprocess} and will it will deliver the first result.
+Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. The several parts of the process will be discussed in the next sections. Fig.~\ref{fig:overallprocess} shows how it is implemented. First, the original graph or sub graph (the reason for sub graphs is explained below) is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
 
-In the next step, relevant properties have to be determined and the original graph will be manipulated. Then the manipulated graph is given to GRP. In addition, the relevant ontology triples have to be compressed and stored as well. Otherwise, the original graph could not be restored. Both graphs are then compressed by GRP and that delivers result 2 (gray parts in Fig.~\ref{fig:overallprocess}).
+In the next step, relevant properties have to be determined and the original graph will be manipulated. Then the manipulated graph is given to GRP. In addition, the relevant ontology triples have to be compressed and stored as well. Otherwise, the original graph could not be restored. Both graphs together are called $in_2$ which is then compressed by GRP and that delivers $out_2$.
 
-Finally, both results have to be compared. Here, the output sizes have to be compared instead of the compression ratios, because the ratio of result 2 would be relative to the manipulated graph. But a comparison to the original RDF graph is needed in order to evaluate whether the manipulations are beneficial.
+Finally, $|out_1|$ and $|out_2|$ have to be compared. Here, the output sizes have to be compared instead of the compression ratios, because the ratio of $out_2$ would be relative to $in_2$. But a comparison to the original RDF graph ($in_1$) is needed in order to evaluate whether the manipulations delivered an improvement.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{figures/4_implementation/overallProcess}
-	\caption{Overall process for the evaluation of applying ontology knowledge.}
+	\caption{Overall process of applying ontology knowledge and comparing the compression results.}
 	\label{fig:overallprocess}
 \end{figure}
 
@@ -83,10 +83,10 @@ In this way one sees first, what the manipulations bring individually and in the
 First, all relevant properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
 
 \[
-\text{<myProperty> <rdf:type> <owl:SymmetricProperty> .} 
-\]
+\text{ {\tt <myProperty> <rdf:type> <owl:SymmetricProperty> .}}
+\] 
 
-This triple states that \textit{myProperty} is symmetric. The concept is analogous for inverse or transitive properties. 
+This triple states that {\tt myProperty} is symmetric. The concept is analogous for inverse or transitive properties. 
 
 However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now one can check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
 
@@ -98,10 +98,10 @@ After all symmetric properties have been found (they are shown in Ch.~\ref{ch:ev
 
 \subsubsection{Symmetric Properties}
 
-In order to remove or add symmetric properties SPARQL can be used. The code of listing~\ref{lst:symmetricInsert} will be used to do that:
+In order to remove or add symmetric properties SPARQL can be used. The code of listing~\ref{lst:symmetricInsert} will be used to do add symmetric triples.
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the symmetric property p., label=lst:symmetricInsert,
-basicstyle=\ttfamily,frame=single]
+basicstyle=\ttfamily,frame=single,float=hbt,]
 INSERT {?o ?p ?s}
 WHERE{
 	{?s ?p ?o}
@@ -109,16 +109,30 @@ WHERE{
 }
 \end{lstlisting}
 
-That update has to be executed for each symmetric property $p$. In the case where one wants to remove the second, a delete update would have to executed.
+That update has to be executed for each symmetric property $p$. In the case where one wants to remove the second, a delete update would have to executed. That delete is shown in Listing~\ref{lst:symmetricDelete}.
 
-The removal of triples with symmetric predicates works analogously with a delete. But here one has to be careful not to delete both directions, this can be done by using a filter.
+
+\begin{lstlisting}[captionpos=b, caption=SPARQL update for removing triples with the symmetric property p., label=lst:symmetricDelete,
+basicstyle=\ttfamily,frame=single,float=hbt,]
+DELETE {?o ?p ?s}
+WHERE{
+?s ?p ?o .
+FILTER (EXISTS {?o ?p ?s } && (str(?s) > str(?o) )
+}
+\end{lstlisting}
+
+Here one has to be careful not to delete both directions, this can be done by using a filter.
 
 \subsubsection{Inverse Properties}
 
-Assume that $ p1 $ and $ p2 $ are inverse properties. Listing~\ref{lst:inverseInsert} is used to add the triple $(o,p1,s)$ if $(s,p2,o)$ already exists. That update has to be made in both directions ( $(p1,p2)$ and $(p2,p1)$ ), in case the other direction exists. If one wants to remove triples instead of adding them, a delete has to be performed which is similar.
+Assume that $ p1 $ and $ p2 $ are inverse properties. Listing~\ref{lst:inverseInsert} is used to add the triple $(o,p1,s)$ if $(s,p2,o)$ already exists. That update has to be made in both directions  
+\[
+(p1,p2) \text{ and } (p2,p1)
+\]
+, in case the other direction exists. If one wants to remove triples instead of adding them, a delete has to be performed which is shown in Listing~\ref{lst:inverseDelete}
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the inverse properties p1 and p2., label=lst:inverseInsert,
-basicstyle=\ttfamily,frame=single]
+basicstyle=\ttfamily,frame=single,float=hbt,]
 INSERT {?o ?p1 ?s}
 WHERE{
 	{?s ?p2 ?o}
@@ -126,18 +140,39 @@ WHERE{
 }
 \end{lstlisting}
 
+
+
+\begin{lstlisting}[captionpos=b, caption=SPARQL update for removing triples with the inverse properties p1 and p2., label=lst:inverseDelete,
+basicstyle=\ttfamily,frame=single,float=hbt,]
+DELETE {?o ?p1 ?s}
+WHERE{
+?s ?p2 ?o .
+FILTER (EXISTS { ?o ?p ?s })
+}
+\end{lstlisting}
+
 \subsubsection{Transitive Properties}
 
-Here one wants to remove the triple $(s,p,o)$ if there exists a path from $s$ to $o$ via the predicate $p$ of a length of at least two edges. That can be achieved by Listing~\ref{lst:transitiveRemove} in which a property path is used in the first line of the where-clause to denote the just mentioned path.
+Here one wants to remove the triple $(s,p,o)$ if there exists a path from $s$ to $o$ via the transitive predicate $p$ of a length of at least two edges. That can be achieved by Listing~\ref{lst:transitiveRemove} in which a property path is used in the first line of the where clause.
 
-Of course, it is also possible to add the triple $(s,p,o)$ if it does not exist. That can be done similarly with an insert.
+Of course, it is also possible to add the triple $(s,p,o)$ if it does not exist. That can be done similarly with an insert and is shown in Listing~\ref{lst:transitiveInsert}.
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for removing triples with the transitive property p., label=lst:transitiveRemove,
-basicstyle=\ttfamily,frame=single]
+basicstyle=\ttfamily,frame=single,float=hbt,]
 DELETE { ?s ?p ?o }
 WHERE { 
 	?s ?p/?p+ ?o. 
 	?s ?p ?o 
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the transitive property p., label=lst:transitiveInsert,
+basicstyle=\ttfamily,frame=single,float=hbt,]
+INSERT { ?s ?p ?o }
+WHERE { 
+?s ?p/?p+ ?o. 
+FILTER (NOT EXISTS {?s ?p ?o })
 }
 \end{lstlisting}
 
@@ -162,19 +197,11 @@ The procedure is illustrated in Fig.~\ref{fig:subgraph}. There $p$ is the only r
 
 \subsection{Dictionary Improvements}\label{sec:implementationDictImprovements}
 
-For the dictionary improvements, HDT's dictionary compression is used as a foundation. Therefore, the HDT-Java code~\footnote{https://github.com/rdfhdt/hdt-java} has been extended.
-
-\subsubsection{Blank Nodes}\label{sec:implementationBlankNodes}
-
-HDT normally uses the arbirary and long UUIDs generated by the Jena API and tries to compress them using prefix trees. As already explained in Ch.~\ref{sec:approachBlankNodes} it is possible to use shorter strings (e.g. numbers from 1 to $n$). Then, during run time a mapping from old ID to new ID is maintained in order to make sure that the same blank node will get the same new ID if it occurs multiple times. That mapping does not have to be stored persistently and will therefore be omitted once the compression is finished.
-
-The other possibility is to omit blank node ID completely. That can be achieved quite easily. The HDT code is changed in such a way that skips storing blank nodes.
-
-Both approaches have been implemented and will be evaluated in Ch.~\ref{sec:evaluationDictImprovements}.
+For the dictionary improvements, HDT's dictionary compression is used as a basis. Therefore, the HDT-Java code~\footnote{https://github.com/rdfhdt/hdt-java} has been extended.
 
 \subsubsection{Literals}\label{sec:implementationLiterals}
 
-As already mentioned in Ch.~\ref{sec:approachDictImprovements}, the literals will be compressed using a Huffman code. To achieve that, HDT is changed such that is does not compress the literals by prefix trees, but rather gives the literals to a \enquote{Huffman Handler}, which compresses all literals and finally stores them in a binary format.
+As already mentioned in Ch.~\ref{sec:approachDictImprovements}, the literals will be compressed using a Huffman code. To achieve that, HDT is changed such that it does not compress literals by prefix trees, but rather gives the literals to the {\tt HuffmanHandler}, which compresses all literals and finally stores them in a binary format. In order to make that possible, the {\tt HuffmanHandler} has to traverse all literals in the beginning of the compression to establish a Huffman Tree.
 
 In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started with the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one and the current node's character in case the current node is leaf. Otherwise it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
 
@@ -192,17 +219,18 @@ In addition, the Huffman code/tree itself has to be stored in order to be able t
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\linewidth]{figures/4_rdf_specific_features/huffman}
-	\caption{An example of a Huffman Tree.}
-	\label{fig:huffmantree}
-\end{figure}
 
+Alternatively, there are pre-computed Huffman trees for natural languages such as English. There, it has already been investigated which letter occurs how often in English texts and in this way a generally valid Huffman code has been established. The advantage is that one does not have to save the Huffman tree and does not have to calculate it oneself, which saves runtime. The disadvantage, however, is that the tree is not optimal for the text to be compressed, as it is more general. Another problem in our case is that the literals contain a lot of special characters that are not taken into account in prefabricated Huffman codes. Therefore, prefabricated codes will not be used.
 
-Alternatively, there are pre-computed Huffman trees for natural languages such as English. There they have already investigated which letter occurs how often in English texts and in this way a generally valid Huffman code has been established. The advantage is that one does not have to save the Huffman tree and does not have to calculate it oneself, which saves runtime. The disadvantage, however, is that the tree is not optimal for the text to be compressed, as it is more general. Another problem in our case is that the literals contain a lot of special characters that are not taken into account in prefabricated Huffman codes. Also, in Ch.~\ref{sec:evaluationDictImprovements} it will turn out that saving the Huffman tree does not require much additional memory. Therefore, we choose to calculate the Huffman code ourselves to compress the literals. All literals of the input graph have to be traversed in the beginning to compute the character frequencies.
+\subsubsection{Blank Nodes}\label{sec:implementationBlankNodes}
 
+HDT normally uses the arbitrary and long strings generated by the Jena API and tries to compress them using prefix trees.
 
+Now, two approaches, which have both been implemented, for improving the compression of blank nodes are presented.
+
+The first approach is to use shorter IDs (e.g. numbers from 1 to $n$). Then, during the run time a mapping from old ID to new ID is maintained in order to make sure that the same blank node will get the same new ID if it occurs multiple times. That mapping does not have to be stored persistently and will therefore be omitted once the compression is finished.
+
+The second approach is to omit blank node IDs completely. The HDT code is changed in such a way that skips blank nodes in the process of storing the dictionary.
 
 
 

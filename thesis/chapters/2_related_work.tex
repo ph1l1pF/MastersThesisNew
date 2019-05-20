@@ -5,7 +5,7 @@ This chapter gives an introduction to RDF and presents the different compression
 
 \section{RDF}\label{sec:rdf}
 
-RDF~(\cite{rdf}) is a framework for structured data on the web. It can be formally described as follows. Let the following sets be infinite and mutually disjoint:
+RDF is a framework for structured data on the web. According to~\cite{hitzler} it can be formally described as follows. Let the following sets be infinite and mutually disjoint:
 
 \begin{itemize}
 	\item $U$ (URI references, typically represent unique entities or properties)
@@ -14,6 +14,12 @@ RDF~(\cite{rdf}) is a framework for structured data on the web. It can be formal
 \end{itemize}
 
 An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays the statement that the subject $s$ is related to the object $o$ via the predicate $p$. So a subject can be anything but a literal. A predicate can only be a URI and an object can be anything.
+
+\todo{Blank nodes beschreiben}
+Blank nodes are normally used when a node does not get a URI, but is still necessary to represent a statement. Such a node is often used to formulate more complex logical statements. 
+
+\subsection{Ontology}\label{sec:relatedworkOntology}
+\todo{machen}
 
 \section{HDT}\label{related_work_hdt}
 

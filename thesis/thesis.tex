@@ -26,6 +26,7 @@
 
 \setlength{\parindent}{0pt}
 
+
 % here your thesis really starts
 \begin{document}
 
@@ -51,7 +52,21 @@
 %%%%%%%%%
 \input{body}
 
+\chapter*{List of Acronyms}
+\begin{acronym}[ICANN]
+	\acro{HDT}{Header Dictionary Triples}
+	\acro{GRP}{GraphRePair}
+	\acro{$ CR_C $}{Compression Ratio for Compressor $C$}
+	\acro{$ CT_C $}{Compression Run Time for Compressor $C$}
+	\acro{$ DCT_C $}{Decompression Run Time for Compressor $C$}
+\end{acronym}
+
+
+
+
 \listoftodos
+
+
 
 % include the bibliography, and add it as a chapter the table of contents
 \newpage

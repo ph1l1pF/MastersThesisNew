@@ -6,9 +6,6 @@ This chapter will explain how the different approaches of Ch.~\ref{ch:approach} 
 \section{GRP vs HDT}\label{sec:implementationGRPvsHDT}
 
 In this section, it will be explained how the comparison between HDT and GRP is implemented.
-
-\subsection{Synthetic Data Creation}\label{sec:data_creation}
-
 \todo{alles neu machen}
 
 As has just explained, HDT can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So it gets worse the further away the graph is from this pattern. This corresponds to the authority pattern, where there are few objects but many subjects.
@@ -201,7 +198,7 @@ For the dictionary improvements, HDT's dictionary compression is used as a basis
 
 \subsubsection{Literals}\label{sec:implementationLiterals}
 
-As already mentioned in Ch.~\ref{sec:approachDictImprovements}, the literals will be compressed using a Huffman code. To achieve that, HDT is changed such that it does not compress literals by prefix trees, but rather gives the literals to the {\tt HuffmanHandler}, which compresses all literals and finally stores them in a binary format. In order to make that possible, the {\tt HuffmanHandler} has to traverse all literals in the beginning of the compression to establish a Huffman Tree.
+As already mentioned in Ch.~\ref{sec:approachDictImprovements}, the literals will be compressed using a Huffman code. To achieve that, HDT is changed such that it does not compress literals by prefix trees, but rather gives the literals to the newly created {\tt HuffmanHandler}, which compresses all literals and finally stores them in a binary format. In order to make that possible, the {\tt HuffmanHandler} has to traverse all literals in the beginning of the compression to establish a Huffman Tree.
 
 In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started with the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one and the current node's character in case the current node is leaf. Otherwise it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
 

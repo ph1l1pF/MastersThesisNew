@@ -15,9 +15,6 @@ RDF is a framework for structured data on the web. According to~\cite{hitzler} i
 
 An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays the statement that the subject $s$ is related to the object $o$ via the predicate $p$. So a subject can be anything but a literal. A predicate can only be a URI and an object can be anything.
 
-\todo{Blank nodes beschreiben}
-Blank nodes are normally used when a node does not get a URI, but is still necessary to represent a statement. Such a node is often used to formulate more complex logical statements. 
-
 \subsection{Ontology}\label{sec:relatedworkOntology}
 \todo{machen}
 
@@ -31,6 +28,7 @@ It is easy to see that a more compact representation can be achieved by cleverly
 (s,p_1,o_{11}),...,(s,p_1,o_{1_{n1}}),(s,p_2,o_{2_1}),...,\\
 	(s,p_2,o_{2_{n2}}),...,(s,p_k,o_{k_{n_k}})
 \end{align*}
+\todo{fix}
 
 In HDT the triples are then grouped by $s$.
 
@@ -99,7 +97,7 @@ For these reasons the thesis will focus on the compressor GraphRePair, which is 
 
 \subsection{GraphRePair}\label{ch:GRP}
 
-This chapter deals with GraphRePair, the compressor from~\cite{maneth}. 
+This chapter deals with GRP, the compressor from~\cite{maneth}. It firstly presents some foundations and afterwards explains what digrams and digram occurrences are in GRP. Finally, the main routine of the compressor and the encoding of the compressed data are discussed.
 
 \subsubsection{Foundations}
 

@@ -11,7 +11,7 @@ Finally, improvements of the compression will be suggested.
 
 This section introduces a formal model for an RDF compressor, that can be applied to both HDT and GRP and is illustrated in Fig.~\ref{fig:compressorModel}.
 
-Let $C \in \{HDT,GRP\}$ be a compressor. $C$ takes an RDF file $in$ as input and produces an output $out=\{out_{graph}, out_{dict}\}$, which contains the compressed RDF graph and the compressed dictionary. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
+Let $C $ be a compressor. $C$ takes an RDF file $in$ as input and produces an output $out=\{out_{graph}, out_{dict}\}$, which contains the compressed RDF graph and the compressed dictionary. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
 
 Let $m$ be a single file or a set of files. Then $|m|$ is defined as the size which is measured in bytes.
 
@@ -31,7 +31,7 @@ One of the key performance indicators for a compressor $C$ is its compression ra
 CR_{C}(o) = \dfrac{|o|}{ |in|}  \text{ with } o\in \{out,out_{graph},out_{dict} \}
 \end{align*}
 
-Sometimes $CR(o)$ is used instead of $CR_C(o)$ if it is clear from the context, which compressor $C$ is considered.
+Sometimes $CR(o)$ is used instead of $CR_C(o)$ if it is clear from the context, which compressor $C$ is considered. Moreover, the parameter $o$ is omitted if it is clear from the context or not relevant.
 
 $CR_C$  is in the $(0,\infty)$ interval, since the compressed data can potentially be arbitrarily large. Obviously, the compressed data cannot have a size of 0 or less.
 
@@ -43,22 +43,11 @@ As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. Tha
 
 Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds.
 
+Analogously to $CR(o)$, if is clear from the context which compressor is considered, $CT$ and $DCT$ are used instead of $CT_C$ and $DCT_C$, respectively.
+
 \subsection{How GRP and HDT fit in the Model}
 
 HDT is compressor made for RDF and therefore produces both  $out_{graph}$ and $out_{dict}$. GRP only produces  $out_{graph}$. In order to compare $CR_{HDT}$ and $CR_{GRP}$ in a fair way we use the same $out_{dict}$ for both algorithms.
-
-%\section{Concept}
-%
-%Fig.~\ref{fig:benchmark_overview} shows the aspects of a benchmark of two compressors. There are parameters that can be set during the evaluation (they start with $p$) and measures that represent the performance of the algorithms (they start with $m$).
-%
-%The compressors get an input $p_{input}$, which in this case is in RDF graph. They each produce an output $m_{output}$, the compressed data. For compression and decompression there will be run times, which we call $m_{runtime} $. In addition, there are certain parameters $p_{alg}$ that can be set in the algorithms that change the behavior of the algorithm. \todo{hier kommt noch nicht performance von queries vor}
-%
-%\begin{figure}[h]
-%	\centering
-%	\includegraphics[width=1\textwidth]{figures/approach/Benchmark}
-%	\caption{The different aspects of a compression process. $p_{input},p_{alg}$ are parameters that can be changed. $m_{output},m_{runtime}$ are measures of the algorithm's performance.}
-%	\label{fig:benchmark_overview}
-%\end{figure}
 
 \section{GRP vs HDT}\label{sec:approachGRPvsHDT}
 
@@ -111,7 +100,7 @@ Generally it can be said that GRP can compress a graph better if $elr$ is lower,
 
 \todo{besseres Bsp}
 
-There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} stands for...} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because one make $elr$ smaller by adding it, which can lead to a better compression ratio. At the same time one should not get an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
+There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} stands for}\todo{machen} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because one make $elr$ smaller by adding it, which can lead to a better compression ratio. At the same time one should not get an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
 
 
 \begin{figure}[h]

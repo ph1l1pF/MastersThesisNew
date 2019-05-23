@@ -7,53 +7,82 @@ Secondly, the two existing compressors HDT and GRP are compared.
 
 Finally, improvements of the compression will be suggested.
 
-\section{RDF Compressor Model}\label{sec:compressorModel}
+\section{General Compressor Model}\label{sec:generalcompressorModel}
 
-This section introduces a formal model for an RDF compressor, that can be applied to both HDT and GRP and is illustrated in Fig.~\ref{fig:compressorModel}.
-
-Let $C $ be a compressor. $C$ takes an RDF file $in$ as input and produces an output $out=\{out_{graph}, out_{dict}\}$, which contains the compressed RDF graph and the compressed dictionary. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
-
-Let $m$ be a single file or a set of files. Then $|m|$ is defined as the size which is measured in bytes.
+A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/approach/model}
-	\caption{Visualization of the Compressor Model.}
+	\includegraphics[width=0.8\linewidth]{figures/approach/model_general}
+	\caption{Visualization of the General Compressor Model.}
+	\label{fig:generalcompressorModel}
+\end{figure}
+
+\section{RDF Compressor Model}\label{sec:compressorModel}
+
+This section introduces a formal model for an RDF compressor (see Ch.~\ref{fig:compressorModel}) which can be seen as a sub class of the general model in Ch.~\ref{sec:generalcompressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in Ch.~\ref{related_work_hdt}, it assigns an ID to URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees, see Ch.~\ref{related_work_hdt}). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
+
+The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output of $C$: $out$. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/approach/model}
+	\caption{Visualization of the RDF Compressor Model.}
 	\label{fig:compressorModel}
 \end{figure}
 
 
 \subsection{Compression Ratio}
 
-One of the key performance indicators for a compressor $C$ is its compression ratio ($CR_C$). $CR_C$ depends on the input data $in$ and is defined as follows:
+One of the key performance indicators for a compressor $C$ is its compression ratio ($CR_C$). Let $m$ be a single file or a set of files. Then $|m|$ is defined as the size which is measured in bytes. $CR_C$ depends on the input data $in$ and is defined as follows:
 
 \begin{align*}
 CR_{C}(o) = \dfrac{|o|}{ |in|}  \text{ with } o\in \{out,out_{graph},out_{dict} \}
 \end{align*}
 
+If $C$ is not an RDF compressor then $o=out$ holds, as $C$ does not have a composed output.
+
 Sometimes $CR(o)$ is used instead of $CR_C(o)$ if it is clear from the context, which compressor $C$ is considered. Moreover, the parameter $o$ is omitted if it is clear from the context or not relevant.
 
 $CR_C$  is in the $(0,\infty)$ interval, since the compressed data can potentially be arbitrarily large. Obviously, the compressed data cannot have a size of 0 or less.
 
-$CR$ is not always measured with respect to the whole output $out$, but sometimes only with respect to $out_{graph} \text{ or } out_{dict}$. This is due to the fact that in some cases it is interesting to only consider the compression of the dictionary or the graph.
+If $C$ is an RDF compressor, then $CR_C$ is not always measured with respect to the whole output $out$, but sometimes only with respect to $out_{graph} \text{ or } out_{dict}$. This is due to the fact that in some cases it is interesting to only consider the compression of the dictionary or the graph.
 
-As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. That has to be taken into account with regard to $CR$ as those formats implicate different input sizes. When $CR$ of two compressor is compared, their input has to have the same format.
+As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. That has to be taken into account with regard to $CR$ as those formats implicate different input sizes. When $CR$ of two compressors is compared, their input has to have the same format.
 
 \subsection{(De-)Compression Time}
 
-Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds.
+Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds. $CT_C$ and $DCT_C$ are also shown in Fig.~\ref{fig:generalcompressorModel} and~\ref{fig:compressorModel}. They are defined the same for general compressors and RDF compressors.
 
 Analogously to $CR(o)$, if is clear from the context which compressor is considered, $CT$ and $DCT$ are used instead of $CT_C$ and $DCT_C$, respectively.
 
-\subsection{How GRP and HDT fit in the Model}
+\subsection{Existing RDF  Compressors}
 
-HDT is compressor made for RDF and therefore produces both  $out_{graph}$ and $out_{dict}$. GRP only produces  $out_{graph}$. In order to compare $CR_{HDT}$ and $CR_{GRP}$ in a fair way we use the same $out_{dict}$ for both algorithms.
+Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors discussed in this thesis and in which way they fulfill the model. As already explained in Ch.~\ref{related_work_hdt}, $Dict_{HDT}$ assigns IDs and compresses the dictionary. In contrast, $Dict_{GRP}$  only assigns IDs and omits the dictionary afterwards. $Dict_{GRP}$ is therefore not a real dictionary compressor. We solve this problem by letting GRP use $Dict_{HDT}$. This way, comparing HDT and GRP in a fair way is possible.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		& $Dict_{C}$ & $Graph_{C}$ \\ 
+		\hline \hline
+		HDT & $\checkmark$ & $\checkmark$  \\ 
+		\hline 
+		GRP & only ID assignment (no compression or storage of dictionary) & $\checkmark$ \\ 
+		\hline 
+	\end{tabular} 
+	\captionof{table}{Overview of RDF compressors presented in this thesis.}	
+	\label{tab:compressorsOverview}
+\end{center}
 
 \section{GRP vs HDT}\label{sec:approachGRPvsHDT}
 
 In this section, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain properties of RDF graphs are discussed.
 
 The question is whether there are certain properties/features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
+
+As HDT and GRP use the same method for compressing the dictionary ($Dict_{HDT}$), we only compare $Graph_{HDT}$ and $Graph_{GRP}$ in this chapter.
 
 \subsection{Relation Between Structure of Data and Compression Ratio}\label{sec:relationDataStructureComprRatio}
 
@@ -77,7 +106,7 @@ As already explained in Ch.~\ref{ch:related_work}, HDT divides an RDF file into 
 
 \section{Compression Improvements}\label{sec:approachComprRatioImprovements}
 
-First comparisons of GRP and HDT (see~Ch.~\ref{sec:evaluationHDTvsGRP}) showed that GRP achieves a better compression ratio. Therefore, improving the compression ratio will mainly focus on improving GRP, although parts of this work can be used to improve HDT as well. 
+First comparisons of $Graph_{HDT}$ and $Graph_{GRP}$ (see~Ch.~\ref{sec:evaluationHDTvsGRP}) showed that  $Graph_{GRP}$ achieves a better compression ratio. Therefore, Ch.~\ref{sec:approachOntKnowledge} will mainly focus on improving $Graph_{GRP}$. But Ch.~\ref{sec:approachDictImprovements} is about the improvement of $Dict_{HDT}$ which is used for both HDT and GRP.
 
 
 
@@ -119,7 +148,7 @@ A property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two proper
 
 \subsubsection{Transitive Properties}
 
-In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. The shown graph shall again be seen as some sub graph. The approach is to remove the triple $(1,p,n)$. This is sensible, as it gives the nodes 1 and $n$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}).
+In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. The shown graph shall again be seen as some sub graph. The approach is to remove the triple $(1,p,n)$. This is sensible, as it gives the nodes 1 and $n$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). \todo{warum Kanten nicht hinzufügen?}
 
 \begin{figure}[h]
 	\centering
@@ -139,11 +168,7 @@ In OWL there are the predicates {\tt owl:equivalentProperty} and {\tt owl:sameAs
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}
 
 
-According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memory of a compression output. First results in Ch.~\ref{ch:evaluation} also show that. It is therefore worth investigating whether the dictionary can be compressed better. It can be taken advantage of certain features of the dictionary to achieve that.
-
-As mentioned above, GRP does not have its own method for compressing the dictionary. We have therefore taken the compression method from HDT, and applied it in GRP to ensure a fair comparison.
-
-HDT has a fairly mature mechanism for compressing the dictionary.\todo{genauer erklären}
+According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memory of a compression output. First results in Ch.~\ref{ch:evaluation} also show that. It is therefore worth investigating whether the dictionary can be compressed better. It can be taken advantage of certain features of the dictionary to achieve that. In order to do that we use $Dict_{HDT}$ as the basis and further improve it.
 
 \subsubsection{Literals}\label{sec:approachLiterals}
 

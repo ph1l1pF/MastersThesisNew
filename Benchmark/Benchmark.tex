@@ -40,6 +40,8 @@
 \begin{itemize}
 	\item compressor model: input immer N-triples und turtle/N3 dann schon als compressor ansehen
 	\item baseline compressor: wie sollen die evaluiert werden (DBPedia, Wordnet Teilgraphen)?
+	\item Dekompression evtl auch bei baseline compressors evaluieren?
+	\item HDT star pattern: warum triples kleiner?
 	\item Problem: materialiserung bringt auf Graph Ebene Verbesserung, aber auf Kodierungsebene nicht immer\\
 			Grund wahrscheinlich: durch stärkere Kompression mehr Hyperkanten und dadurch wird permutations file größer\\
 			Außerdem: Kodierung der Startregel evtl auch manchmal schlechter
@@ -66,7 +68,21 @@
 	\textbf{Wordnet} & yes & (hypernym <-> hyponym) only for nouns & yes \\ 
 	\hline 
 \end{tabular} 
+\\\\\\All together: persondata graph
 
+\section{Dictionary vs Graph}
+
+\begin{tabular}{|c|c|c|}
+	\hline 
+	\textbf{dict  / graph compr }& \textbf{yes} & \textbf{no} \\ 
+	\hline 
+	\textbf{yes} & Normal HDT or GRP+HDT-Dict & HDT with plain triples \\ 
+	\hline 
+	\textbf{no} & (HDT or GRP) with HDT's plain dictionary  & N-triples \\ 
+	\hline 
+\end{tabular} 
+\\\\\\HDT plain triples: possible\\
+HDT Plain dictionary: not possible
 
 \section{Notes}
 

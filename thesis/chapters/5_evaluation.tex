@@ -21,7 +21,7 @@ Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{HDT}(out_{graph})$. As expected, 
 	\caption{The compression ratios for HDT without and with dictionary sizes.}
 \end{figure}
 
-Next the compression ratio of $CR_{GRP}(out_{graph})$ is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here one can see that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect on$CR_{GRP}(out_{graph})$ than on $CR_{HDT}(out_{graph})$ (standard deviation is twice as high for $CR_{GRP}(out_{graph})$ as for $CR_{HDT}(out_{graph})$). 
+Next, the compression ratio of GRP ($CR_{GRP}(out_{graph})$) is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here, it is noticeable that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect on$CR_{GRP}(out_{graph})$ than on $CR_{HDT}(out_{graph})$ (standard deviation is twice as high for $CR_{GRP}(out_{graph})$ as for $CR_{HDT}(out_{graph})$). 
 
 When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this curve behaves almost exactly like the one from Fig.~\ref{fig:ratiosHDTWithDict}, since $|out_{dict}|$ accounts for most of $|out|$.
 
@@ -64,9 +64,9 @@ Apart from the compression ratio, the run time is also important for the overall
 
 It can be seen that $CT_{GRP}$ is significantly higher than $CT_{HDT}$. It is on average ca. 48 times as high.
 
-However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not comparable in terms of quality. Unfortunately, one cannot say at this point whether a more professional implementation of GRP will also be slower than HDT.
+However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not comparable in terms of quality. Unfortunately, it is not possible say at this point whether a more professional implementation of GRP will also be slower than HDT.
 
-In addition one can notice that $CT_{GRP}$ fluctuates more than $CT_{HDT}$. $CT_{GRP}$ has a standard deviation of about 134, while $CT_{HDT}$ only has a standard deviation of about 7. One reason for this is that GRP, in contrast to HDT, is non-deterministic because of the partly random search order of the graph. On the other hand, the high deviations are also a confirmation of the above mentioned hypothesis that the behavior of GRP depends more on the structure of the input data than HDT does.
+In addition it can be noticed that $CT_{GRP}$ fluctuates more than $CT_{HDT}$. $CT_{GRP}$ has a standard deviation of about 134, while $CT_{HDT}$ only has a standard deviation of about 7. One reason for this is that GRP, in contrast to HDT, is non-deterministic because of the partly random search order of the graph. On the other hand, the high deviations are also a confirmation of the above mentioned hypothesis that the behavior of GRP depends more on the structure of the input data than HDT does.
 
 
 
@@ -114,7 +114,7 @@ At this point  about the evaluation of the approaches from Ch.~\ref{sec:implemen
 
 \subsubsection{Literals}
 
-As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as one hopes for a better compression than the with the prefix-based compression of HDT.
+As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as it is likely to get a better compression than the with the prefix-based compression of HDT.
 
 Now the results of the evaluation are presented. First, the Semantic Web Dog Food data set is used. This is well suited for an evaluation, since both literals and URIS are included as objects. Fig.~\ref{fig:dogfoodcomprratios} shows $CR(out_{dict})$ for a subset of the data (DF0 - DF9). 
 
@@ -126,7 +126,7 @@ Now the results of the evaluation are presented. First, the Semantic Web Dog Foo
 	\label{fig:dogfoodcomprratios}
 \end{figure}
 
-One can see that the use of the Huffman code only brings a small improvement in some cases. In some cases Normal HDT even compresses better than HDT with Huffman.
+It can be seen that the use of the Huffman code only brings a small improvement in some cases. In some cases Normal HDT even compresses better than HDT with Huffman.
 
 This is because these data do not have a very high proportion of literals and literals are also rather short. This can be seen in Fig.~\ref{fig:dogfood}, where Fig.\ref{fig:dogfoodcomprratiosSub} lists $CR(out_{dict})$ again and Fig.\ref{fig:dogfoodliteralanalysis} shows the relative proportion of literals and the average length of a literal. The proportion of literals in the triples is never higher than 17.5\% and the highest average literal length is about 12. So these are single words rather than whole texts. Only in cases where both the proportion and the literal length are relatively high, an improvement can be seen (e.g. with DF9).
 
@@ -140,7 +140,7 @@ This is because these data do not have a very high proportion of literals and li
 	\label{fig:dogfood}
 \end{figure}
 
-Now the DBPedia data set is considered, because it has a different structure of data. Here, graphs are considered which contain the abstracts of Wikipedia, because these are longer texts. In addition there are abstracts in different languages, so one can see if some languages are better suited for Huffman than others.
+Now the DBPedia data set is considered, because it has a different structure of data. Here, graphs are considered which contain the abstracts of Wikipedia, because these are longer texts. In addition there are abstracts in different languages, so it can be seen whether some languages are better suited for Huffman than others.
 
 Fig.~\ref{fig:dbAbstractscomprratiosSub} shows $CR(out_{dict})$ for the abstract files. The abbreviations stand for the languages in which the abstracts are written. It can be seen that Huffman significantly improves $CR(out_{dict})$ here. The reason for this can be seen in Fig.~\ref{fig:dbAbstractsliteralanalysis}, where the average literal length is illustrated. The relative proportion of literals is not shown this time, since it is 100\% for all files. The average literal length varies between languages, but is generally much higher than in Semantic Web Dog Food. Therefore, the improvement is much greater here.
 
@@ -157,7 +157,7 @@ Another phenomenon can also be seen here: Although the English file contains by 
 
 As mentioned above, saving the Huffman code means almost no additional storage effort. The average fraction of the Huffman code is about 0.1\% and was therefore not displayed in the visualizations.
 
-Since the calculation of the Huffman code increases the runtime of the whole compression, it is now considered how big this effect is. Fig.~\ref{fig:dbAbstractsRuntimes} shows $CT$ for the compression of the DBPedia abstract data. Here, $CT$ has been increased very much. This is because HDT can normally compress very little with this data because of the many long literals and is therefore finished quite quickly. With Huffman one can compress much better and it takes quite a long time.
+Since the calculation of the Huffman code increases the runtime of the whole compression, it is now considered how big this effect is. Fig.~\ref{fig:dbAbstractsRuntimes} shows $CT$ for the compression of the DBPedia abstract data. Here, $CT$ has been increased very much. This is because HDT can normally compress very little with this data because of the many long literals and is therefore finished quite quickly. With Huffman the data can be compressed much better and it takes quite a long time.
 
 Fig.~\ref{fig:dogFoodRuntimes} shows $CT$ for the Semantic Web Dog Food data, where the run times are only slightly longer, because Huffman hardly improves the compression.
 

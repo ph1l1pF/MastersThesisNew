@@ -3,7 +3,7 @@
 
 This chapter gives an introduction to RDF and presents the different compression algorithms discussed in the thesis.
 
-\section{RDF}\label{sec:rdf}
+\section{RDF}\label{sec:relatedworkRDF}
 
 RDF is a framework for structured data on the web. According to~\cite{hitzler} it can be formally described as follows. Let the following sets be infinite and mutually disjoint:
 
@@ -15,8 +15,13 @@ RDF is a framework for structured data on the web. According to~\cite{hitzler} i
 
 An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays the statement that the subject $s$ is related to the object $o$ via the predicate $p$. So a subject can be anything but a literal. A predicate can only be a URI and an object can be anything.
 
+Similar to entities or properties each blank node has unique ID in order reference it in the graph. But in contrast to URIs, these IDs do not have a semantic meaning. That fact will be used in Ch.~\ref{sec:approachBlankNodes}.
+
 \subsection{Ontology}\label{sec:relatedworkOntology}
-\todo{machen}
+In the Semantic Web, vocabularies define the concepts and relationships (also called "terms") that describe and represent a problem area. Vocabularies are used to classify the terms that can be used in a particular application, characterize possible relationships, and define possible restrictions on the use of these terms. In practice, vocabularies can be very complex (with several thousand terms) or very simple (describing only one or two concepts).
+
+There is no clear distinction between what is called "vocabularies" and "ontologies". The trend is to use the word "ontology" for more complex and possibly quite formal collections of terms, while "vocabulary" is used when such strict formalism is not necessarily used or only in a very loose sense. Vocabularies are the building blocks for inference techniques in the Semantic Web.
+\ac{OWL}
 
 \section{HDT}\label{related_work_hdt}
 
@@ -39,9 +44,9 @@ s \to [(p_1,(o_{1_1},...,o_{1_{n_1}})),(p_2,(o_{2_1},...,o_{2_{n_2}})),...,\\
 
 Since all triples have the same subject $s$, it does not have to be written down at the beginning of each triple anymore. On the second level the triples are then grouped according to the predicates. So all triples with the predicate $p_1$ come first, then all with the predicate $p_2$ and so on. Finally only the different objects have to be enumerated since the subject and predicate are already implicitly given. It will now be explained how HDT implements this mechanism.
 
-First, all URIs and literals (which are usually quite long) are mapped to unique IDs (integers). From now on these IDs will be used. One can see the triples with the IDs in Fig.~\ref{fig:hdt_overview} on the left ('Plain Triples'). 
+First, all URIs and literals (which are usually quite long) are mapped to unique IDs (integers). From now on these IDs will be used. The triples with the IDs in Fig.~\ref{fig:hdt_overview} are on the left ('Plain Triples'). 
 
-The above mentioned grouped representation is called 'Compact Triples' and can be seen in Fig.~\ref{fig:hdt_overview} in the middle. In the array 'Predicates' one can see the IDs of the predicates. A '0' means that from now on a new subject comes. For example, the first two entries in the 'Predicates' are linked to the first subject. At position 3 in 'Predicates', there is a '0'. Therefore, the following predicates are linked to the next subject (subject 2 in this case).
+The above mentioned grouped representation is called 'Compact Triples' and can be seen in Fig.~\ref{fig:hdt_overview} in the middle. In the array 'Predicates' are the IDs of the predicates. A '0' means that from now on a new subject comes. For example, the first two entries in the 'Predicates' are linked to the first subject. At position 3 in 'Predicates', there is a '0'. Therefore, the following predicates are linked to the next subject (subject 2 in this case).
 
 This works analogously for the objects, in the array 'Objects' the IDs of the objects are listed, and a '0' here means that from then on a new predicate comes. For instance, the first entry in 'Objects' is a '6', so the first derived triple would be $(1,2,6)$. The second entry of 'Objects' is a '0' since there is a change from predicate '2' to '3' in 'Predicates'.
 
@@ -67,7 +72,7 @@ HDT has also procedures for answering queries, but those will not be mentioned h
 
 In this section we will discuss two different approaches to grammar-based graph compression. First, ~\cite{mattdk} is introduced and briefly explained why the approach is less suitable for RDF. Then~\cite{maneth}, which the thesis will focus on, is introduced.
 
-In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually small patterns are searched for, since one can usually find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.
+In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually small patterns are searched for, since it is possible to find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.
 
 \subsection{Dürksen's Algorithm}
 
@@ -190,7 +195,9 @@ Since the graph has also edge labels, an adjacency matrix and its corresponding 
 The remaining productions of the grammar are encodes differently, because they are usually quite small compared to the start production. Here, $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}\todo{genauer erklären}
 
 
+\subsubsection{Implementation}\label{sec:relatedworkGRPImpl}
 
+\todo{GRP impl beschreiben}
 
 
 

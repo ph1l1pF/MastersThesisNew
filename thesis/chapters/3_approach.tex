@@ -57,7 +57,7 @@ The question is whether there are certain properties/features that an RDF graph 
 
 \subsection{Relation Between Structure of Data and Compression Ratio}\label{sec:relationDataStructureComprRatio}
 
-First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is shown again. There one can see that the size of the data becomes smaller if there are only a few subjects. This is the case because the bit-array $B_p$ contains a 1 every time a new subject is considered. For example, if there is only one subject, then $B_p$ consists only of zeros.\todo{stimmt anscheinend nicht}
+First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is shown again. There, it is noticeable that the size of the data becomes smaller if there are only a few subjects. This is the case because the bit-array $B_p$ contains a 1 every time a new subject is considered. For example, if there is only one subject, then $B_p$ consists only of zeros.\todo{stimmt anscheinend nicht}
 
 \begin{figure}[h]
 	\centering
@@ -100,7 +100,7 @@ Generally it can be said that GRP can compress a graph better if $elr$ is lower,
 
 \todo{besseres Bsp}
 
-There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} stands for}\todo{machen} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because one make $elr$ smaller by adding it, which can lead to a better compression ratio. At the same time one should not get an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
+There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} stands for}\todo{machen} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $elr$ can be reduced by adding it, which can lead to a better compression ratio. At the same time this will not result in an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
 
 
 \begin{figure}[h]
@@ -114,7 +114,7 @@ There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The 
 
 \subsubsection{Inverse Properties}
 
-A property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. One can argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes have been connected before.
+A property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes have been connected before.
 
 
 \subsubsection{Transitive Properties}
@@ -139,7 +139,7 @@ In OWL there are the predicates {\tt owl:equivalentProperty} and {\tt owl:sameAs
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}
 
 
-According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memory of a compression output. First results in Ch.~\ref{ch:evaluation} also show that. It is therefore worth investigating whether the dictionary can be compressed better. One can take advantage of certain features of the dictionary to achieve that.
+According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memory of a compression output. First results in Ch.~\ref{ch:evaluation} also show that. It is therefore worth investigating whether the dictionary can be compressed better. It can be taken advantage of certain features of the dictionary to achieve that.
 
 As mentioned above, GRP does not have its own method for compressing the dictionary. We have therefore taken the compression method from HDT, and applied it in GRP to ensure a fair comparison.
 
@@ -162,9 +162,9 @@ This tree must then be stored in addition to the compressed data so that the ori
 
 \subsubsection{Blank Nodes}\label{sec:approachBlankNodes}
 
-The same blank node can occur in different triples. In order for it to be referenced uniquely, it gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random long strings are assigned for the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective again. 
+As already mentioned in Ch.~\ref{sec:relatedworkRDF} every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random long strings are assigned for the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective again. 
 
-To improve compression, one can reassign the IDs of the blank nodes. For example one can use numbers from 1 to $n$ ($n=$ number of blank nodes) to have short IDs. 
+To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can used to have short IDs. 
 
 Another possibility is not to save the IDs of the blank nodes at all. In HDT all strings in the dictionary (including the blank node IDs) are mapped to short IDs. Thus the blank node IDs are in principle already stored. They can therefore be removed from the dictionary. HDT must then be changed so that it can handle the case in which it does not find a corresponding string in the dictionary for a certain short ID. At this point it would know directly that the considered node is a blank node and the longer blank node ID is unimportant. Such a situation will occur when a decompression is performed.
 

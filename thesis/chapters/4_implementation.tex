@@ -73,7 +73,7 @@ Finally, $|out_1|$ and $|out_2|$ have to be compared. Here, the output sizes hav
 
 The process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. 
 
-In this way one sees first, what the manipulations bring individually and in the end also, what they all achieve in combination.
+In this way it is noticeable what the manipulations bring individually and in the end also, what they all achieve in combination.
 
 
 \subsubsection{Gathering Relevant Properties}
@@ -85,7 +85,7 @@ First, all relevant properties must be determined. This information should norma
 
 This triple states that {\tt myProperty} is symmetric. The concept is analogous for inverse or transitive properties. 
 
-However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now one can check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
+However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now it is possible to check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
 
 In Wordnet, transitive properties are explicitly given, but symmetric and inverse are not. It is necessary to determine them by understanding the meaning of Wordnet's relations. Properties connect different \enquote{synsets}. One of those properties is antonymy, which is like an opposite-relation between words. Therefore, the property can be seen as symmetric.
 
@@ -106,7 +106,7 @@ WHERE{
 }
 \end{lstlisting}
 
-That update has to be executed for each symmetric property $p$. In the case where one wants to remove the second, a delete update would have to executed. That delete is shown in Listing~\ref{lst:symmetricDelete}.
+That update has to be executed for each symmetric property $p$. If it is desired to remove the second triple, a delete update would have to executed. That delete is shown in Listing~\ref{lst:symmetricDelete}.
 
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for removing triples with the symmetric property p., label=lst:symmetricDelete,
@@ -118,7 +118,7 @@ FILTER (EXISTS {?o ?p ?s } && (str(?s) > str(?o) )
 }
 \end{lstlisting}
 
-Here one has to be careful not to delete both directions, this can be done by using a filter.
+Here it has to be taken care that not to delete both directions, this can be done by using a filter.
 
 \subsubsection{Inverse Properties}
 
@@ -126,7 +126,7 @@ Assume that $ p1 $ and $ p2 $ are inverse properties. Listing~\ref{lst:inverseIn
 \[
 (p1,p2) \text{ and } (p2,p1)
 \]
-, in case the other direction exists. If one wants to remove triples instead of adding them, a delete has to be performed which is shown in Listing~\ref{lst:inverseDelete}
+, in case the other direction exists. If the triples should be removed instead of adding them, a delete has to be performed which is shown in Listing~\ref{lst:inverseDelete}
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the inverse properties p1 and p2., label=lst:inverseInsert,
 basicstyle=\ttfamily,frame=single,float=hbt,]
@@ -150,7 +150,7 @@ FILTER (EXISTS { ?o ?p ?s })
 
 \subsubsection{Transitive Properties}
 
-Here one wants to remove the triple $(s,p,o)$ if there exists a path from $s$ to $o$ via the transitive predicate $p$ of a length of at least two edges. That can be achieved by Listing~\ref{lst:transitiveRemove} in which a property path is used in the first line of the where clause.
+Here, the triple $(s,p,o)$ will be removed if there exists a path from $s$ to $o$ via the transitive predicate $p$ of a length of at least two edges. That can be achieved by Listing~\ref{lst:transitiveRemove} in which a property path is used in the first line of the where clause.
 
 Of course, it is also possible to add the triple $(s,p,o)$ if it does not exist. That can be done similarly with an insert and is shown in Listing~\ref{lst:transitiveInsert}.
 
@@ -175,7 +175,7 @@ FILTER (NOT EXISTS {?s ?p ?o })
 
 \subsubsection{Sub Graphs}
 
-Real datasets are quite big and it can happen that there are only a few relevant properties (symmetric/inverse/transitive). Even if there are many of those properties it can be that they do not occur often in the data. In that case, the effect of manipulating the data can not have a big impact on the compression ratio. However, one still wants to investigate if the effect is possibly there. Therefore, it is necessary to form a smaller graph in which those relevant properties occur often. So, a procedure to build a sub graph is needed.
+Real datasets are quite big and it can happen that there are only a few relevant properties (symmetric/inverse/transitive). Even if there are many of those properties it can be that they do not occur often in the data. In that case, the effect of manipulating the data can not have a big impact on the compression ratio. However, it is still desired to investigate if the effect is possibly there. Therefore, it is necessary to form a smaller graph in which those relevant properties occur often. So, a procedure to build a sub graph is needed.
 
 First, all triples $t_1,...,t_n$ are collected which contain one of the relevant properties. It would now be possible to randomly add a number of remaining triples in order to get a more diversified graph. But that would result in a graph far away from the original and would probably not contain structural patterns from the original one.
 
@@ -217,7 +217,7 @@ In addition, the Huffman code/tree itself has to be stored in order to be able t
 \end{algorithm}
 
 
-Alternatively, there are pre-computed Huffman trees for natural languages such as English. There, it has already been investigated which letter occurs how often in English texts and in this way a generally valid Huffman code has been established. The advantage is that one does not have to save the Huffman tree and does not have to calculate it oneself, which saves runtime. The disadvantage, however, is that the tree is not optimal for the text to be compressed, as it is more general. Another problem in our case is that the literals contain a lot of special characters that are not taken into account in prefabricated Huffman codes. Therefore, prefabricated codes will not be used.
+Alternatively, there are pre-computed Huffman trees for natural languages such as English. There, it has already been investigated which letter occurs how often in English texts and in this way a generally valid Huffman code has been established. The advantage is that the Huffman tree does not have to be stored and it does not have to  be calculated, which saves runtime. The disadvantage, however, is that the tree is not optimal for the text to be compressed, as it is more general. Another problem in our case is that the literals contain a lot of special characters that are not taken into account in prefabricated Huffman codes. Therefore, prefabricated codes will not be used.
 
 \subsubsection{Blank Nodes}\label{sec:implementationBlankNodes}
 

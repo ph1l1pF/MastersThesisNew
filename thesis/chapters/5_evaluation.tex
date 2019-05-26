@@ -21,7 +21,7 @@ Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{Graph_{HDT}}$. As expected, $CR_{
 	\caption{The compression ratios for HDT without and with dictionary sizes.}
 \end{figure}
 
-Next, the compression ratio of GRP ($CR_{Graph_{GRP}}$) is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here, it is noticeable that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect is higher on $CR_{Graph_{GRP}}$ than on  $CR_{Graph_{HDT}}$ (standard deviation is twice as high for $CR_{Graph_{GRP}}$ as for $CR_{Graph_{HDT}}$). 
+Next, the compression ratio of GRP ($CR_{Graph_{GRP}}$) is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here, it is noticeable that GRP has a better compression ratio if the graph is more similar to the star pattern (hub or authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect is higher on $CR_{Graph_{GRP}}$ than on  $CR_{Graph_{HDT}}$ (standard deviation is twice as high for $CR_{Graph_{GRP}}$ as for $CR_{Graph_{HDT}}$). 
 
 When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this curve behaves almost exactly like the one from Fig.~\ref{fig:ratiosHDTWithDict}, since $|out_{dict}|$ accounts for most of $|out|$.
 
@@ -98,21 +98,39 @@ Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in r
 
 Therefore, for the following evaluations of Ch.~\ref{sec:evaluationOntKnowledge}, we use sub graphs as described in Ch.~\ref{sec:implementationSubGraphs}. More precisely, we use graphs that contain half triples with the relevant properties and the other half triples connected with them. By doing that, the effects will be significant and it will be clear whether they lead to a better or worse compression ratio. 
 
+\subsubsection{Evaluation Process}
+Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. The several parts of the process will be discussed in the next sections. Fig.~\ref{fig:overallprocess} shows how it is implemented. First, the original graph or sub graph is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
+
+In the next step, relevant properties have to be determined and the original graph will be manipulated. Then the manipulated graph is given to GRP. In addition, the relevant ontology triples have to be compressed and stored as well. Otherwise, the original graph could not be restored. Both graphs together are merged together into one graph called $in_2$ which is then compressed by GRP and that delivers $out_2$. 
+
+Finally, $|out_1|$ and $|out_2|$ have to be compared. The next chapter will explain how that is done.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/4_implementation/overallProcess}
+	\caption{Overall process of applying ontology knowledge and comparing the compression results.}
+	\label{fig:overallprocess}
+\end{figure}
+
+The evaluation process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. This way, it is noticeable what the manipulations bring individually and in the end also, what they all achieve in combination.\todo{wurde das gemacht?}
+
 \subsubsection{Metrics}
 
-In order to evaluate the result on the grammar level, the metrics input edge ratio ($IER$) and output edge ratio ($OER$)  are defined (the notation from Fig.~\ref{fig:overallprocess} is re-used here):
- 
- \[
- IER=\frac {\text{number of edges in grammar of } in_2} {\text{number of edges in grammar of } in_1}
- \]
- 
- \[
- OER=\frac {\text{number of edges in grammar of } out_2} {\text{number of edges in grammar of } out_1}
- \]
- 
- $IER$ can show how many edges have been added or removed by the manipulations which shows how big the impact of the manipulation is. $OER$ will show how whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
+This chapter explains how the two outputs $out_1$ and $out_2$ are compared.
 
-In order to measure the manipulation effect on the file size level, the metric size ratio ($SR$) is defined as follows:
+Since the ontology-based manipulations are intended to achieve a better compression by enabling $Graph_{GRP}$ to produce a smaller grammar, it is interesting to not only compare $out_1$ and $out_2$ at the file size level, but also in terms of their grammar/graph sizes. The most significant metric for the size of a grammar/graph is its number of edges. In order to compare $out_1$ and $out_2$ with respect to their grammar/graph edge amounts, the metrics input edge ratio ($IER$) and output edge ratio ($OER$)  are defined:
+ 
+ \[
+ IER=\frac {\text{number of edges in } in_2} {\text{number of edges in  } in_1}
+ \]
+ 
+ \[
+ OER=\frac {\text{number of edges in } out_2} {\text{number of edges in } out_1}
+ \]
+ 
+$IER$ shows how many edges have been added or removed by the manipulations which indicates how big the impact of the manipulation is. $OER$  shows whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
+
+In order to measure the manipulation it is necessary to define a new metric instead of re-using $CR_{GRP}$ as defined in Ch.~\ref{sec:compressorModel}. For $out_1$, $CR_{GRP}$ would be in relation to $in_1$ (analogously for $out_2$ and $in_2$). But here it is necessary to compare $out_1$ and $out_2$. Therefore, the new metric size ratio ($SR$) is defined as follows:
 
  \[
 SR=\frac {|out_2|} {|out_1|}
@@ -124,7 +142,7 @@ If $SR<1$ holds than the manipulation has resulted in an improvement at the file
 
 \subsubsection{Symmetric Properties}
 
-First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. Fig.~\ref{fig:edgeratiossymmetricsadd} shows the results on the grammar level, here $IER$ and $OER$ are presented. As expected $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. The other scale in Fig.~\ref{fig:edgeratiossymmetricsadd} shows $OER$. There, it can be notices that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
+First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. Fig.~\ref{fig:edgeratiossymmetricsadd} shows the results on the grammar level, here $IER$ and $OER$ are presented. As expected $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. The other scale in Fig.~\ref{fig:edgeratiossymmetricsadd} shows $OER$. There, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
 
 In Fig.~\ref{fig:sizeratiossymmetricsadd}, $SZ$ is shown. Here, it can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. That is because the file \textbf{Perms} (see Ch.~\ref{sec:relatedworkGRPImpl}) becomes bigger in $out_2$, since there are now more hyper edges in the grammar. So, it can be noticed that the encoding algorithm of $Dict_{GRP}$ (see Ch.~\ref{sec:relatedworkGRPImpl}) cannot always take full advantage of a smaller grammar.
 
@@ -164,11 +182,13 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Inverse Properties}
 
-\subsubsection{Symmetric Properties}
+\subsubsection{Transitive Properties}
+
+\subsubsection{Everything Together}
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 
-At this point  about the evaluation of the approaches from Ch.~\ref{sec:implementationDictImprovements}. First the Huffman compression of literals is evaluated and then the compression of blank node IDs. Finally, both approaches combined will be evaluated.\todo{wurde das gemacht?}
+At this point  about the evaluation of the approaches from Ch.~\ref{sec:implementationDictImprovements}. First the Huffman compression of literals is evaluated and then the compression of blank node IDs. 
 
 
 \subsubsection{Literals}
@@ -233,8 +253,6 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 \end{figure}
 
 \subsubsection{Blank Nodes}
-
-\subsubsection{Literals and Blank Nodes Combined}
 
 \subsection{Ontology and Dictionary}
 \todo{evtl beides anwenden,wahrscheinl. ist ont Anteil so gering dass man es auf Grafik nicht sehen kann}

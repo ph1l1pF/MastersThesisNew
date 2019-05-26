@@ -57,25 +57,6 @@ Wordnet contains knowledge about the English language. Words that have the same 
 This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} is used.
 
 
-\subsubsection{Overall Process}
-Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. The several parts of the process will be discussed in the next sections. Fig.~\ref{fig:overallprocess} shows how it is implemented. First, the original graph or sub graph (the reason for sub graphs is explained below) is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
-
-In the next step, relevant properties have to be determined and the original graph will be manipulated. Then the manipulated graph is given to GRP. In addition, the relevant ontology triples have to be compressed and stored as well. Otherwise, the original graph could not be restored. Both graphs together are called $in_2$ which is then compressed by GRP and that delivers $out_2$.
-
-Finally, $|out_1|$ and $|out_2|$ have to be compared. Here, the output sizes have to be compared instead of the compression ratios, because the ratio of $out_2$ would be relative to $in_2$. But a comparison to the original RDF graph ($in_1$) is needed in order to evaluate whether the manipulations delivered an improvement.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\linewidth]{figures/4_implementation/overallProcess}
-	\caption{Overall process of applying ontology knowledge and comparing the compression results.}
-	\label{fig:overallprocess}
-\end{figure}
-
-The process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. 
-
-In this way it is noticeable what the manipulations bring individually and in the end also, what they all achieve in combination.
-
-
 \subsubsection{Gathering Relevant Properties}
 First, all relevant properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
 

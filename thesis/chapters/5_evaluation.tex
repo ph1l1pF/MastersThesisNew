@@ -9,46 +9,48 @@ For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://githu
 
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
-Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{HDT}(out_{graph})$. As expected, $CR_{HDT}(out_{graph})$ gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary ($out_{dict}$) has a much bigger effect, since $CR_{HDT}(out)$ is much larger than $CR_{HDT}(out_{graph})$ and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that $|out_{dict}|$ bigger when the graph is further away from the star pattern. The dictionary implementation of HDT seems to be more inefficient when there are about as many subject as objects. 
+Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{Graph_{HDT}}$. As expected, $CR_{Graph_{HDT}}$ gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary ($out_{dict}$) has a much bigger effect, since $CR_{HDT}(out)$ is much larger than $CR_{Graph_{HDT}}$ and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that $|out_{dict}|$ bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
 \todo{dafür sorgen, dass kurve rechts auch den knick hat}
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR_{HDT}(out_{graph})$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/hdtWithoutDict}\label{fig:ratiosHDTWithoutDict}}
+	\subfloat[$CR_{Graph_{HDT}}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/hdtWithoutDict}\label{fig:ratiosHDTWithoutDict}}
 	\hfill
-	\subfloat[$CR_{HDT}(out)$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/hdtWithDict}\label{fig:ratiosHDTWithDict}}
+	\subfloat[$CR_{HDT}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/hdtWithDict}\label{fig:ratiosHDTWithDict}}
 	\caption{The compression ratios for HDT without and with dictionary sizes.}
 \end{figure}
 
-Next, the compression ratio of GRP ($CR_{GRP}(out_{graph})$) is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here, it is noticeable that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect on$CR_{GRP}(out_{graph})$ than on $CR_{HDT}(out_{graph})$ (standard deviation is twice as high for $CR_{GRP}(out_{graph})$ as for $CR_{HDT}(out_{graph})$). 
+Next, the compression ratio of GRP ($CR_{Graph_{GRP}}$) is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here, it is noticeable that GRP has a better compression ratio if the graph is more similar to the star pattern (hub order authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect is higher on $CR_{Graph_{GRP}}$ than on  $CR_{Graph_{HDT}}$ (standard deviation is twice as high for $CR_{Graph_{GRP}}$ as for $CR_{Graph_{HDT}}$). 
 
 When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this curve behaves almost exactly like the one from Fig.~\ref{fig:ratiosHDTWithDict}, since $|out_{dict}|$ accounts for most of $|out|$.
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR_{GRP}(out_{graph})$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/grpWithoutDict}\label{fig:ratiosGRPWithoutDict}}
+	\subfloat[$CR_{Graph_{GRP}}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/grpWithoutDict}\label{fig:ratiosGRPWithoutDict}}
 	\hfill
-	\subfloat[$CR_{GRP}(out)$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/grpWithDict}\label{fig:ratiosGRPWithDict}}
+	\subfloat[$CR_{GRP}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/grpWithDict}\label{fig:ratiosGRPWithDict}}
 	\caption{The compression ratios for GRP without and with dictionary sizes.}
 \end{figure}
 
-Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDict} show $CR(out_{graph})$ and $CR(out)$ respectively (for both GRP and HDT). Since both use the same method to compress the dictionary, the curves in Fig.~\ref{fig:ratiosBothWithDict} are very similar. However, it becomes clear that GRP compresses better than HDT. In Fig.~\ref{fig:ratiosBothWithoutDict}, $CR_{HDT}(out_{graph})$ is 31 times higher than $CR_{GRP}(out_{graph})$ on average. Of course, this factor becomes much smaller in Fig.~\ref{fig:ratiosBothWithDict} because the dictionary accounts for most of the memory size. Here, the $CR_{HDT}(out)$ is on average 1.8 times as high as $CR_{GRP}(out)$
+Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDict} show $CR_{Graph_C})$ and $CR_C$ respectively (for both GRP and HDT). Since both use $Dict_{HDT}$ to compress the dictionary, the curves in Fig.~\ref{fig:ratiosBothWithDict} are very similar. However, it becomes clear that GRP compresses better than HDT. In Fig.~\ref{fig:ratiosBothWithoutDict}, $CR_{Graph_{HDT}}$ is 31 times higher than $CR_{Graph_{GRP}}$ on average. Of course, this factor becomes much smaller in Fig.~\ref{fig:ratiosBothWithDict} because the dictionary accounts for most of the memory size. Here, the $CR_{HDT}$ is on average 1.8 times as high as $CR_{GRP}$
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR_{HDT}(out_{graph})$ and $CR_{GRP}(out_{graph})$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/bothWithoutDict}\label{fig:ratiosBothWithoutDict}}
-	\hfill
-	\subfloat[$CR_{HDT}(out)$ and $CR_{GRP}(out)$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/bothWithDict}\label{fig:ratiosBothWithDict}}
+	\subfloat[$CR_{Graph_{HDT}}$ and $CR_{Graph_{GRP}}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/bothWithoutDict}\label{fig:ratiosBothWithoutDict}}
+	\hfill 
+	\subfloat[$CR_{HDT}$ and $CR_{GRP}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/bothWithDict}\label{fig:ratiosBothWithDict}}
 	\caption{The compression ratios for GRP and HDT without and with dictionary sizes.}
 \end{figure}
 
-It would be possible to argue that only one distinct predicate was used in that scenario and this is beneficial for GRP, as it gets worse as the number of predicates increases. Therefore a further evaluation is made in Fig.~\ref{fig:bothwithdict1000predicates}, where 1000 distinct predicates have been used. That is a quite high number considering the number of triples (1199) compared to real RDF data \todo{belegen}. It is visible that the compression ratios are now higher for both compressors, but still $CR_{GRP}(out)$ ratio is always smaller than $CR_{HDT}(out)$. $CR_{HDT}(out)$ is still 1.7 times higher on average. So, the increasing number of predicates has a similar effect on both algorithms.
+It would be possible to argue that only one distinct predicate was used in that scenario and this is beneficial for GRP, as it gets worse as the number of predicates increases. Therefore a further evaluation is made in Fig.~\ref{fig:bothwithdict1000predicates}, where 1000 distinct predicates have been used. That is a quite high number considering the number of triples (1199) compared to real RDF data \todo{belegen}. It is visible that the compression ratios are now higher for both compressors, but still $CR_{GRP}$ is always smaller than $CR_{HDT}$. $CR_{HDT}$ is still 1.7 times higher on average. So, the increasing number of predicates has a similar effect on both algorithms.
 
+
+\todo{figure passt nicht}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/GRPvsHDT/bothWithDict1000Predicates}
-	\caption{$CR_{HDT}(out)$ and $CR_{GRP}(out)$. Graphs have now 1000 distinct predicates.}
+	\caption{$CR_{HDT}$ and $CR_{GRP}$. Graphs have now 1000 distinct predicates.}
 	\label{fig:bothwithdict1000predicates}
 \end{figure}
 
@@ -76,24 +78,12 @@ This chapter is about evaluating the compression improvements. It starts with ap
 
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
 
-\subsubsection{Occurrence of Properties}
-Now it will be presented how much of those symmetric/inverse/transitive properties exist in real data. For that we will use the datasets presented in Ch.~\ref{sec:implementationDatasets}. 
+In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. 
 
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-	\hline 
-	Dataset & Symmetric & Inverse & Transitive \\ 
-	\hline 
-	DBPedia &  &  &  \\ 
-	\hline 
-	Wordnet &  &  &  \\ 
-	\hline 
-	&  &  &  \\ 
-	\hline 
-\end{tabular}
-\captionof{table}{The relevant properties for applying ontology knowledge found in real datasets.}	
-\label{tab:properties}
-\end{center}
+Here, not only the size of the output $out_{graph}$ will be measured. Since these approaches have the intention to improve the ability for GRP to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because after the encoding of the grammar it might happen that despite the fact that the grammar is smaller after the manipulations that effect is not visible in the value of $out_{graph}$.
+
+\subsubsection{Occurrence of Properties}
+Now, it will be presented how much of those symmetric/inverse/transitive properties exist in real data. For that we will use the datasets presented in Ch.~\ref{sec:implementationDatasets}. 
 
 Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in real datasets (DBPedia and Wordnet). (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low, especially for symmetric and inverse properties. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties can be necessary to observe a real effect of the data manipulations. Nevertheless, first the normal datasets will be used to evaluate the manipulations.
 
@@ -104,7 +94,57 @@ Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in r
 	\label{fig:ontoccurrences}
 \end{figure}
 
+\todo{irgendiwe zeigen, dass interessante Fälle zu selten auftreten}
 
+Therefore, for the following evaluations of Ch.~\ref{sec:evaluationOntKnowledge}, we use sub graphs as described in Ch.~\ref{sec:implementationSubGraphs}. More precisely, we use graphs that contain half triples with the relevant properties and the other half triples connected with them. By doing that, the effects will be significant and it will be clear whether they lead to a better or worse compression ratio. 
+
+In order to evaluate the result on the grammar level, the metrics input edge ratio ($IER$) and output edge ratio ($OER$)  are defined (the notation from Fig.~\ref{fig:overallprocess} is re-used here):
+ 
+ \[
+ IER=\frac {\text{number of edges in grammar of } in_2} {\text{number of edges in grammar of } in_1}
+ \]
+ 
+ \[
+ OER=\frac {\text{number of edges in grammar of } out_2} {\text{number of edges in grammar of } out_1}
+ \]
+ 
+ $IER$ can show how many edges have been added or removed by the manipulations which shows how big the impact of the manipulation is. $OER$ will show how big the impact of the manipulation is after the compression by $Graph_{GRP}$. 
+
+In order to measure the manipulation effect on the file size level, the metric size ratio ($SR$) is defined as follows:
+
+ \[
+SR=\frac {|out_2|} {|out_1|}
+\]
+
+If $SR<1$ holds than the manipulation has resulted in an improvement, otherwise not.
+
+\subsubsection{Symmetric Properties}
+
+First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} shows the results.
+
+Fig.~\ref{fig:edgeratiossymmetricsadd} shows the results on the grammar level, here $IER$ and $OER$ are illustrated. As expected $IER$ is bigger than 1 as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. The other scale in Fig.~\ref{fig:edgeratiossymmetricsadd} shows $OER$. There, it can be notices that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
+
+In Fig.~\ref{fig:sizeratiossymmetricsadd}, $SZ$ is shown. Here, it can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. That is because the file \textbf{Perms} (see Ch.~\ref{sec:relatedworkGRPImpl}) becomes bigger in $out_2$, since there are now more hyper edges in the grammar. So, it can be noticed that the encoding algorithm of $Dict_{GRP}$ (see Ch.~\ref{sec:relatedworkGRPImpl}) cannot always take full advantage of a smaller grammar.
+
+\begin{figure}[h]
+	\centering
+	\subfloat[$IER$ and $OER$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd}\label{fig:edgeratiossymmetricsadd}}
+	\hfill 
+	\subfloat[$SR$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd}\label{fig:sizeratiossymmetricsadd}}
+	\caption{Results for adding symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsadd}) and on the file size level (\ref{fig:sizeratiossymmetricsadd}).}
+	\label{fig:symmetricAddResults}
+\end{figure}
+
+In order to show that adding symmetric properties is more beneficial than removing them, the results of removing case are also shown.
+
+\begin{figure}[h]
+	\centering
+	\subfloat[$IER$ and $OER$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsDelete}\label{fig:edgeratiossymmetricsdelete}}
+	\hfill 
+	\subfloat[$SR$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsDelete}\label{fig:sizeratiossymmetricsdelete}}
+	\caption{Results for deleting symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsdelete}) and on the file size level (\ref{fig:sizeratiossymmetricsdelete}).}
+	\label{fig:symmetricDeleteResults}
+\end{figure}
 
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}

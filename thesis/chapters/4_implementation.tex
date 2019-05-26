@@ -173,9 +173,9 @@ FILTER (NOT EXISTS {?s ?p ?o })
 }
 \end{lstlisting}
 
-\subsubsection{Sub Graphs}
+\subsubsection{Sub Graphs}\label{sec:implementationSubGraphs}
 
-Real datasets are quite big and it can happen that there are only a few relevant properties (symmetric/inverse/transitive). Even if there are many of those properties it can be that they do not occur often in the data. In that case, the effect of manipulating the data can not have a big impact on the compression ratio. However, it is still desired to investigate if the effect is possibly there. Therefore, it is necessary to form a smaller graph in which those relevant properties occur often. So, a procedure to build a sub graph is needed.
+Real datasets are quite big and it can happen that there are only a few relevant properties (symmetric/inverse/transitive). Even if there are many of those properties it can be that they do not occur often in the data. In that case, the effect of manipulating the data cannot have a big impact on the compression ratio. However, it is still desired to investigate if the effect is possibly there. Therefore, it is necessary to form a smaller graph in which those relevant properties occur often. So, a procedure to build a sub graph is needed.
 
 First, all triples $t_1,...,t_n$ are collected which contain one of the relevant properties. It would now be possible to randomly add a number of remaining triples in order to get a more diversified graph. But that would result in a graph far away from the original and would probably not contain structural patterns from the original one.
 
@@ -189,6 +189,8 @@ The procedure is illustrated in Fig.~\ref{fig:subgraph}. There $p$ is the only r
 	\caption{Extraction of a sub graph (marked by dashed line).}
 	\label{fig:subgraph}
 \end{figure}
+
+The results of Ch.~\ref{sec:evaluationHDTvsGRP} have also shown that GRP has a quite high run time even for smaller graphs. It was also mentioned in~\cite{maneth} that the rudimentary implementation (see Ch.~\ref{sec:relatedworkGRPImpl}) cannot handle very large graphs. However, we still want to evaluate GRP for real datasets which are often very large. To solve this problem, a realistic sub graph of the big graphs has to be extracted. As mentioned earlier, choosing random triples does not fulfill that. Hence, we choose an approach similar to the one shown in Fig.~\ref{fig:subgraph}. But here we start with some entity $e$ (not with a set of desired properties). Analogously to the other approach, we gather all triples $e$ is part of and then add triples which the newly gathered entities $e_1,...,e_n$ are part of. That step is repeated a few times until some defined number of triples has been reached. The result graph is called $e$-based subgraph.
 
 
 

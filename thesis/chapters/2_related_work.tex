@@ -21,7 +21,7 @@ Similar to entities or properties each blank node has unique ID in order referen
 In the Semantic Web, vocabularies define the concepts and relationships (also called "terms") that describe and represent a problem area. Vocabularies are used to classify the terms that can be used in a particular application, characterize possible relationships, and define possible restrictions on the use of these terms. In practice, vocabularies can be very complex (with several thousand terms) or very simple (describing only one or two concepts).
 
 There is no clear distinction between what is called "vocabularies" and "ontologies". The trend is to use the word "ontology" for more complex and possibly quite formal collections of terms, while "vocabulary" is used when such strict formalism is not necessarily used or only in a very loose sense. Vocabularies are the building blocks for inference techniques in the Semantic Web.
-\ac{OWL}
+\ac{OWL} \todo{anpassen}
 
 \section{HDT}\label{related_work_hdt}
 
@@ -197,7 +197,12 @@ The remaining productions of the grammar are encodes differently, because they a
 
 \subsubsection{Implementation}\label{sec:relatedworkGRPImpl}
 
-\todo{GRP impl beschreiben}
+GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\footnote{https://www.scala-lang.org/}. It has to been seen as a proof of concept implementation, i.e., it has quite a high run time for bigger graphs. The software can take an RDF file (in N-triples format) as the input and produces three different output files:
+
+\begin{description}
+	\item [Productions:] Contains the start rule and all other productions.
+	\item [Permutations:] Contains the hyper edge permutations.
+\end{description} 
 
 
 

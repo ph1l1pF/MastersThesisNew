@@ -1,7 +1,7 @@
 % !TeX spellcheck = en_US
 \chapter{Approach}\label{ch:approach}
 
-This chapter contains the solution approaches to the parts of the thesis. Firstly, a formal model of an RDF compressor is defined. Based on that, the key performance indicators which will be used to measure the performance of the single compressors are introduced.
+This chapter contains the solution approaches to the parts of the thesis. Firstly, a formal model of a compressor is defined. Based on that, the key performance indicators which will be used to measure the performance of the single compressors are introduced.
 
 Secondly, the two existing compressors HDT and GRP are compared.
 
@@ -20,9 +20,9 @@ A general purpose compressor $C$ can be described as follows: $C$ takes an input
 
 \section{RDF Compressor Model}\label{sec:compressorModel}
 
-This section introduces a formal model for an RDF compressor (see Ch.~\ref{fig:compressorModel}) which can be seen as a sub class of the general model in Ch.~\ref{sec:generalcompressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in Ch.~\ref{related_work_hdt}, it assigns an ID to URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees, see Ch.~\ref{related_work_hdt}). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
+This section introduces a formal model for an RDF compressor which can be seen as a sub class or extension of the general model in Ch.~\ref{sec:generalcompressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in the context of HDT (see~Ch.~\ref{related_work_hdt}). It assigns an ID to each URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
 
-The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output of $C$: $out$. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
+The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output $out$. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
 
 
 
@@ -36,17 +36,25 @@ The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$
 
 \subsection{Compression Ratio}
 
-One of the key performance indicators for a compressor $C$ is its compression ratio ($CR_C$). Let $m$ be a single file or a set of files. Then $|m|$ is defined as the size which is measured in bytes. $CR_C$ depends on the input data $in$ and is defined as follows:
+One of the key performance indicators for a compressor $C$ is its compression ratio. Let $m$ be a single file or a set of files. Then $|m|$ is defined as the size which is measured in bytes. The compression ratio is defined by the following equations:
 
-\begin{align*}
-CR_{C}(o) = \dfrac{|o|}{ |in|}  \text{ with } o\in \{out,out_{graph},out_{dict} \}
-\end{align*}
+\begin{align}
+CR_{C} = \dfrac{|out|}{ |in|} \label{eq:complete}
+\end{align}
 
-If $C$ is not an RDF compressor then $o=out$ holds, as $C$ does not have a composed output.
+\begin{align}
+CR_{Dict_C} = \dfrac{|out_{dict}|}{ |in|} \label{eq:dict}
+\end{align}
 
-Sometimes $CR(o)$ is used instead of $CR_C(o)$ if it is clear from the context, which compressor $C$ is considered. Moreover, the parameter $o$ is omitted if it is clear from the context or not relevant.
+\begin{align}
+CR_{Graph_C} = \dfrac{|out_{graph}|}{ |in|} \label{eq:graph}
+\end{align}
 
-$CR_C$  is in the $(0,\infty)$ interval, since the compressed data can potentially be arbitrarily large. Obviously, the compressed data cannot have a size of 0 or less.
+Eq.~\ref{eq:complete} defines the compression ratio for the whole output $out$. Therefore, it is applicable to general and RDF compressors.
+
+In contrast, Eq.~\ref{eq:dict} and~\ref{eq:graph} define the compression ratio only with regard to $out_{dict}$ and $out_{graph}$, respectively. They are only applicable for RDF compressors, since a general compressor has no distinction between $out_{dict}$ and $out_{graph}$. In some cases it is of interest to only consider either dictionary or graph compression.
+
+Sometimes $CR$ is used instead of $CR_C$ if it is clear from the context, which compressor $C$ is considered.
 
 If $C$ is an RDF compressor, then $CR_C$ is not always measured with respect to the whole output $out$, but sometimes only with respect to $out_{graph} \text{ or } out_{dict}$. This is due to the fact that in some cases it is interesting to only consider the compression of the dictionary or the graph.
 
@@ -54,9 +62,9 @@ As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. Tha
 
 \subsection{(De-)Compression Time}
 
-Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds. $CT_C$ and $DCT_C$ are also shown in Fig.~\ref{fig:generalcompressorModel} and~\ref{fig:compressorModel}. They are defined the same for general compressors and RDF compressors.
+Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds. $CT_C$ and $DCT_C$ are also shown in Fig.~\ref{fig:generalcompressorModel} and~\ref{fig:compressorModel}. They are defined the same for general compressors and RDF compressors. Furthermore, $CT_C$ and $DCT_C$ are only measured for the whole compressor $C$, not for $Dict_C$ or $Graph_C$.
 
-Analogously to $CR(o)$, if is clear from the context which compressor is considered, $CT$ and $DCT$ are used instead of $CT_C$ and $DCT_C$, respectively.
+Analogously to $CR$, if is clear from the context which compressor is considered, $CT$ and $DCT$ are used instead of $CT_C$ and $DCT_C$, respectively.
 
 \subsection{Existing RDF  Compressors}
 
@@ -161,8 +169,6 @@ In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProp
 \subsubsection{Equal Properties}
 
 In OWL there are the predicates {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $elr$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same but single nodes can be marked as the same as well.
-
-
 
 
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}

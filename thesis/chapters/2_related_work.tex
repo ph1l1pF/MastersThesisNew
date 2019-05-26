@@ -200,8 +200,10 @@ The remaining productions of the grammar are encodes differently, because they a
 GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\footnote{https://www.scala-lang.org/}. It has to been seen as a proof of concept implementation, i.e., it has quite a high run time for bigger graphs. The software can take an RDF file (in N-triples format) as the input and produces three different output files:
 
 \begin{description}
-	\item [Productions:] Contains the start rule and all other productions.
-	\item [Permutations:] Contains the hyper edge permutations.
+	\item [Prod:] all productions expect the start rule.
+	\item [Perms:] Contains the hyper edge permutations.
+	\item [Start]: Contains the start rule.
+	\item [Multi]: \todo{mutli?}
 \end{description} 
 
 

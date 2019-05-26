@@ -5,13 +5,13 @@ This chapter is about the evaluation of the several approaches presented in Ch.~
 
 \section{Experimental Setup}
 
-For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation mentioned in~\cite{maneth} has been used (written in Scala). It is not open source and has been given to us by the authors of~\cite{maneth}.
+For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used.
 
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
-Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{Graph_{HDT}}$. As expected, $CR_{Graph_{HDT}}$ gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary ($out_{dict}$) has a much bigger effect, since $CR_{HDT}(out)$ is much larger than $CR_{Graph_{HDT}}$ and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that $|out_{dict}|$ bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
+\todo{passt alles nicht mehr wegen neuer Erkenntnis}
 
-\todo{dafür sorgen, dass kurve rechts auch den knick hat}
+Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{Graph_{HDT}}$. As expected, $CR_{Graph_{HDT}}$ gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary ($out_{dict}$) has a much bigger effect, since $CR_{HDT}(out)$ is much larger than $CR_{Graph_{HDT}}$ and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that $|out_{dict}|$ is bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
 \begin{figure}[h]
 	\centering
@@ -33,7 +33,7 @@ When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this cu
 	\caption{The compression ratios for GRP without and with dictionary sizes.}
 \end{figure}
 
-Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDict} show $CR_{Graph_C})$ and $CR_C$ respectively (for both GRP and HDT). Since both use $Dict_{HDT}$ to compress the dictionary, the curves in Fig.~\ref{fig:ratiosBothWithDict} are very similar. However, it becomes clear that GRP compresses better than HDT. In Fig.~\ref{fig:ratiosBothWithoutDict}, $CR_{Graph_{HDT}}$ is 31 times higher than $CR_{Graph_{GRP}}$ on average. Of course, this factor becomes much smaller in Fig.~\ref{fig:ratiosBothWithDict} because the dictionary accounts for most of the memory size. Here, the $CR_{HDT}$ is on average 1.8 times as high as $CR_{GRP}$
+Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDict} show $CR_{Graph_C}$ and $CR_C$, respectively for GRP and HDT. Since both use $Dict_{HDT}$ to compress the dictionary, the curves in Fig.~\ref{fig:ratiosBothWithDict} are very similar. However, it becomes clear that GRP compresses better than HDT. In Fig.~\ref{fig:ratiosBothWithoutDict}, $CR_{Graph_{HDT}}$ is 31 times higher than $CR_{Graph_{GRP}}$ on average. Of course, this factor becomes much smaller in Fig.~\ref{fig:ratiosBothWithDict} because the dictionary accounts for most of the memory size. Here, the $CR_{HDT}$ is on average 1.8 times as high as $CR_{GRP}$
 
 \begin{figure}[h]
 	\centering
@@ -80,7 +80,7 @@ This chapter is about evaluating the compression improvements. It starts with ap
 
 In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. 
 
-Here, not only the size of the output $out_{graph}$ will be measured. Since these approaches have the intention to improve the ability for GRP to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because after the encoding of the grammar it might happen that despite the fact that the grammar is smaller after the manipulations that effect is not visible in the value of $out_{graph}$.
+Here, not only the size of the output $out_{graph}$ will be measured. Since these approaches have the intention to improve the ability for GRP to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because after the encoding of the grammar it might happen that despite the fact that the grammar is smaller after the manipulations that effect is not visible in the value of $|out_{graph}|$. 
 
 \subsubsection{Occurrence of Properties}
 Now, it will be presented how much of those symmetric/inverse/transitive properties exist in real data. For that we will use the datasets presented in Ch.~\ref{sec:implementationDatasets}. 
@@ -98,6 +98,8 @@ Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in r
 
 Therefore, for the following evaluations of Ch.~\ref{sec:evaluationOntKnowledge}, we use sub graphs as described in Ch.~\ref{sec:implementationSubGraphs}. More precisely, we use graphs that contain half triples with the relevant properties and the other half triples connected with them. By doing that, the effects will be significant and it will be clear whether they lead to a better or worse compression ratio. 
 
+\subsubsection{Metrics}
+
 In order to evaluate the result on the grammar level, the metrics input edge ratio ($IER$) and output edge ratio ($OER$)  are defined (the notation from Fig.~\ref{fig:overallprocess} is re-used here):
  
  \[
@@ -108,7 +110,7 @@ In order to evaluate the result on the grammar level, the metrics input edge rat
  OER=\frac {\text{number of edges in grammar of } out_2} {\text{number of edges in grammar of } out_1}
  \]
  
- $IER$ can show how many edges have been added or removed by the manipulations which shows how big the impact of the manipulation is. $OER$ will show how big the impact of the manipulation is after the compression by $Graph_{GRP}$. 
+ $IER$ can show how many edges have been added or removed by the manipulations which shows how big the impact of the manipulation is. $OER$ will show how whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
 
 In order to measure the manipulation effect on the file size level, the metric size ratio ($SR$) is defined as follows:
 
@@ -116,13 +118,13 @@ In order to measure the manipulation effect on the file size level, the metric s
 SR=\frac {|out_2|} {|out_1|}
 \]
 
-If $SR<1$ holds than the manipulation has resulted in an improvement, otherwise not.
+If $SR<1$ holds than the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is in the end more relevant than the grammar level, because it is the real storage amount necessary to store the compressed data.
+
+
 
 \subsubsection{Symmetric Properties}
 
-First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} shows the results.
-
-Fig.~\ref{fig:edgeratiossymmetricsadd} shows the results on the grammar level, here $IER$ and $OER$ are illustrated. As expected $IER$ is bigger than 1 as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. The other scale in Fig.~\ref{fig:edgeratiossymmetricsadd} shows $OER$. There, it can be notices that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
+First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. Fig.~\ref{fig:edgeratiossymmetricsadd} shows the results on the grammar level, here $IER$ and $OER$ are presented. As expected $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. The other scale in Fig.~\ref{fig:edgeratiossymmetricsadd} shows $OER$. There, it can be notices that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
 
 In Fig.~\ref{fig:sizeratiossymmetricsadd}, $SZ$ is shown. Here, it can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. That is because the file \textbf{Perms} (see Ch.~\ref{sec:relatedworkGRPImpl}) becomes bigger in $out_2$, since there are now more hyper edges in the grammar. So, it can be noticed that the encoding algorithm of $Dict_{GRP}$ (see Ch.~\ref{sec:relatedworkGRPImpl}) cannot always take full advantage of a smaller grammar.
 
@@ -135,7 +137,9 @@ In Fig.~\ref{fig:sizeratiossymmetricsadd}, $SZ$ is shown. Here, it can be seen t
 	\label{fig:symmetricAddResults}
 \end{figure}
 
-In order to show that adding symmetric properties is more beneficial than removing them, the results of removing case are also shown.
+In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). In Fig.~\ref{fig:sizeratiossymmetricsdelete}, it is possible to see that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$~(Fig.~\ref{fig:edgeratiossymmetricsdelete}) and $SR$~(Fig.~\ref{fig:sizeratiossymmetricsdelete}) are less than 1, but not less than in Fig.~\ref{fig:symmetricAddResults}, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. However, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable.
+
+To further investigate the removal case, the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
 
 \begin{figure}[h]
 	\centering
@@ -146,6 +150,21 @@ In order to show that adding symmetric properties is more beneficial than removi
 	\label{fig:symmetricDeleteResults}
 \end{figure}
 
+The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:edgeratiossymmetricsadd}, since now a higher amount of edges has been added. The fact that both $OER$~(Fig.~\ref{fig:edgeratiossymmetricsadd2}) and $SR$~(Fig.~\ref{fig:sizeratiossymmetricsadd2}) are lower than 1, support our hypothesis that adding symmetric edges is more beneficial than removing them.
+
+\begin{figure}[h]
+	\centering
+	\subfloat[$IER$ and $OER$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd2}\label{fig:edgeratiossymmetricsadd2}}
+	\hfill 
+	\subfloat[$SR$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd2}\label{fig:sizeratiossymmetricsadd2}}
+	\caption{Results for adding symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsadd2}) and on the file size level (\ref{fig:sizeratiossymmetricsadd2}). In contrast to Fig.~\ref{fig:symmetricAddResults}, the input graph $in_1$ contains only one direction for each triple with a symmetric property.}
+	\label{fig:symmetricAddResults2}
+\end{figure}
+
+
+\subsubsection{Inverse Properties}
+
+\subsubsection{Symmetric Properties}
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 

@@ -7,7 +7,12 @@ Secondly, the two existing compressors HDT and GRP are compared.
 
 Finally, improvements of the compression will be suggested.
 
-\section{General Compressor Model}\label{sec:generalcompressorModel}
+
+\section{Compressor Models}
+
+Here, two compressor models will be introduced, one for general compressor and another one for RDF compressors. 
+
+\subsection{General Compressor Model}\label{sec:generalcompressorModel}
 
 A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$.
 
@@ -18,13 +23,11 @@ A general purpose compressor $C$ can be described as follows: $C$ takes an input
 	\label{fig:generalcompressorModel}
 \end{figure}
 
-\section{RDF Compressor Model}\label{sec:compressorModel}
+\subsection{RDF Compressor Model}\label{sec:compressorModel}
 
-This section introduces a formal model for an RDF compressor which can be seen as a sub class or extension of the general model in Ch.~\ref{sec:generalcompressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in the context of HDT (see~Ch.~\ref{related_work_hdt}). It assigns an ID to each URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
+This section introduces a formal model for an RDF compressor which can be seen as a sub class or extension of the general model in Ch.~\ref{sec:generalcompressorModel}. It is illustrated in Fig.~\ref{fig:compressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in the context of HDT (see~Ch.~\ref{related_work_hdt}). It assigns an ID to each URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
 
 The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output $out$. $out_{graph}$ and $out_{dict}$ can each be a single file or set of files. 
-
-
 
 \begin{figure}
 	\centering
@@ -33,6 +36,28 @@ The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$
 	\label{fig:compressorModel}
 \end{figure}
 
+
+\subsection{Existing RDF  Compressors}
+
+Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors discussed in this thesis and in which way they fulfill the model. As already explained in Ch.~\ref{related_work_hdt}, $Dict_{HDT}$ assigns IDs and compresses the dictionary. In contrast, $Dict_{GRP}$  only assigns IDs and omits the dictionary afterwards. $Dict_{GRP}$ is therefore not a real dictionary compressor. We solve this problem by letting GRP use $Dict_{HDT}$. This way, comparing HDT and GRP in a fair way is possible.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		& $Dict_{C}$ & $Graph_{C}$ \\ 
+		\hline \hline
+		HDT & $\checkmark$ & $\checkmark$  \\ 
+		\hline 
+		GRP & only ID assignment (no compression or storage of dictionary) & $\checkmark$ \\ 
+		\hline 
+	\end{tabular} 
+	\captionof{table}{Overview of RDF compressors presented in this thesis.}	
+	\label{tab:compressorsOverview}
+\end{center}
+
+\section{Key Performance Indicators}
+
+In the following two sections, key performance indicators for general and RDF compressors are introduced. Those indicators will be measured in to determine the overall performance for the different compressors.
 
 \subsection{Compression Ratio}
 
@@ -66,23 +91,6 @@ Another key performance indicator of a compressor $C$ is its compression time ($
 
 Analogously to $CR$, if is clear from the context which compressor is considered, $CT$ and $DCT$ are used instead of $CT_C$ and $DCT_C$, respectively.
 
-\subsection{Existing RDF  Compressors}
-
-Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors discussed in this thesis and in which way they fulfill the model. As already explained in Ch.~\ref{related_work_hdt}, $Dict_{HDT}$ assigns IDs and compresses the dictionary. In contrast, $Dict_{GRP}$  only assigns IDs and omits the dictionary afterwards. $Dict_{GRP}$ is therefore not a real dictionary compressor. We solve this problem by letting GRP use $Dict_{HDT}$. This way, comparing HDT and GRP in a fair way is possible.
-
-\begin{center}
-	\begin{tabular}{|c|c|c|}
-		\hline 
-		& $Dict_{C}$ & $Graph_{C}$ \\ 
-		\hline \hline
-		HDT & $\checkmark$ & $\checkmark$  \\ 
-		\hline 
-		GRP & only ID assignment (no compression or storage of dictionary) & $\checkmark$ \\ 
-		\hline 
-	\end{tabular} 
-	\captionof{table}{Overview of RDF compressors presented in this thesis.}	
-	\label{tab:compressorsOverview}
-\end{center}
 
 \section{GRP vs HDT}\label{sec:approachGRPvsHDT}
 
@@ -99,7 +107,7 @@ First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is sh
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{figures/relatedwork/hdt1}
-	\caption{Three different representations of triples in HDT}
+	\caption{Three different representations of triples in HDT, figure from~\cite{hdt}.}
 	\label{fig:hdt_overview_1}
 \end{figure}
 
@@ -137,7 +145,7 @@ Generally it can be said that GRP can compress a graph better if $elr$ is lower,
 
 \todo{besseres Bsp}
 
-There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} stands for}\todo{machen} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $elr$ can be reduced by adding it, which can lead to a better compression ratio. At the same time this will not result in an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
+There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} is used for every entity in the context of OWL.} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $elr$ can be reduced by adding it, which can lead to a better compression ratio. At the same time this will not result in an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
 
 
 \begin{figure}[h]
@@ -151,12 +159,12 @@ There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The 
 
 \subsubsection{Inverse Properties}
 
-A property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes have been connected before.
+One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes were already connected before. 
 
 
 \subsubsection{Transitive Properties}
 
-In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. The shown graph shall again be seen as some sub graph. The approach is to remove the triple $(1,p,n)$. This is sensible, as it gives the nodes 1 and $n$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). \todo{warum Kanten nicht hinzufügen?}
+In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. The shown graph shall again be seen as some sub graph. The approach is to remove the triple $(1,p,n)$. This is sensible, as it gives the nodes 1 and $n$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). A further argument against adding edges is that this would dramatically increase the number of edges, because for each pair $(x,y)$ (with $x,y\in \{1,...,n\} $  and distance between $x$ and $y$ greater than 1), an edge $(x,y)$ would be added. After increasing the graph's size so much it is unlikely that $out_{graph}$ becomes smaller even if more digrams could be found.
 
 \begin{figure}[h]
 	\centering
@@ -180,9 +188,7 @@ According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memo
 
 Objects in RDF can be literals. Literals typically contain constant values and usually have no common prefixes. Therefore the compression of HDT is not suitable for these. It would be possible to use different compression techniques for different types of data values (integer, double, string, etc.). The thesis will focus on compressing strings.
 
-Since those strings can contain whole flow texts, a text compression would probably be well applicable. An example of such a text compression is a Huffman Code~\cite{huffman}. Here the text is converted into a binary format. Every single character of a text is binary coded, whereby frequently occurring characters get short and rare characters get longer codes. These codes are expressed by a binary Huffman tree. An example can be seen in Fig.~\ref{fig:huffmantree}. Each leaf contains a symbol whereas the ones and zeros on the path to the symbol define its code. The tree is constructed in such a way that paths to frequent characters are shorter than those to rare characters. The whole procedures can be seen in~\cite{huffman}.
-
-This tree must then be stored in addition to the compressed data so that the original data can be recovered.The details of the process are shown in Ch.~\ref{sec:implementationLiterals}.
+Since those strings can contain whole flow texts, a text compression would probably be well applicable. An example of such a text compression is a Huffman Code~\cite{huffman}. Here, every single character of a text is binary coded, whereby frequently occurring characters get short and rare characters get longer codes. These codes are expressed by a binary Huffman tree. An example can be seen in Fig.~\ref{fig:huffmantree}. Each leaf contains a symbol whereas the ones and zeros on the path to the symbol define its code. The tree is constructed in such a way that paths to frequent characters are shorter than those to rare characters. The whole procedures can be seen in~\cite{huffman}.
 
 \begin{figure}
 	\centering
@@ -193,13 +199,11 @@ This tree must then be stored in addition to the compressed data so that the ori
 
 \subsubsection{Blank Nodes}\label{sec:approachBlankNodes}
 
-As already mentioned in Ch.~\ref{sec:relatedworkRDF} every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random long strings are assigned for the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective again. 
+As already mentioned in Ch.~\ref{sec:relatedworkRDF} every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random long strings are assigned for the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective here. 
 
-To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can used to have short IDs. 
+To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can used to get short IDs. 
 
-Another possibility is not to save the IDs of the blank nodes at all. In HDT all strings in the dictionary (including the blank node IDs) are mapped to short IDs. Thus the blank node IDs are in principle already stored. They can therefore be removed from the dictionary. HDT must then be changed so that it can handle the case in which it does not find a corresponding string in the dictionary for a certain short ID. At this point it would know directly that the considered node is a blank node and the longer blank node ID is unimportant. Such a situation will occur when a decompression is performed.
-
-\todo{evtl weniger details hier}
+Another possibility is not to save the IDs of the blank nodes at all. In HDT all strings in the dictionary (including the blank node IDs) are mapped to short IDs. Thus, the blank node IDs are in principle already stored. They can therefore be removed from the dictionary. HDT must then be changed so that it can handle the case in which it does not find a corresponding string in the dictionary for a certain short ID. At this point it would know directly that the considered node is a blank node and the longer blank node ID is unimportant. Such a situation will occur when a decompression is performed.
 
 
 

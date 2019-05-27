@@ -184,6 +184,8 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Transitive Properties}
 
+The next evaluated ontology-based manipulation is adding or removing triples with transitive properties. 
+
 \subsubsection{Everything Together}
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
@@ -254,8 +256,19 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 
 \subsubsection{Blank Nodes}
 
-\subsection{Ontology and Dictionary}
-\todo{evtl beides anwenden,wahrscheinl. ist ont Anteil so gering dass man es auf Grafik nicht sehen kann}
+This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact hat the files GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples like in N-Triples. Also, it does not use blank node IDs as long as $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement. The improvement is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/blankNodes}
+	\caption{Results for Blank Node ID improvements for Geo Coordinates (GC) files. \textbf{Normal HDT} uses long IDs. \textbf{Short IDs} uses integer IDs. \textbf{Omit IDs} does not store the IDs.}
+	\label{fig:blanknodes}
+\end{figure}
+
+
+\section{Ontology Knowledge and Dictionary Improvements Combined}
+\todo{hier evtl einen DBPedia Datensatz nehmen, wo HDT vorher besser war und GRP wegen symmetry jetzt besser ist}
 
 
 

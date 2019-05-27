@@ -25,26 +25,29 @@ There is no clear distinction between what is called "vocabularies" and "ontolog
 
 \section{HDT}\label{related_work_hdt}
 
-HDT~(\cite{hdt}) is an approach for compressing RDF data which is directly tailored to RDF and the data compressed by it is still accessible for queries. The idea behind it is to make RDF's extensive representation more compact, thus reducing memory size. Usually, in many plain text formats for RDF (e.g. N-Triples~\footnote{https://www.w3.org/TR/n-triples/}) each triple is written down after another. This does not only require much space, but is also not good for query performance, since each single triple has to be traversed within a query execution.
+HDT~(\cite{hdt}) is an approach for compressing RDF data which is directly tailored to RDF and the data compressed by it is still query-able. The idea behind it is to make RDF's extensive representation more compact, thus reducing memory size. To achieve that, HDT creates three different components during the compression: A header, a dictionary and the triples.
+
+The header contains statistical information about the RDF graph (e.g. number of subjects) and is not needed to decompress the file.
+
+In the dictionary, all URIs and literals (which are usually quite long) are mapped to unique IDs (integers) and that mapping is stored persistently. HDT also compresses the dictionary to store it more efficiently. Since URIs typically have long common prefixes, a prefix-based text compression~(\cite{ppm}) is used here. It identifies longest common prefixes and takes advantage of the redundancy by storing the prefixes only once.
+
+The triples component only uses the IDs produced by the dictionary in order to denote the triples. Usually, in many plain text formats for RDF (e.g. N-Triples~\footnote{https://www.w3.org/TR/n-triples/}) each triple is written down after another. That simple notation is called 'Plain Triples' in HDT and can be seen in Fig.~\ref{fig:hdt_overview}. This does not only require much space, but is also not good for query performance, since each single triple has to be traversed within a query execution.
 
 It is easy to see that a more compact representation can be achieved by cleverly grouping the triples. That is exactly what HDT does. Imagine for example some triples that all have the same subject $s$. These would then be written in N-Triples as follows:
 
 \begin{align*}
-(s,p_1,o_{11}),...,(s,p_1,o_{1_{n1}}),(s,p_2,o_{2_1}),...,\\
-	(s,p_2,o_{2_{n2}}),...,(s,p_k,o_{k_{n_k}})
+(s,p_1,o_{11}),...,(s,p_1,o_{1n_1}),(s,p_2,o_{21}),...,\\
+	(s,p_2,o_{2n_2}),...,(s,p_k,o_{kn_k})
 \end{align*}
-\todo{fix}
 
-In HDT the triples are then grouped by $s$.
+In HDT the triples are then grouped by $s$:
 
 \begin{align*}
-s \to [(p_1,(o_{1_1},...,o_{1_{n_1}})),(p_2,(o_{2_1},...,o_{2_{n_2}})),...,\\
- (p_k , (o_{k_{n_k}} ))]
+s \to [(p_1,(o_{11},...,o_{1n_1})),(p_2,(o_{21},...,o_{2n_2})),...,\\
+ (p_k , (o_{kn_k} ))]
 \end{align*}
 
 Since all triples have the same subject $s$, it does not have to be written down at the beginning of each triple anymore. On the second level the triples are then grouped according to the predicates. So all triples with the predicate $p_1$ come first, then all with the predicate $p_2$ and so on. Finally only the different objects have to be enumerated since the subject and predicate are already implicitly given. It will now be explained how HDT implements this mechanism.
-
-First, all URIs and literals (which are usually quite long) are mapped to unique IDs (integers). From now on these IDs will be used. The triples with the IDs in Fig.~\ref{fig:hdt_overview} are on the left ('Plain Triples'). 
 
 The above mentioned grouped representation is called 'Compact Triples' and can be seen in Fig.~\ref{fig:hdt_overview} in the middle. In the array 'Predicates' are the IDs of the predicates. A '0' means that from now on a new subject comes. For example, the first two entries in the 'Predicates' are linked to the first subject. At position 3 in 'Predicates', there is a '0'. Therefore, the following predicates are linked to the next subject (subject 2 in this case).
 
@@ -58,7 +61,8 @@ The advantage of 'Bitmap Triples' is that queries can be executed faster on this
 
 HDT has also procedures for answering queries, but those will not be mentioned here, because the thesis will focus on HDT's compression ability.
 
-\todo{dict compr erkären}
+
+
 
 \begin{figure}[h]
 	\centering
@@ -178,11 +182,9 @@ After GRP has constructed a grammar for some graph, this grammar has to be store
 
 The start production is encoded using $k^2$ trees which is illustrated in Fig.~\ref{fig:encoding}. The adjacency matrix of the compressed graph (start rule of the grammar) is considered here. First, that matrix is extended with zeros to the next power of two. Then it is partitioned into $k^2$ equally large partitions ($k=2$ here).
 
-The tree's root represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedures continues until there is zero-leaf for each path of the tree.
+The tree's root represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedure continues until there is zero-leaf for each path of the tree. Afterwards, the tree is represented by bit-strings which is shown in Fig.~\ref{fig:encoding}~(c). $T_1$ and $T_2$ encode the first and second level and $L$ encodes the level of the leaves. 
 
-Afterwards, the tree is represented by bit-strings.
-
-Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. \todo{hyper edges permutations}
+Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. Furthermore, the compressed graph grammar contains hyper edges. An adjacency matrix only displays the nodes connected to the hyper edge, but not the order they are connected to it. Hence, for each hyper edge a permutation is stored in addition to the adjacency matrix.
 
 \begin{figure}
 	\centering
@@ -190,9 +192,8 @@ Since the graph has also edge labels, an adjacency matrix and its corresponding 
 	\caption{An adjacency matrix, its $k^2$ tree representation and the tree's bit representation.}
 	\label{fig:encoding}
 \end{figure}
-\todo{einfachere Grafik oder alles erklären}
 
-The remaining productions of the grammar are encodes differently, because they are usually quite small compared to the start production. Here, $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}\todo{genauer erklären}
+The remaining productions of the grammar are encoded differently, because they are usually quite small compared to the start production. Here, $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}\todo{genauer erklären}
 
 
 \subsubsection{Implementation}\label{sec:relatedworkGRPImpl}
@@ -200,13 +201,12 @@ The remaining productions of the grammar are encodes differently, because they a
 GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\footnote{https://www.scala-lang.org/}. It has to been seen as a proof of concept implementation, i.e., it has quite a high run time for bigger graphs. The software can take an RDF file (in N-triples format) as the input and produces three different output files:
 
 \begin{description}
-	\item [Prod:] all productions expect the start rule.
+	\item [Prod:] Contains all productions expect the start rule.
 	\item [Perms:] Contains the hyper edge permutations.
 	\item [Start]: Contains the start rule.
-	\item [Multi]: \todo{mutli?}
 \end{description} 
 
-
+All these files are necessary to decompress the graph.
 
 
 

@@ -15,9 +15,9 @@ Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{Graph_{HDT}}$. As expected, $CR_{
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR_{Graph_{HDT}}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/hdtWithoutDict}\label{fig:ratiosHDTWithoutDict}}
+	\subfloat[$CR_{Graph_{HDT}}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/hdtWithoutDict}\label{fig:ratiosHDTWithoutDict}}
 	\hfill
-	\subfloat[$CR_{HDT}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/hdtWithDict}\label{fig:ratiosHDTWithDict}}
+	\subfloat[$CR_{HDT}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/hdtWithDict}\label{fig:ratiosHDTWithDict}}
 	\caption{The compression ratios for HDT without and with dictionary sizes.}
 \end{figure}
 
@@ -27,9 +27,9 @@ When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this cu
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR_{Graph_{GRP}}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/grpWithoutDict}\label{fig:ratiosGRPWithoutDict}}
+	\subfloat[$CR_{Graph_{GRP}}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/grpWithoutDict}\label{fig:ratiosGRPWithoutDict}}
 	\hfill
-	\subfloat[$CR_{GRP}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/grpWithDict}\label{fig:ratiosGRPWithDict}}
+	\subfloat[$CR_{GRP}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/grpWithDict}\label{fig:ratiosGRPWithDict}}
 	\caption{The compression ratios for GRP without and with dictionary sizes.}
 \end{figure}
 
@@ -37,9 +37,9 @@ Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDi
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR_{Graph_{HDT}}$ and $CR_{Graph_{GRP}}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/bothWithoutDict}\label{fig:ratiosBothWithoutDict}}
+	\subfloat[$CR_{Graph_{HDT}}$ and $CR_{Graph_{GRP}}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/bothWithoutDict}\label{fig:ratiosBothWithoutDict}}
 	\hfill 
-	\subfloat[$CR_{HDT}$ and $CR_{GRP}$.]{\includegraphics[width=0.5\textwidth]{figures/GRPvsHDT/bothWithDict}\label{fig:ratiosBothWithDict}}
+	\subfloat[$CR_{HDT}$ and $CR_{GRP}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/bothWithDict}\label{fig:ratiosBothWithDict}}
 	\caption{The compression ratios for GRP and HDT without and with dictionary sizes.}
 \end{figure}
 
@@ -148,9 +148,9 @@ In Fig.~\ref{fig:sizeratiossymmetricsadd}, $SZ$ is shown. Here, it can be seen t
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$IER$ and $OER$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd}\label{fig:edgeratiossymmetricsadd}}
+	\subfloat[$IER$ and $OER$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd}\label{fig:edgeratiossymmetricsadd}}
 	\hfill 
-	\subfloat[$SR$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd}\label{fig:sizeratiossymmetricsadd}}
+	\subfloat[$SR$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd}\label{fig:sizeratiossymmetricsadd}}
 	\caption{Results for adding symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsadd}) and on the file size level (\ref{fig:sizeratiossymmetricsadd}).}
 	\label{fig:symmetricAddResults}
 \end{figure}
@@ -161,9 +161,9 @@ To further investigate the removal case, the graph $out_2$ from Fig.~\ref{fig:sy
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$IER$ and $OER$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsDelete}\label{fig:edgeratiossymmetricsdelete}}
+	\subfloat[$IER$ and $OER$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsDelete}\label{fig:edgeratiossymmetricsdelete}}
 	\hfill 
-	\subfloat[$SR$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsDelete}\label{fig:sizeratiossymmetricsdelete}}
+	\subfloat[$SR$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsDelete}\label{fig:sizeratiossymmetricsdelete}}
 	\caption{Results for deleting symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsdelete}) and on the file size level (\ref{fig:sizeratiossymmetricsdelete}).}
 	\label{fig:symmetricDeleteResults}
 \end{figure}
@@ -172,9 +172,9 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$IER$ and $OER$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd2}\label{fig:edgeratiossymmetricsadd2}}
+	\subfloat[$IER$ and $OER$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd2}\label{fig:edgeratiossymmetricsadd2}}
 	\hfill 
-	\subfloat[$SR$]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd2}\label{fig:sizeratiossymmetricsadd2}}
+	\subfloat[$SR$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd2}\label{fig:sizeratiossymmetricsadd2}}
 	\caption{Results for adding symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsadd2}) and on the file size level (\ref{fig:sizeratiossymmetricsadd2}). In contrast to Fig.~\ref{fig:symmetricAddResults}, the input graph $in_1$ contains only one direction for each triple with a symmetric property.}
 	\label{fig:symmetricAddResults2}
 \end{figure}
@@ -184,7 +184,9 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Transitive Properties}
 
-The next evaluated ontology-based manipulation is adding or removing triples with transitive properties. 
+The next evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others. It is therefore more difficult to find data where this manipulation can be executed. In DBPedia, we could not find a graphs in which \textit{long paths} exist (defined in Ch.~\ref{sec:approachTransitive}). Thus, only Wordnet will be used here, since it contains \textit{long paths}.
+
+In order to evaluate the approach suggested in Ch.~\ref{sec:approachTransitive} to remove transitive edges $(i,j)$ if there exists a \textit{long path} from $i$ to $j$. Unfortunately, those edges do not exist in Wordnet. To solve that problem, an artificial graph has been created in which all those edges from $i$ to $j$ have been added if a \textit{long path} exists between them.
 
 \subsubsection{Everything Together}
 
@@ -214,9 +216,9 @@ This is because these data do not have a very high proportion of literals and li
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
+	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
 	\hfill
-	\subfloat[Relative amounts of literals and average literal length.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dogFoodLiteralAnalysis}\label{fig:dogfoodliteralanalysis}}
+	\subfloat[Relative amounts of literals and average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodLiteralAnalysis}\label{fig:dogfoodliteralanalysis}}
 	\caption{Relation between literal percentage and literal length (right) and $CR(out_{dict})$ (left) for Semantic Web Dog Food Data.}
 	\label{fig:dogfood}
 \end{figure}
@@ -229,9 +231,9 @@ Another phenomenon can also be seen here: Although the English file contains by 
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dbAbstractsComprRatios}\label{fig:dbAbstractscomprratiosSub}}
+	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsComprRatios}\label{fig:dbAbstractscomprratiosSub}}
 	\hfill
-	\subfloat[Average literal length.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dbAbstractsLiteralAnalysis}\label{fig:dbAbstractsliteralanalysis}}
+	\subfloat[Average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsLiteralAnalysis}\label{fig:dbAbstractsliteralanalysis}}
 	\caption{Relation between literal length (b) and compression ratios (a) for DBPedia Abstracts (Abbreviations denote the languages the abstracts are written in).}
 	\label{fig:dbAbstracts}
 \end{figure}
@@ -247,16 +249,16 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CT$ for DBPedia abstracts.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dbAbstractsRuntimes}\label{fig:dbAbstractsRuntimes}}
+	\subfloat[$CT$ for DBPedia abstracts.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsRuntimes}\label{fig:dbAbstractsRuntimes}}
 	\hfill
-	\subfloat[$CT$ for Semantic Web Dog Food files.]{\includegraphics[width=0.5\textwidth]{figures/4_evaluation/dogFoodRuntimes}\label{fig:dogFoodRuntimes}}
+	\subfloat[$CT$ for Semantic Web Dog Food files.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodRuntimes}\label{fig:dogFoodRuntimes}}
 	\caption{Run times ($CT$) for Normal HDT and HDT + Huffman.}
 	\label{fig:huffmanRuntimes}
 \end{figure}
 
 \subsubsection{Blank Nodes}
 
-This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact hat the files GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples like in N-Triples. Also, it does not use blank node IDs as long as $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement. The improvement is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size.
+This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that, the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs as long as $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement. The improvement is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
 
 
 \begin{figure}

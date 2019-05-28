@@ -184,7 +184,7 @@ The start production is encoded using $k^2$ trees which is illustrated in Fig.~\
 
 The tree's root represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedure continues until there is zero-leaf for each path of the tree. Afterwards, the tree is represented by bit-strings which is shown in Fig.~\ref{fig:encoding}~(c). $T_1$ and $T_2$ encode the first and second level and $L$ encodes the level of the leaves. 
 
-Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. Furthermore, the compressed graph grammar contains hyper edges. An adjacency matrix only displays the nodes connected to the hyper edge, but not the order they are connected to it. Hence, for each hyper edge a permutation is stored in addition to the adjacency matrix.
+Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. Furthermore, the compressed graph grammar contains hyper edges. An adjacency matrix only displays the nodes connected to the hyper edge, but not the order they are connected to it. Hence, for each hyper edge a permutation is stored in addition to the adjacency matrix.\todo{erlären, warum ecnoding oft nicht gut ist}
 
 \begin{figure}
 	\centering

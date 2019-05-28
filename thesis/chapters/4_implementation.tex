@@ -214,7 +214,7 @@ Now, two approaches, which have both been implemented, for improving the compres
 
 The first approach is to use shorter IDs (e.g. numbers from 1 to $n$). Then, during the run time a mapping from old ID to new ID is maintained by the new class {\tt BlankNodeHandler} in order to make sure that the same blank node will get the same new ID if it occurs multiple times. That mapping does not have to be stored persistently and will therefore be omitted once the compression is finished.
 
-The second approach is to omit blank node IDs completely. The HDT code is changed in such a way that skips blank nodes in the process of storing the dictionary.
+The second approach is to omit blank node IDs completely. The HDT code is changed in such a way that skips blank nodes in the process of storing the dictionary. HDT must then be changed so that it can handle the case in which it does not find a corresponding string in the dictionary for a certain short ID. At this point it would know directly that the considered node is a blank node and the longer blank node ID is unimportant. Such a situation will occur when a decompression is performed. That mechanism has not been implemented, because this thesis is only interested in potential compression ratio improvements.
 
 
 

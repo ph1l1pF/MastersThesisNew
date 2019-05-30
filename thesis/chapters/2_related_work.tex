@@ -176,7 +176,7 @@ Algorithm~\ref{alg:GRP} is the main routine of GraphRePair. The algorithm take a
 \end{algorithm}
 
 
-\subsubsection{Grammar Encoding}
+\subsubsection{Grammar Encoding}\label{sec:related_workGrammarEncoding}
 
 After GRP has constructed a grammar for some graph, this grammar has to be stored in an efficient way. The start production (the graph) is most often much bigger than the other productions and is therefore encoded differently. 
 
@@ -184,7 +184,10 @@ The start production is encoded using $k^2$ trees which is illustrated in Fig.~\
 
 The tree's root represents the whole matrix and its child order correspond to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedure continues until there is zero-leaf for each path of the tree. Afterwards, the tree is represented by bit-strings which is shown in Fig.~\ref{fig:encoding}~(c). $T_1$ and $T_2$ encode the first and second level and $L$ encodes the level of the leaves. 
 
-Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. Furthermore, the compressed graph grammar contains hyper edges. An adjacency matrix only displays the nodes connected to the hyper edge, but not the order they are connected to it. Hence, for each hyper edge a permutation is stored in addition to the adjacency matrix.\todo{erlären, warum ecnoding oft nicht gut ist}
+Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. Furthermore, the compressed graph grammar contains hyper edges. An adjacency matrix only displays the nodes connected to the hyper edge, but not the order they are connected to it. Hence, for each hyper edge a permutation is stored in addition to the adjacency matrix.
+
+That encoding method does not always work well together with the grammar, i.e., a smaller grammar sometimes results in a bigger encoded size of the start rule. If GRP can compress well that results in a high number of non terminals and hyper edges, in most cases. That will increase the storage amount for the start rule. Moreover, the compression potential of the $k^2$-tree highly depends on the content of the adjacency matrix. That is, a small change in the matrix can deliver a much higher storage amount of the tree.
+
 
 \begin{figure}
 	\centering

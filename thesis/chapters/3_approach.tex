@@ -113,12 +113,6 @@ First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is sh
 
 For GRP that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio will be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns.
 
-\subsection{Dictionary Size}
-
-\todo{gucken ob sectoin nötig,passt nicht mehr}
-
-As already explained in Ch.~\ref{ch:related_work}, HDT divides an RDF file into its header, dictionary and triples component. This is partially also true for GRP except that GRP does not create a header. But it also assigns an ID to every URI or literal and then only works with these IDs. Unfortunately the authors of~\cite{maneth} did not work on efficient storing of the dictionary. In GRP the size for the dictionary component is just ignored. Therefore we have to add this size in order to compare GRP with HDT in a fair way. To achieve that we just add the same size to the compressed size of GRP that HDT would need to store the dictionary.
-
 
 \section{Compression Improvements}\label{sec:approachComprRatioImprovements}
 
@@ -164,11 +158,13 @@ One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two prop
 
 \subsubsection{Transitive Properties}\label{sec:approachTransitive}
 
-In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. Such a path with the length of at least is called \textit{long path} from now on.
+\todo{hier noch ein bsp wo nach entfernen mehr digramme gefunden werden}
 
-The shown graph shall again be seen as some sub graph. The approach is to remove all triples $(i,j)$ if a \textit{long path} from $i$ to $j$. This is sensible, as it gives the nodes $i$ and $j$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). 
+In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. Such a path, with the length of at least two, is called \tp from now on.
 
-The opposing approach is to add an edge from $i$ to $j$ if there is a \textit{long path} from $i$ to $j$. But a strong argument against this approach is that it would dramatically increase the number of edges, because for each pair $(x,y)$ (with $x,y\in \{1,...,n\} $  and distance between $x$ and $y$ greater than 1), an edge $(x,y)$ would be added. After increasing the graph's size so much it is unlikely that $out_{graph}$ becomes smaller even if more digrams could be found for some reason. 
+The shown graph shall again be seen as some sub graph. The approach is to remove all triples $(i,j)$ if a \tp from $i$ to $j$ exists. This is reasonable, as it gives the nodes $i$ and $j$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). 
+
+The opposing approach is to add an edge from $i$ to $j$ if there is a \tp from $i$ to $j$. But a strong argument against this approach is that it would dramatically increase the number of edges, because for each pair $(x,y)$ (with $x,y\in \{1,...,n\} $  and distance between $x$ and $y$ greater than 1), an edge $(x,y)$ would be added. After increasing the graph's size so much it is unlikely that $out_{graph}$ becomes smaller even if more digrams could be found for some reason. 
 
 \begin{figure}[h]
 	\centering
@@ -178,7 +174,7 @@ The opposing approach is to add an edge from $i$ to $j$ if there is a \textit{lo
 \end{figure}
 
 
-\subsubsection{Equal Properties}
+\subsubsection{Equal Properties}\label{sec:approachEqualProperties}
 
 In OWL there are the properties {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $elr$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same but single nodes can be marked as the same as well.
 

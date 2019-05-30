@@ -56,6 +56,8 @@ It would be possible to argue that only one distinct predicate was used in that 
 
 Apart from the compression ratio, the run time is also important for the overall performance. Fig.~\ref{fig:runtimes} shows the average value of $CT$ for both compressors, respectively. For this the same scenario with the star pattern (and only one distinct predicate) was used. It has been executed 100 times to get a sophisticated run time measurement, because $CT$ depends on the current CPU workload of the computer.
 
+
+\todo{decompression time auch messen}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/GRPvsHDT/runtimes}
@@ -184,15 +186,16 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Transitive Properties}
 
-The next evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others. It is therefore more difficult to find data where this manipulation can be executed. In DBPedia, we could not find a graphs in which \textit{long paths} exist (defined in Ch.~\ref{sec:approachTransitive}). Thus, only Wordnet will be used here, since it contains \textit{long paths}.
+The next evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others (symmetric or inverse). It is therefore more difficult to find data where this manipulation can be executed. In DBPedia, we could not find a graph in which \tps exist (defined in Ch.~\ref{sec:approachTransitive}). Thus, only Wordnet will be used here, since it contains \tps.
 
-In order to evaluate the approach suggested in Ch.~\ref{sec:approachTransitive} to remove transitive edges $(i,j)$ if there exists a \textit{long path} from $i$ to $j$. Unfortunately, those edges do not exist in Wordnet. To solve that problem, an artificial graph has been created in which all those edges from $i$ to $j$ have been added if a \textit{long path} exists between them.
+First, the approach suggested in Ch.~\ref{sec:approachTransitive}, to remove transitive edges $(i,j)$ if there exists a \tp from $i$ to $j$, is evaluated. Unfortunately, those edges do not exist in Wordnet. To solve that problem, an artificial graph has been created in the following way:  The original graph has been divided into two halves (via its list of triples). In the first half, transitive edges are added whenever a \tp exists between two nodes. Afterwards, the manipulated first half is merged with the untouched second half again. This gives us a graph in which both adding and removing transitive edges is possible. Thus, both approaches can be evaluated.
 
 \subsubsection{Everything Together}
 
+
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 
-At this point  about the evaluation of the approaches from Ch.~\ref{sec:implementationDictImprovements}. First the Huffman compression of literals is evaluated and then the compression of blank node IDs. 
+At this point  about the evaluation of the approaches from Ch.~\ref{sec:implementationDictImprovements}. First, the Huffman compression of literals is evaluated and then the compression of blank node IDs. 
 
 
 \subsubsection{Literals}
@@ -237,6 +240,7 @@ Another phenomenon can also be seen here: Although the English file contains by 
 	\caption{Relation between literal length (b) and compression ratios (a) for DBPedia Abstracts (Abbreviations denote the languages the abstracts are written in).}
 	\label{fig:dbAbstracts}
 \end{figure}
+\todo{evtl Formel ab wann sich huffman lohnt}
 
 As mentioned above, saving the Huffman code means almost no additional storage effort. The average fraction of the Huffman code is about 0.1\% and was therefore not displayed in the visualizations.
 
@@ -258,7 +262,7 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 
 \subsubsection{Blank Nodes}
 
-This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that, the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs as long as $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement. The improvement is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
+This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that, the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs that are as long as those used by $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement which is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
 
 
 \begin{figure}
@@ -271,30 +275,6 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 
 \section{Ontology Knowledge and Dictionary Improvements Combined}
 \todo{hier evtl einen DBPedia Datensatz nehmen, wo HDT vorher besser war und GRP wegen symmetry jetzt besser ist}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

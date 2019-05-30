@@ -1,16 +1,25 @@
 % !TeX spellcheck = en_US
 \chapter{Summary and Future Work}\label{ch:summary_and_discussion}
 
-This last chapter concludes the thesis by first summarizing its most important results in a compact form. It is then discussed what future work might be interesting to do in this area.
+This last chapter concludes the thesis by first summarizing its most important results in a compact form. Secondly, it is then discussed what future work might be interesting to do in this area.
 
 \section{Summary}
 
 \section{Future Work}
 
+The topic of RDF compression covered in this thesis can be divided into two aspects: Graph and dictionary compression. Therefore, these aspects are presented separately in the following list:
+
 \begin{itemize}
-	\item loll
+	\item Graph Compression
 	\begin{itemize}
-		\item lo
+		\item More sophisticated implementation of GRP: The GRP implementation used in the thesis is only a proof of concept is not performing well in terms of its run time. Also, the whole graph has to be loaded into the main memory. A faster and more space-efficient variant is needed in order to compete with the more mature HDT.
+		\item Node-based compression: GRP is an edge-based compressor, which means that it replaces edges of a graph by non terminal edges. However, there are also grammar-based compressor which are edge- and node-based, thus also replacing nodes by non terminal nodes. It would be interesting to see whether they can outperform GRP for RDF graphs. Currently, such a compressor is under development as an extension of~\cite{mattdk}.
+		\item Better grammar encoding: In Ch.~\ref{sec:related_workGrammarEncoding}, it has already been stated that the grammar encoding method of GRP is not always working well (especially the $k^2$-tree for storing the start rule). Therefore, a different method can be chosen which maybe delivers better results.
+		\item Compress multiple graphs together: As already mentioned in Ch.~\ref{sec:approachEqualProperties}, it is possible to compress multiple graphs at once. Then, properties or entities can be replaced by equal by equal properties or entities, respectively. This would enable $Graph_{GRP}$ to produce a better compression.
+	\end{itemize}
+	\item Dictionary Compression
+	\begin{itemize}
+		\item More compression methods for literals: As explained in Ch.~\ref{sec:approachLiterals}, the thesis focused on string compression via Huffman Coding. But in literals there can be many other data types. It would be good to have a separate compression technique for each of those data types. That would probably result in a better compression ratio.
 	\end{itemize}
 \end{itemize}
 

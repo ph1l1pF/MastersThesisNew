@@ -124,57 +124,59 @@ OER&=\frac {\text{number of edges in } out_2} {\text{number of edges in } out_1}
  
 $IER$ shows how many edges have been added or removed by the manipulations which indicates how big the impact of the manipulation is. $OER$  shows whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
 
-In order to measure the manipulation it is necessary to define a new metric instead of re-using $CR_{GRP}$ as defined in Ch.~\ref{sec:compressorModel}. For $out_1$, $CR_{GRP}$ would be in relation to $in_1$ (analogously for $out_2$ and $in_2$). But here it is necessary to compare $out_1$ and $out_2$. Therefore, the new metric size ratio ($SR$) is defined as follows:
+In order to measure the manipulation it is necessary to define a new metric instead of re-using $CR_{GRP}$ as defined in Ch.~\ref{sec:compressorModel}. For $out_1$, $CR_{GRP}$ would be in relation to $in_1$ (analogously for $out_2$ and $in_2$). But here it is necessary to compare $out_1$ and $out_2$. Therefore, the new metric Size Ratio ($SR$) is defined as follows:
 
  \[
 SR=\frac {|out_2|} {|out_1|}
 \]
 
-If $SR<1$ holds than the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is in the end more relevant than the grammar level, because it is the real storage amount necessary to store the compressed data.
+If $SR<1$ holds then the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is in the end more relevant than the grammar level, because it is the real amount necessary to store the compressed data.
 
 
 
 \subsubsection{Symmetric Properties}
 
-First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. Fig.~\ref{fig:edgeratiossymmetricsadd} shows the results on the grammar level, here $IER$ and $OER$ are presented. As expected $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. The other scale in Fig.~\ref{fig:edgeratiossymmetricsadd} shows $OER$. There, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
+First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. As expected $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
 
-In Fig.~\ref{fig:sizeratiossymmetricsadd}, $SR$ is shown. Here, it can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from~\ref{sec:related_workGrammarEncoding}, that the encoding does not always work well, is supported by these results. 
+When $SR$ is considered, it can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from~\ref{sec:related_workGrammarEncoding}, that the encoding does not always work well, is supported by these results. 
 
-\begin{figure}[h]
+
+
+\begin{figure}
 	\centering
-	\subfloat[$IER$ and $OER$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd}\label{fig:edgeratiossymmetricsadd}}
-	\hfill 
-	\subfloat[$SR$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd}\label{fig:sizeratiossymmetricsadd}}
-	\caption{Results for adding symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsadd}) and on the file size level (\ref{fig:sizeratiossymmetricsadd}).}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosSymmetricsAdd}
+	\caption{Results for adding symmetric properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
 	\label{fig:symmetricAddResults}
 \end{figure}
 
-In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). In Fig.~\ref{fig:sizeratiossymmetricsdelete}, it is possible to see that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$~(Fig.~\ref{fig:edgeratiossymmetricsdelete}) and $SR$~(Fig.~\ref{fig:sizeratiossymmetricsdelete}) are less than 1, but not less than in Fig.~\ref{fig:symmetricAddResults}, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. However, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable.
+
+In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it is possible to see that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. However, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable.
 
 To further investigate the removal case, the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
 
-\begin{figure}[h]
+\begin{figure}
 	\centering
-	\subfloat[$IER$ and $OER$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsDelete}\label{fig:edgeratiossymmetricsdelete}}
-	\hfill 
-	\subfloat[$SR$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsDelete}\label{fig:sizeratiossymmetricsdelete}}
-	\caption{Results for deleting symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsdelete}) and on the file size level (\ref{fig:sizeratiossymmetricsdelete}).}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosSymmetricsDelete}
+	\caption{Results for deleting symmetric properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
 	\label{fig:symmetricDeleteResults}
 \end{figure}
 
-The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:edgeratiossymmetricsadd}, since now a higher amount of edges has been added. The fact that both $OER$~(Fig.~\ref{fig:edgeratiossymmetricsadd2}) and $SR$~(Fig.~\ref{fig:sizeratiossymmetricsadd2}) are lower than 1, support our hypothesis that adding symmetric edges is more beneficial than removing them. So, we conclude that adding symmetric edges enables $Graph_{GRP}$ to find more digrams, and thus producing a smaller grammar.
 
-\begin{figure}[h]
+
+The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:symmetricAddResults}, since now a higher amount of edges has been added. The fact that both $OER$ and $SR$ are lower than 1, support our hypothesis that adding symmetric edges is more beneficial than removing them. So, we conclude that adding symmetric edges enables $Graph_{GRP}$ to find more digrams, and thus producing a smaller grammar.
+
+\begin{figure}
 	\centering
-	\subfloat[$IER$ and $OER$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/edgeRatiosSymmetricsAdd2}\label{fig:edgeratiossymmetricsadd2}}
-	\hfill 
-	\subfloat[$SR$]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/sizeRatiosSymmetricsAdd2}\label{fig:sizeratiossymmetricsadd2}}
-	\caption{Results for adding symmetric properties, on the grammar level (\ref{fig:edgeratiossymmetricsadd2}) and on the file size level (\ref{fig:sizeratiossymmetricsadd2}). In contrast to Fig.~\ref{fig:symmetricAddResults}, the input graph $in_1$ contains only one direction for each triple with a symmetric property.}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosSymmetricsAdd2}
+	\caption{Results for adding symmetric properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$). In contrast to Fig.~\ref{fig:symmetricAddResults}, the input graph $in_1$ contains only one direction for each triple with a symmetric property.}
 	\label{fig:symmetricAddResults2}
 \end{figure}
 
 
+
 \subsubsection{Inverse Properties}
+
+
 
 \subsubsection{Transitive Properties}
 
@@ -182,22 +184,22 @@ The next evaluated ontology-based manipulation is adding or removing triples wit
 
 First, the approach suggested in Ch.~\ref{sec:approachTransitive}, to remove transitive edges $(i,j)$ if there exists a \tp from $i$ to $j$, is evaluated. Unfortunately, those edges do not exist in Wordnet. To solve that problem, an artificial graph has been created in the following way:  The original graph has been divided into two halves (via its list of triples). In the first half, transitive edges are added whenever a \tp exists between two nodes. Afterwards, the manipulated first half is merged with the untouched second half again. This gives us a graph in which both adding and removing transitive edges is possible. So, both approaches can be evaluated.
 
-The results for removing transitive edges can be seen in Fig.~\ref{fig:ratiotransitivesDelete}. Since only Wordnet is evaluated here, Fig.~\ref{fig:ratiotransitivesDelete} only consists of one figure, which contains all metrics. $IER$ is about 0.75, as several edges have been removed. $OER$ is about 0.5, which means that the removals have delivered a significant improvement on the grammar level. It could be argued that the improvement is only due to the reduced size of the graph. But this is not the case, since $OER<IER$ holds. Hence, due to the removed transitive edges could indeed find more patterns, as stated in Ch.~\ref{sec:approachTransitive}. On the file size level, the improved compression is also visible, because $SR\approx0.88$ is also less than 1. Again, the improvement is not as good as on the grammar level.
+The results for removing transitive edges can be seen in Fig.~\ref{fig:ratiotransitivesDelete}. Since only Wordnet is evaluated here, Fig.~\ref{fig:ratiotransitivesDelete} only consists of one figure, which contains all metrics. $IER$ is about 0.75, as several edges have been removed. $OER$ is about 0.5, which means that the removals have delivered a significant improvement on the grammar level. It could be argued that the improvement is only due to the reduced size of the graph. But this is not the case, since $OER<IER$ holds. Hence, due to the removed transitive edges, $Graph_{GRP}$ could indeed find more patterns, as stated in Ch.~\ref{sec:approachTransitive}. On the file size level, the improved compression is also visible, because $SR\approx0.88$ is also less than 1. Again, the improvement is not as good as on the grammar level.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/ontology/ratioTransitivesDelete}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratioTransitivesDelete}
 	\caption{$IER$, $OER$ and $SR$ for removing transitive edges in Wordnet.}
 	\label{fig:ratiotransitivesDelete}
 \end{figure}
 
-Next, the opposing approach (adding transitive edges) is evaluated. The result are illustrated in Fig.~\ref{fig:ratiotransitivesAdd}. Obviously, $ IER>1 $ holds, since edges have been added. $OER\approx3.5$ is significantly high now, which means that adding transitive edges has resulted in a much larger end result, on the grammar level. In contrast to Fig.~\ref{fig:ratiotransitivesDelete}, $IER<OER$ holds here, but that supports the hypothesis that adding transitive edges makes$Graph_{GRP}$ find less digrams (see Ch.~\ref{sec:approachTransitive}). On the file size level, $SR\approx1.8$ is higher than 1, but the result is not as bad as on the grammar level. 
+Next, the opposing approach (adding transitive edges) is evaluated. The results are illustrated in Fig.~\ref{fig:ratiotransitivesAdd}. Obviously, $ IER>1 $ holds, since edges have been added. $OER\approx3.5$ is significantly high, which means that adding transitive edges has resulted in a much larger end result, on the grammar level. In contrast to Fig.~\ref{fig:ratiotransitivesDelete}, $IER<OER$ holds here, but that supports the hypothesis that adding transitive edges makes $Graph_{GRP}$ find less digrams (see Ch.~\ref{sec:approachTransitive}). On the file size level, $SR\approx1.8$ is higher than 1, but the result is not as bad as on the grammar level. 
 
 Thus, it can be concluded that removing transitive edges results in a better compression, and adding them delivers a worse compression.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/ontology/ratioTransitivesAdd}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratioTransitivesAdd}
 	\caption{$IER$, $OER$ and $SR$ for adding transitive edges in Wordnet.}
 	\label{fig:ratiotransitivesAdd}
 \end{figure}
@@ -283,7 +285,7 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 \end{figure}
 
 
-\section{Ontology Knowledge and Dictionary Improvements Combined}
+\section{Final Result}
 \todo{hier evtl einen DBPedia Datensatz nehmen, wo HDT vorher besser war und GRP wegen symmetry jetzt besser ist}
 
 

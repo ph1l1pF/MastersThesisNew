@@ -10,7 +10,7 @@ Finally, improvements of the compression will be suggested.
 
 \section{Compressor Models}
 
-Here, two compressor models will be introduced, one for general compressor and another one for RDF compressors. 
+Here, two compressor models will be introduced, one for general compressors and another one for RDF compressors. 
 
 \subsection{General Compressor Model}\label{sec:generalcompressorModel}
 
@@ -48,7 +48,7 @@ Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors dis
 		\hline \hline
 		HDT & $\checkmark$ & $\checkmark$  \\ 
 		\hline 
-		GRP & only ID assignment (no compression or storage of dictionary) & $\checkmark$ \\ 
+		GRP & only ID assignment (no storage of $out_{dict}$) & $\checkmark$ \\ 
 		\hline 
 	\end{tabular} 
 	\captionof{table}{Overview of RDF compressors presented in this thesis.}	
@@ -199,9 +199,9 @@ Since those strings can contain whole flow texts, a text compression would proba
 
 \subsubsection{Blank Nodes}\label{sec:approachBlankNodes}
 
-As already mentioned in Ch.~\ref{sec:relatedworkRDF} every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random long strings are assigned for the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective here. 
+As already mentioned in Ch.~\ref{sec:relatedworkRDF} every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random strings are assigned to the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective here. 
 
-To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can used to get short IDs. 
+To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can be used to get short IDs. 
 
 Another possibility is not to save the IDs of the blank nodes at all. In HDT all strings in the dictionary (including the blank node IDs) are mapped to short IDs. Thus, the blank node IDs are in principle already stored. They can therefore be removed from the dictionary. 
 

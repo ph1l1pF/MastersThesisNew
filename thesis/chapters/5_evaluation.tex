@@ -1,7 +1,9 @@
 % !TeX spellcheck = en_US
 \chapter{Evaluation}\label{ch:evaluation}
 
-This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach} and~\ref{ch:implementation}. For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
+This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach} and~\ref{ch:implementation}.  First, the comparison of GRP and HDT is evaluated. Second, the evaluation results for the compression improvements are presented.
+
+For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
 
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
@@ -72,18 +74,16 @@ In addition it can be noticed that $CT_{GRP}$ fluctuates more than $CT_{HDT}$. $
 
 \section{Compression Improvements}
 
-This chapter is about evaluating the compression improvements. It starts with applying ontology knowledge and then continues with dictionary compression improvement. In contrast to Ch.~\ref{sec:evaluationHDTvsGRP}, real data will be evaluated here to see how much influence the improvements have.
+This chapter is about evaluating the compression improvements. First, results for the graph compression improvements  are discussed. Then, results for the dictionary compression improvements are presented.  In the end, both approaches will be combined in a final evaluation.
 
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
 
 In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. 
 
-Here, not only the size of the output $out_{graph}$ will be measured. Since these approaches have the intention to improve the ability for GRP to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because after the encoding of the grammar it might happen that despite the fact that the grammar is smaller after the manipulations that effect is not visible in the value of $|out_{graph}|$. 
+Here, not only the file size of the output ($|out_{graph}|$) will be measured. Since these approaches have the intention to improve the ability for $Graph_{GRP}$ to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because after the encoding of the grammar it might happen that despite the fact that the grammar is smaller (after the manipulations), that effect is not visible in the value of $|out_{graph}|$. 
 
 \subsubsection{Occurrence of Properties}
-Now, it will be presented how much of those symmetric/inverse/transitive properties exist in real data. For that we will use the datasets presented in Ch.~\ref{sec:implementationDatasets}. 
-
-Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in real datasets (DBPedia and Wordnet). (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low, especially for symmetric and inverse properties. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties can be necessary to observe a real effect of the data manipulations. Nevertheless, first the normal datasets will be used to evaluate the manipulations.
+First, it is interesting to consider how often the relevant properties occur in real datasets.  For that, DBPedia and Wordnet will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties can be necessary to observe a real effect of the data manipulations. Consequently, those sub graphs are used in the following evaluations.
 
 \begin{figure}
 	\centering
@@ -92,9 +92,16 @@ Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur in r
 	\label{fig:ontoccurrences}
 \end{figure}
 
-\todo{irgendiwe zeigen, dass interessante Fälle zu selten auftreten}
+Another interesting feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that the number of are quite low, especially for symmetric properties, considering the fact that these datasets are very large.
 
-Therefore, for the following evaluations of Ch.~\ref{sec:evaluationOntKnowledge}, we use sub graphs as described in Ch.~\ref{sec:implementationSubGraphs}. More precisely, we use graphs that contain half triples with the relevant properties and the other half triples connected with them. By doing that, the effects will be significant and it will be clear whether they lead to a better or worse compression ratio. 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/ontology/totalNumbers}
+	\caption{Number of different relevant properties for DBPedia and Wordnet.}
+	\label{fig:totalnumbers}
+\end{figure}
+
+
 
 \subsubsection{Evaluation Process}
 Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. The several parts of the process will be discussed in the next sections. Fig.~\ref{fig:overallprocess} shows how it is implemented. First, the original graph or sub graph is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
@@ -110,7 +117,7 @@ Finally, $|out_1|$ and $|out_2|$ have to be compared. The next chapter will expl
 	\label{fig:overallprocess}
 \end{figure}
 
-The evaluation process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. This way, it is noticeable what the manipulations bring individually and in the end also, what they all achieve in combination.\todo{wurde das gemacht?}
+The evaluation process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So, there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. This way, it is noticeable what the manipulations bring individually and in the end also, what they all achieve in combination.\todo{wurde das gemacht?}
 
 \subsubsection{Metrics}
 
@@ -122,13 +129,13 @@ IER&=\frac {\text{number of edges in } in_2} {\text{number of edges in  } in_1}
 OER&=\frac {\text{number of edges in } out_2} {\text{number of edges in } out_1}
  \end{align*}
  
-$IER$ shows how many edges have been added or removed by the manipulations which indicates how big the impact of the manipulation is. $OER$  shows whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
+$IER$ shows how many edges have been added or removed by the manipulation which indicates how big the impact of the manipulation is. $OER$  shows whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
 
 In order to measure the manipulation it is necessary to define a new metric instead of re-using $CR_{GRP}$ as defined in Ch.~\ref{sec:compressorModel}. For $out_1$, $CR_{GRP}$ would be in relation to $in_1$ (analogously for $out_2$ and $in_2$). But here it is necessary to compare $out_1$ and $out_2$. Therefore, the new metric Size Ratio ($SR$) is defined as follows:
 
- \[
+\begin{align*} 
 SR=\frac {|out_2|} {|out_1|}
-\]
+\end{align*}
 
 If $SR<1$ holds then the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is in the end more relevant than the grammar level, because it is the real amount necessary to store the compressed data.
 
@@ -138,7 +145,7 @@ If $SR<1$ holds then the manipulation has resulted in an improvement at the file
 
 First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. As expected $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for $Dict_{GRP}$ and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
 
-When $SR$ is considered, it can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from~\ref{sec:related_workGrammarEncoding}, that the encoding does not always work well, is supported by these results. 
+It can be seen that $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from Ch.~\ref{sec:related_workGrammarEncoding}, that the encoding does not always work well, is supported by these results. 
 
 
 
@@ -152,7 +159,7 @@ When $SR$ is considered, it can be seen that $SR<1$ is true. Hence, also on the 
 
 In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it is possible to see that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. However, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable.
 
-To further investigate the removal case, the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
+To further investigate the removal case, the decompressed version of the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
 
 \begin{figure}
 	\centering
@@ -176,15 +183,34 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Inverse Properties}
 
+Next, the manipulation based on inverse properties is being evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has already been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better end result for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
+
+For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is significantly smaller than 1. Hence, in this case, the manipulation has delivered a positive result. On the file size level, the result is also positive ($OER=0.9$).
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosInverseAdd}
+	\caption{Results for adding inverse properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
+	\label{fig:inverseAddResults}
+\end{figure}
+
+In the case of DBPedia, a reason for the negative result can be that DBPedia has a relatively high number of different inverse properties. Therefore, adding all the edges with many different URIs to the relatively small graph in Fig.~\ref{fig:inverseAddResults} (2000 triples) does not have effect which is positive enough to compensate the high amount of edges added to it. In order to further investigate that, a graph that is ten times bigger, is created. The results for it are shown in Fig.~\ref{fig:inverseAddResultsBigger}. It can be seen that the results are now much better. While $IER$ is about 2 again, $OER=0.85$ is now much smaller and also $SR=0.91$ is smaller. So, it can be stated that adding inverse properties has a positive effect on the graph compression potential, as mentioned in Ch.~\ref{sec:approachInverse}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosInverseAddBigger}
+	\caption{Results for adding inverse properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$). DBPedia graph is now 10 ten times bigger than in Fig.~\ref{fig:inverseAddResults}.}
+	\label{fig:inverseAddResultsBigger}
+\end{figure}
 
 
 \subsubsection{Transitive Properties}
 
-The next evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others (symmetric or inverse). It is therefore more difficult to find data where this manipulation can be executed. In DBPedia, we could not find a graph in which \tps exist (defined in Ch.~\ref{sec:approachTransitive}). Thus, only Wordnet will be used here, since it contains \tps.
+The final evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others (symmetric or inverse). It is therefore more difficult to find data where this manipulation can be executed. In DBPedia, we could not find a graph in which \tps exist (defined in Ch.~\ref{sec:approachTransitive}). Thus, only Wordnet will be used here, since it contains \tps.
 
-First, the approach suggested in Ch.~\ref{sec:approachTransitive}, to remove transitive edges $(i,j)$ if there exists a \tp from $i$ to $j$, is evaluated. Unfortunately, those edges do not exist in Wordnet. To solve that problem, an artificial graph has been created in the following way:  The original graph has been divided into two halves (via its list of triples). In the first half, transitive edges are added whenever a \tp exists between two nodes. Afterwards, the manipulated first half is merged with the untouched second half again. This gives us a graph in which both adding and removing transitive edges is possible. So, both approaches can be evaluated.
+First, the approach suggested in Ch.~\ref{sec:approachTransitive}, to remove \textit{direct transitive paths}, is evaluated. Unfortunately, those edges do not exist in Wordnet. To solve that problem, an artificial graph has been created in the following way:  The original graph has been divided into two halves (via its list of triples). In the first half, all possible \dtps are added. Afterwards, the manipulated first half is merged with the untouched second half again. This gives us a graph in which both adding and removing \dtps is possible. So, both approaches can be evaluated.
 
-The results for removing transitive edges can be seen in Fig.~\ref{fig:ratiotransitivesDelete}. Since only Wordnet is evaluated here, Fig.~\ref{fig:ratiotransitivesDelete} only consists of one figure, which contains all metrics. $IER$ is about 0.75, as several edges have been removed. $OER$ is about 0.5, which means that the removals have delivered a significant improvement on the grammar level. It could be argued that the improvement is only due to the reduced size of the graph. But this is not the case, since $OER<IER$ holds. Hence, due to the removed transitive edges, $Graph_{GRP}$ could indeed find more patterns, as stated in Ch.~\ref{sec:approachTransitive}. On the file size level, the improved compression is also visible, because $SR\approx0.88$ is also less than 1. Again, the improvement is not as good as on the grammar level.
+The results for removing \dtps can be seen in Fig.~\ref{fig:ratiotransitivesDelete}. $IER$ is about 0.75, as several edges have been removed. $OER$ is about 0.5, which means that the removals have delivered a significant improvement on the grammar level. It could be argued that the improvement is only due to the reduced size of the graph. But this is not the case, since $OER<IER$ holds. Hence, due to the removed \textit{direct transitive paths}, $Graph_{GRP}$ could indeed find more digrams, as stated in Ch.~\ref{sec:approachTransitive}. On the file size level, the improved compression is also visible, because $SR\approx0.88$ is less than 1. Again, the improvement is not as good as on the grammar level.
 
 \begin{figure}
 	\centering
@@ -193,9 +219,9 @@ The results for removing transitive edges can be seen in Fig.~\ref{fig:ratiotran
 	\label{fig:ratiotransitivesDelete}
 \end{figure}
 
-Next, the opposing approach (adding transitive edges) is evaluated. The results are illustrated in Fig.~\ref{fig:ratiotransitivesAdd}. Obviously, $ IER>1 $ holds, since edges have been added. $OER\approx3.5$ is significantly high, which means that adding transitive edges has resulted in a much larger end result, on the grammar level. In contrast to Fig.~\ref{fig:ratiotransitivesDelete}, $IER<OER$ holds here, but that supports the hypothesis that adding transitive edges makes $Graph_{GRP}$ find less digrams (see Ch.~\ref{sec:approachTransitive}). On the file size level, $SR\approx1.8$ is higher than 1, but the result is not as bad as on the grammar level. 
+Next, the opposing approach (adding \textit{direct transitive paths}) is evaluated. The results are illustrated in Fig.~\ref{fig:ratiotransitivesAdd}. Obviously, $ IER>1 $ holds, since many edges have been added. $OER\approx3.5$ is significantly high, which means that adding \dtps has resulted in a much larger end result, on the grammar level. In contrast to Fig.~\ref{fig:ratiotransitivesDelete}, $IER<OER$ holds here, but that supports the hypothesis that adding \dtps makes $Graph_{GRP}$ find less digrams (see Ch.~\ref{sec:approachTransitive}). On the file size level, $SR\approx1.8$ is higher than 1, but the result is not as bad as on the grammar level. 
 
-Thus, it can be concluded that removing transitive edges results in a better compression, and adding them delivers a worse compression.
+Thus, it can be concluded that removing \dtps results in a better compression, and adding them delivers a worse compression. Although \dtps do not exist in the considered datasets, they still can exist in other datasets. The evaluation results have shown that removing \dtps leads to a insignificant  compression improvement. 
 
 \begin{figure}
 	\centering
@@ -285,7 +311,7 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 \end{figure}
 
 
-\section{Final Result}
+\subsection{Final Result}
 \todo{hier evtl einen DBPedia Datensatz nehmen, wo HDT vorher besser war und GRP wegen symmetry jetzt besser ist}
 
 

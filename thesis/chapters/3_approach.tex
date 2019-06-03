@@ -14,7 +14,7 @@ Here, two compressor models will be introduced, one for general compressors and 
 
 \subsection{General Compressor Model}\label{sec:generalcompressorModel}
 
-A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$.
+A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output $out$. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$.
 
 \begin{figure}
 	\centering
@@ -27,7 +27,7 @@ A general purpose compressor $C$ can be described as follows: $C$ takes an input
 
 This section introduces a formal model for an RDF compressor which can be seen as a sub class or extension of the general model in Ch.~\ref{sec:generalcompressorModel}. It is illustrated in Fig.~\ref{fig:compressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in the context of HDT (see Ch.~\ref{related_work_hdt}). It assigns an ID to each URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
 
-The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output $out$ (whereas $|out|=|out_{dict}|+ |out_{graph}| $). $out_{graph}$ and $out_{dict}$ can each be a single file or a set of files. 
+The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output $out$ ($out=\{out_{dict}, out_{graph}\} $). $out_{graph}$ and $out_{dict}$ can each be a single file or a set of files. 
 
 \begin{figure}
 	\centering
@@ -57,7 +57,7 @@ Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors dis
 
 \section{Key Performance Indicators}
 
-In the following two sections, key performance indicators for general and RDF compressors are introduced. Those indicators will be measured in to determine the overall performance for the different compressors.
+In the following two sections, key performance indicators for general and RDF compressors are introduced. Those indicators will be measured in order to determine the overall performance for the different compressors.
 
 \subsection{Compression Ratio}
 
@@ -77,11 +77,9 @@ CR_{Graph_C} = \dfrac{|out_{graph}|}{ |in|} \label{eq:graph}
 
 Eq.~\ref{eq:complete} defines the compression ratio for the whole output $out$. Therefore, it is applicable to general and RDF compressors.
 
-In contrast, Eq.~\ref{eq:dict} and~\ref{eq:graph} define the compression ratio only with regard to $out_{dict}$ and $out_{graph}$, respectively. They are only applicable for RDF compressors, since a general compressor has no distinction between $out_{dict}$ and $out_{graph}$. In some cases it is of interest to only consider either dictionary or graph compression.
+In contrast, Eq.~\ref{eq:dict} and~\ref{eq:graph} define the compression ratio only with regard to $out_{dict}$ and $out_{graph}$, respectively. They are only applicable for RDF compressors, since a general compressor has no distinction between $out_{dict}$ and $out_{graph}$. In some cases it is of interest to only consider either the dictionary or graph compression.
 
 Sometimes $CR$ is used instead of $CR_C$ if it is clear from the context, which compressor $C$ is considered.
-
-If $C$ is an RDF compressor, then $CR_C$ is not always measured with respect to the whole output $out$, but sometimes only with respect to $out_{graph} \text{ or } out_{dict}$. This is due to the fact that in some cases it is interesting to only consider the compression of the dictionary or the graph.
 
 As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. That has to be taken into account with regard to $CR$ as those formats implicate different input sizes. When $CR$ of two compressors is compared, their input has to have the same format.
 
@@ -111,12 +109,16 @@ First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is sh
 	\label{fig:hdt_overview_1}
 \end{figure}
 
-For GRP that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio will be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns.
+For GRP that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio tends to be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns.
+
+Let \[ elr = \dfrac{\text{number of different edge labels}}{\text{number of edges}} \] (edge label ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
+
+Generally, it can be said that GRP can compress a graph better if $elr$ is lower, because then it is more likely that there is much redundancy in the graph. However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $elr$.
 
 
 \section{Compression Improvements}\label{sec:approachComprRatioImprovements}
 
-First comparisons of $Graph_{HDT}$ and $Graph_{GRP}$ (see~Ch.~\ref{sec:evaluationHDTvsGRP}) showed that  $Graph_{GRP}$ achieves a better compression ratio. Therefore, Ch.~\ref{sec:approachOntKnowledge} will mainly focus on improving $Graph_{GRP}$. But Ch.~\ref{sec:approachDictImprovements} is about the improvement of $Dict_{HDT}$ which is used for both HDT and GRP.
+First comparisons of $Graph_{HDT}$ and $Graph_{GRP}$ (see~Ch.~\ref{sec:evaluationHDTvsGRP}) showed that  $Graph_{GRP}$ achieves a better compression ratio in many cases. Since this thesis' topic is grammar-based compression, Ch.~\ref{sec:approachOntKnowledge} will focus on improving $Graph_{GRP}$. But Ch.~\ref{sec:approachDictImprovements} is about the improvement of $Dict_{HDT}$ which is used for both HDT and GRP.
 
 
 
@@ -129,11 +131,6 @@ This chapter will investigate whether it is possible to change the structure of 
 In Ch.~\ref{sec:relationDataStructureComprRatio} it has already been mentioned that GRP makes use of much more complex sub structures than HDT. It will therefore be interesting to see how applying ontology knowledge influences GRP's compression ratio.
 
 This chapter is about elaborating the theoretical concepts of OWL and investigating how they can be used for grammar-based compression.
-
-Let \[ elr = \dfrac{\text{number of different edge labels}}{\text{number of edges}} \] (edge label ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
-
-Generally it can be said that GRP can compress a graph better if $elr$ is lower, because then there it is more likely that there is much redundancy in the graph. However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $elr$.
-
 
 \subsubsection{Symmetric Properties}
 
@@ -151,7 +148,7 @@ There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The 
 	\label{}
 \end{figure}
 
-\subsubsection{Inverse Properties}
+\subsubsection{Inverse Properties}\label{sec:approachInverse}
 
 One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes were already connected before. 
 
@@ -160,11 +157,11 @@ One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two prop
 
 \todo{hier noch ein bsp wo nach entfernen mehr digramme gefunden werden}
 
-In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. Such a path, with the length of at least two, is called \tp from now on.
+In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $3$, as illustrated in Fig.~\ref{fig:transitiveMat}. Such a path, with the length of at least two, is called \tp from now on. If there exists a \tp between two nodes $i$ and $j$, then the edge $(i,j)$ is called \dtpp So, in Fig.~\ref{fig:transitiveMat}, the edges $(1,3)$ and $(1,n)$ are \dtpsp
 
-The shown graph shall again be seen as some sub graph. The approach is to remove all triples $(i,j)$ if a \tp from $i$ to $j$ exists. This is reasonable, as it gives the nodes $i$ and $j$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). 
+The shown graph shall again be seen as some sub graph. The approach is to remove all \dtpsp This is reasonable, as it gives the nodes $i$ and $j$ a lower degree, and therefore GRP can have a higher chance to find other digrams in which those nodes are involved (they are not shown in Fig.~\ref{fig:transitiveMat}). 
 
-The opposing approach is to add an edge from $i$ to $j$ if there is a \tp from $i$ to $j$. But a strong argument against this approach is that it would dramatically increase the number of edges, because for each pair $(x,y)$ (with $x,y\in \{1,...,n\} $  and distance between $x$ and $y$ greater than 1), an edge $(x,y)$ would be added. After increasing the graph's size so much it is unlikely that $out_{graph}$ becomes smaller even if more digrams could be found for some reason. 
+The opposing approach is to add all \dtpsp But a strong argument against this approach is that it would dramatically increase the number of edges, because for each pair $(x,y)$ (with $x,y\in \{1,...,n\} $  and distance between $x$ and $y$ greater than 1), an edge $(x,y)$ would be added. After increasing the graph's size so much it is unlikely that $out_{graph}$ becomes smaller even if more digrams could be found for some reason. 
 
 \begin{figure}[h]
 	\centering

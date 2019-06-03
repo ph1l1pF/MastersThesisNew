@@ -115,7 +115,7 @@ $M^*=M^+ \cup \{ \epsilon \} $ is similar to $M^+$, but it also includes the emp
 
 Let $\Sigma$ be an alphabet. A hypergraph over $\Sigma$ is a tuple $g=(V,E,att,lab,ext)$ where $V=\{1,...,n\}$ is the set of nodes. $E \subseteq \{(i,j) | i,j\in V\} $ is the set of edges. $att: E \to V^+$ is the attachment mapping assigning start and end nodes to all edges. $lab: E\to \Sigma$ is the edge label mapping, and $ext \in V^*$ is a series of external nodes. A hypergraph does not contain multi-edges, which means for two edges $e_1\not=e_2$ it holds $att(e_1)\not=att(e_2) \vee lab(e_1)\not=lab(e_2)$. For a hypergraph $g=(V,E,att,lab,ext)$  $V_g, E_g, att_g, lab_g, ext_g$ are used to refer to its components.
 
-An example for a hypergraph is illustrated in Fig.~\ref{fig:hypergraph}. Formally the graph can be described as $V=\{1,2,3\}$, $E=\{e_1,e_2,e_3\}$, $att=\{e_1 \mapsto 1 \cdot 2, e_2 \mapsto2 \cdot 3, e_3 \mapsto 2 \cdot 1 \cdot 3 \}$, $lab=\{ e_1\mapsto a, e_2 \mapsto b, e_3 \mapsto A \}$ and $ext=3 \cdot 1$.
+An example for a hypergraph is illustrated in Fig.~\ref{fig:hypergraph}. Formally, the graph can be described as $V=\{1,2,3\}$, $E=\{e_1,e_2,e_3\}$, $att=\{e_1 \mapsto 1 \cdot 2, e_2 \mapsto2 \cdot 3, e_3 \mapsto 2 \cdot 1 \cdot 3 \}$, $lab=\{ e_1\mapsto a, e_2 \mapsto b, e_3 \mapsto A \}$ and $ext=3 \cdot 1$.
 
 \begin{figure}
 	\centering
@@ -196,12 +196,12 @@ That encoding method does not always work well together with the grammar, i.e., 
 	\label{fig:encoding}
 \end{figure}
 
-The remaining productions of the grammar are encoded differently, because they are usually quite small compared to the start production. Here, $\delta $-codes with variable length are used. Essentially this is a way of displaying numbers as a bit-string in an efficient way (similar to a Huffman Code). To realize that, the right hand side of the components of the production have to represented by numbers, e.g. the edges labels, the node IDs etc.~\cite{maneth}\todo{genauer erklären}
+The remaining productions of the grammar are encoded differently, because they are usually quite small compared to the start production. Here, $\delta $-codes with variable length are used. Essentially, this is a way of displaying objects as a bit-string. Every production starts with the number of edges. For each edge, one bit is used to mark terminal/non-terminal edges, followed by the number of attached nodes. Next, the $\delta$-codes of the list of IDs is mentioned. Finally, a $\delta$-code is used for the edge label.~\cite{maneth}
 
 
 \subsubsection{Implementation}\label{sec:relatedworkGRPImpl}
 
-GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\footnote{https://www.scala-lang.org/}. It has to been seen as a proof of concept implementation, i.e., it has quite a high run time for bigger graphs. The software can take an RDF file (in N-triples format) as the input and produces three different output files:
+GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\footnote{https://www.scala-lang.org/}. It has to be seen as a proof of concept implementation, i.e., it has quite a high run time for bigger graphs. The software can take an RDF file (in N-triples format) as the input and produces three different output files:
 
 \begin{description}
 	\item [Prod:] Contains all productions expect the start rule.
@@ -209,7 +209,7 @@ GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\
 	\item [Start]: Contains the start rule.
 \end{description} 
 
-All these files are necessary to decompress the graph.
+All these files are necessary to decompress the graph.\cite{maneth}
 
 
 

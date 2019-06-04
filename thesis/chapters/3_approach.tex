@@ -92,7 +92,7 @@ Analogously to $CR$, if is clear from the context which compressor is considered
 
 \section{GRP vs HDT}\label{sec:approachGRPvsHDT}
 
-In this section, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain properties of RDF graphs are discussed.
+In this chapter, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain properties of RDF graphs are discussed.
 
 The question is whether there are certain properties/features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
 
@@ -100,20 +100,39 @@ As HDT and GRP use the same method for compressing the dictionary ($Dict_{HDT}$)
 
 \subsection{Relation Between Structure of Data and Compression Ratio}\label{sec:relationDataStructureComprRatio}
 
-First these features are considered for HDT. Fig.~\ref{fig:hdt_overview_1} is shown again. There, it is noticeable that the size of the data becomes smaller if there are only a few subjects. This is the case because the bit-array $B_p$ contains a 1 every time a new subject is considered. For example, if there is only one subject, then $B_p$ consists only of zeros.\todo{stimmt anscheinend nicht}
+This chapter discusses how the structure of the input graph $in$ influences the compression ratios ($CR_{Graph_C}$) for GRP and HDT. In order to realize that it is necessary to first introduce the star pattern.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=1\textwidth]{figures/relatedwork/hdt1}
-	\caption{Three different representations of triples in HDT, figure from~\cite{hdt}.}
-	\label{fig:hdt_overview_1}
-\end{figure}
+\subsubsection{Star Pattern}
 
-For GRP that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio tends to be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns.
+In graph theory, a star is a graph in which one node is connected to all other nodes. The other nodes are not connected to each other. While a star is an extreme case, there exist graphs with a few nodes having very high degrees. We denote them to be similar to the star pattern. 
 
-Let \[ elr = \dfrac{\text{number of different edge labels}}{\text{number of edges}} \] (edge label ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
+In order to measure that we define the Star Pattern Similarity ($SPS$). Let $deg(n)$ be the degree of a node $n$. Let $N$ be a list of all nodes sorted by their $deg$-values in descending order.  Let $N_{top}$ be the first $x$ nodes of $N$. Hence, $N_{top}$ contains $x$ nodes with the highest degrees. $x$ should be chosen related to the size of $N$ (e.g. $x=\frac{|N|}{1000}$).  Then, $SPS$ is defined as follows:
 
-Generally, it can be said that GRP can compress a graph better if $elr$ is lower, because then it is more likely that there is much redundancy in the graph. However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $elr$.
+\begin{align*}
+SPS=\dfrac{\sum_{n \in N_{top}} deg(n)  }{\sum_{n \in N} deg(n)}
+\end{align*}
+
+The higher the value of $SPS$ is, the more similar the graph is to the star pattern, because then there a few nodes connected to most of the edges of the graph.
+
+The star pattern can be further divided into hub pattern and authority pattern. As the name suggests, the hub pattern corresponds to a graph in which a few nodes have very high outgoing degrees, the authority pattern is the opposing case (high ingoing degrees). That distinctions is needed in the following chapter.
+
+\subsubsection{HDT}
+
+Now, HDT's behavior with respect to the input is discussed. As HDT's way of compressing the graph structure is fairly simple compared to GRP, there do not seem to be many potential features of the input data that have a high impact on HDT's compression ratio. But one feature is clearly visible: When Fig.~\ref{fig:hdt_overview} is considered, it is noticeable that the size of the data becomes smaller if there are only a few subjects. This is the case because the bit-array $B_p$ contains a 1 every time a new subject is considered. For example, if there is only one subject, then $B_p$ consists only of zeros.\todo{stimmt anscheinend nicht} Hence, HDT should perform better if the graph is similar to the hub pattern.
+
+\subsubsection{GRP}
+For GRP, that feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio tends to be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns.
+
+Let 
+\begin{align*}
+elr = \dfrac{\text{number of different edge labels}}{\text{number of edges}} 
+\end{align*}
+
+(edge label ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
+
+A lower value of $elr$ should increase the likelihood of a lower compression ratio.  However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $elr$.
+
+In~\cite{maneth}, the authors mentioned that a graph similar to the star pattern is beneficial for GRP, because GRP can create many digrams around those nodes with high degrees. In contrast to HDT, GRP does not rely on the hub pattern.
 
 
 \section{Compression Improvements}\label{sec:approachComprRatioImprovements}

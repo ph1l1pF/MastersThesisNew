@@ -3,35 +3,18 @@
 
 This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach} and~\ref{ch:implementation}.  First, the comparison of GRP and HDT is evaluated. Second, the evaluation results for the compression improvements are presented.
 
-For the following evaluations HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
+For the following evaluations, HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
 
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
-\todo{passt alles nicht mehr wegen neuer Erkenntnis}
+This chapter shows the evaluation results of the comparison between HDT and GRP. First, the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be illustrated. Based on those results, the two compressor will also be evaluated for real world data.
 
-Fig.~\ref{fig:ratiosHDTWithoutDict} shows $CR_{Graph_{HDT}}$. As expected, $CR_{Graph_{HDT}}$ gets higher the more similar the graph is to the authority pattern. In general it can be said that this effect is quite small. There is only a distance of 0.002 between the minimum and the maximum. This small effect can also be seen by looking at Fig.~\ref{fig:ratiosHDTWithDict}. It can be seen that the size of the dictionary ($out_{dict}$) has a much bigger effect, since $CR_{HDT}(out)$ is much larger than $CR_{Graph_{HDT}}$ and the curve behavior from Fig.~\ref{fig:ratiosHDTWithoutDict} is no longer recognizable. It is noticeable that $|out_{dict}|$ is bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
-\begin{figure}[h]
-	\centering
-	\subfloat[$CR_{Graph_{HDT}}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/hdtWithoutDict}\label{fig:ratiosHDTWithoutDict}}
-	\hfill
-	\subfloat[$CR_{HDT}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/hdtWithDict}\label{fig:ratiosHDTWithDict}}
-	\caption{The compression ratios for HDT without and with dictionary sizes.}
-\end{figure}
+\subsection{Results for Synthetic Data}
 
-Next, the compression ratio of GRP ($CR_{Graph_{GRP}}$) is considered, which is presented in Fig.~\ref{fig:ratiosGRPWithoutDict}. Here, it is noticeable that GRP has a better compression ratio if the graph is more similar to the star pattern (hub or authority pattern). This property of GRP has also been mentioned in~\cite{maneth}. It can also be seen that the effect is higher on $CR_{Graph_{GRP}}$ than on  $CR_{Graph_{HDT}}$ (standard deviation is twice as high for $CR_{Graph_{GRP}}$ as for $CR_{Graph_{HDT}}$). 
+Fig.~\ref{fig:grpvshdt1} shows the results. Fig.~\ref{fig:ratiosBothWithoutDict} shows the compression ratios without the size of the dictionary. As expected, $CR_{Graph_{HDT}}$ gets bigger as the graphs are further aways from the star pattern. Moreover, GRP compresses better if the graph is similar to the star pattern (greater value of $SPS$), as stated earlier. It is noticeable that $CR_{Graph_{GRP}}$ fluctuates much more than $CR_{Graph_{HDT}}$ and the impact of the star pattern similarity is much higher for GRP.
 
-When Fig.~\ref{fig:ratiosGRPWithDict} is considered, it can be seen that this curve behaves almost exactly like the one from Fig.~\ref{fig:ratiosHDTWithDict}, since $|out_{dict}|$ accounts for most of $|out|$.
-
-\begin{figure}[h]
-	\centering
-	\subfloat[$CR_{Graph_{GRP}}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/grpWithoutDict}\label{fig:ratiosGRPWithoutDict}}
-	\hfill
-	\subfloat[$CR_{GRP}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/grpWithDict}\label{fig:ratiosGRPWithDict}}
-	\caption{The compression ratios for GRP without and with dictionary sizes.}
-\end{figure}
-
-Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDict} show $CR_{Graph_C}$ and $CR_C$, respectively for GRP and HDT. Since both use $Dict_{HDT}$ to compress the dictionary, the curves in Fig.~\ref{fig:ratiosBothWithDict} are very similar. However, it becomes clear that GRP compresses better than HDT. In Fig.~\ref{fig:ratiosBothWithoutDict}, $CR_{Graph_{HDT}}$ is 31 times higher than $CR_{Graph_{GRP}}$ on average. Of course, this factor becomes much smaller in Fig.~\ref{fig:ratiosBothWithDict} because the dictionary accounts for most of the memory size. Here, the $CR_{HDT}$ is on average 1.8 times as high as $CR_{GRP}$
+Fig.~\ref{fig:ratiosBothWithDict} shows the values of $CR_{Dict_{HDT}}$ and $CR_{Dict_{GRP}}$. It can be seen that the curves behave very differently than in Fig.~\ref{fig:ratiosBothWithoutDict}, since the dictionary size $|out_{dict}|$ is much bigger than $|out_{graph}|$. As both GRP and HDT use the same dictionary compressor ($Dict_{HDT}$), they have been increased by the same amount and GRP's compression ratio is still smaller. Furthermore, it is noticeable that $|out_{dict}|$ is bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
 \begin{figure}[h]
 	\centering
@@ -39,17 +22,7 @@ Finally, Fig.~\ref{fig:ratiosBothWithoutDict} and Fig.~\ref{fig:ratiosBothWithDi
 	\hfill 
 	\subfloat[$CR_{HDT}$ and $CR_{GRP}$.]{\includegraphics[width=\subfigCurvePlotWidth\textwidth]{figures/GRPvsHDT/bothWithDict}\label{fig:ratiosBothWithDict}}
 	\caption{The compression ratios for GRP and HDT without and with dictionary sizes.}
-\end{figure}
-
-It would be possible to argue that only one distinct predicate was used in that scenario and this is beneficial for GRP, as it gets worse as the number of predicates increases. Therefore a further evaluation is made in Fig.~\ref{fig:bothwithdict1000predicates}, where 1000 distinct predicates have been used. That is a quite high number considering the number of triples (1199) compared to real RDF data \todo{belegen}. It is visible that the compression ratios are now higher for both compressors, but still $CR_{GRP}$ is always smaller than $CR_{HDT}$. $CR_{HDT}$ is still 1.7 times higher on average. So, the increasing number of predicates has a similar effect on both algorithms.
-
-
-\todo{figure passt nicht}
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\linewidth]{figures/GRPvsHDT/bothWithDict1000Predicates}
-	\caption{$CR_{HDT}$ and $CR_{GRP}$. Graphs have now 1000 distinct predicates.}
-	\label{fig:bothwithdict1000predicates}
+	\label{fig:grpvshdt1}
 \end{figure}
 
 Apart from the compression ratio, the run time is also important for the overall performance. Fig.~\ref{fig:runtimes} shows the average value of $CT$ for both compressors, respectively. For this the same scenario with the star pattern (and only one distinct predicate) was used. It has been executed 100 times to get a sophisticated run time measurement, because $CT$ depends on the current CPU workload of the computer.
@@ -68,7 +41,20 @@ It can be seen that $CT_{GRP}$ is significantly higher than $CT_{HDT}$. It is on
 
 However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not comparable in terms of quality. Unfortunately, it is not possible say at this point whether a more professional implementation of GRP will also be slower than HDT.
 
-In addition it can be noticed that $CT_{GRP}$ fluctuates more than $CT_{HDT}$. $CT_{GRP}$ has a standard deviation of about 134, while $CT_{HDT}$ only has a standard deviation of about 7. One reason for this is that GRP, in contrast to HDT, is non-deterministic because of the partly random search order of the graph. On the other hand, the high deviations are also a confirmation of the above mentioned hypothesis that the behavior of GRP depends more on the structure of the input data than HDT does.
+In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, it will now be shown how the compressor behave as that number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions is shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. The HDT curves can be recognized by the low fluctuations and the monotonic growth, where the GRP curves fluctuate more and do not have monotonic behavior. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first GRP is the blue one, the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which HDT compresses better. That continues, as the number of predicates is further increases. Hence, higher amounts of predicates have a higher impact on GRP than on HDT. However, the next chapter will show that there is now fixed value for $elr$ at which HDT is always better.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/GRPvsHDT/bothWithoutDictIncreasingPreds}
+	\caption{$CR_{Graph_C}$-values for HDT and GRP. GRP's curves can be recognized by the higher fluctuations. Same colors indicate that the number of distinct predicates is the same. The two dashed lines show the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ holds.} 
+	\label{fig:bothwithoutdictincreasingpreds}
+\end{figure}
+
+
+\subsection{Results for Real Data}
+
+The previous chapter used synthetic data to detect behavior of the compressor to certain changes in the structure of the input data. Now, real data will be used to compare the compression ratios of HDT and GRP. 
 
 
 
@@ -236,7 +222,7 @@ Thus, it can be concluded that removing \dtps results in a better compression, a
 At this point  about the evaluation of the approaches from Ch.~\ref{sec:implementationDictImprovements}. First, the Huffman compression of literals is evaluated and then the compression of blank node IDs. 
 
 
-\subsubsection{Literals}
+\subsubsection{Literals}\label{sec:evaluationLiterals}
 
 As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as it is likely to get a better compression than the with the prefix-based compression of HDT.
 
@@ -298,7 +284,7 @@ So it can be said that the use of a standard Huffman code could be worthwhile be
 	\label{fig:huffmanRuntimes}
 \end{figure}
 
-\subsubsection{Blank Nodes}
+\subsubsection{Blank Nodes}\label{sec:evaluationBlankNodes}
 
 This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that, the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs that are as long as those used by $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement which is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
 
@@ -306,13 +292,36 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/blankNodes}
-	\caption{Results for Blank Node ID improvements for Geo Coordinates (GC) files. \textbf{Normal HDT} uses long IDs. \textbf{Short IDs} uses integer IDs. \textbf{Omit IDs} does not store the IDs.}
+	\caption{Results for Blank Node ID improvements for Geo Coordinates (GC) files. \textbf{Normal HDT} uses long IDs. \textbf{Short IDs} uses integer IDs. \textbf{Omit IDs} does not store the IDs at all.}
 	\label{fig:blanknodes}
 \end{figure}
 
 
 \subsection{Final Result}
-\todo{hier evtl einen DBPedia Datensatz nehmen, wo HDT vorher besser war und GRP wegen symmetry jetzt besser ist}
+
+In the previous chapters, the compression improvements (graph and dictionary) were evaluated individually. This final evaluation chapter compares all improvements together. This makes it possible to see which improvement parts accounts for which part of the total compression improvement. 
+
+To make this possible, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in this graph. Therefore, the DBPedia abstract text is added for each person from the data set (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. For this, the coordinates (polygons) for each country from the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, a graph is created on which all improvements can be evaluated.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

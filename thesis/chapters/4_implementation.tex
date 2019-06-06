@@ -4,26 +4,42 @@
 This chapter will explain how the different approaches of Ch.~\ref{ch:approach} have been implemented. First, the comparison of HDT and GRP is discussed. Second, improvements for both graph and dictionary compression are presented.
 
 \section{GRP vs HDT}\label{sec:implementationGRPvsHDT}
+\todo{nochmal angucken}
+In this chapter, it will be explained how the comparison between HDT and GRP is implemented.
 
-In this section, it will be explained how the comparison between HDT and GRP is implemented.
-\todo{alles neu machen}
+As has just explained, HDT can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So it gets worse the further away the graph is from this pattern. The most unfavorable graph structure for HDT is therefore the authority pattern.
 
-As has just explained, HDT can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So it gets worse the further away the graph is from this pattern. This corresponds to the authority pattern, where there are few objects but many subjects.
+The task is to create a series of RDF graphs $(G_1,...,G_m)$ that first correspond to the hub pattern and then continue to change in the direction of the authority pattern. That can be done using Alg.~\ref{alg:BuildGraphs}. The first input parameter $steps$ influences how many graphs will be created. It has to chosen high enough to ensure a smooth transition from the hub to authority pattern. The second parameter $nodesFactor$ influences the amount of nodes of the graphs. Concrete values for the parameter are not important to mention.
 
-The task now is to create a series of RDF graphs that first correspond to the hub pattern and then continue to change in the direction of the authority pattern. This is illustrated in Fig.~\ref{fig:star_pattern}. In this scenario all graphs ($G_1$ to $G_m$) have the same size, i.e. the same number of nodes and edges. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This goes on and on until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
+An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_pattern}. All graphs ($G_1$ to $G_m$) have the same number of nodes and edges. That is ensured by Line~\ref{line:buildgraph} in Alg.~\ref{alg:BuildGraphs}. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This goes on and on until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
+
+\begin{algorithm}
+	\caption{BuildGraphs ($steps$, $ nodesFactor$)}\label{alg:BuildGraphs}
+	\begin{algorithmic}[1]
+	\State $n \leftarrow nodesFactor*steps$ // $n$ is number of nodes
+	\State $subj \leftarrow 1$
+	\State $i \leftarrow 1$
+	\While{$subj\le n$ }
+		\State $obj \leftarrow$ $n-subj$ 
+		\State $G_i \leftarrow$ build graph with $subj$ subjects and $obj$ objects\label{line:buildgraph}
+		\State  $subj\leftarrow subj+steps$
+		\State  $i\leftarrow i+1$
+	\EndWhile
+	\State \Return $(G_1,...,G_m)$
+	\end{algorithmic}
+\end{algorithm}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/GRPvsHDT/starpattern.pdf}
-	\caption{Step-by-step transition from hub pattern to authority pattern. The number of nodes $n$ is the same for each graph. The number of edges is also the same for each graph.}
+	\caption{Example output of Alg.~\ref{alg:BuildGraphs}: Step-by-step transition from hub pattern to authority pattern. The number of nodes $n$ is the same for each graph. The number of edges is also the same for each graph.}
 	\label{fig:star_pattern}
 \end{figure}
 
-It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length. Since the RDF graph also has the same number of triples, the files are of the same size. Since the evaluation compares the compression ratios for the different RDF files, it is important that all files are of the same size to ensure a fair comparison.
+It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length and ensuring that every RDF graph also has the same number of triples. This same size is important for the evaluation, since only the graph's structure is of interest here. An unequal size of the RDF files would lead to undesired effects in terms of $CR_{Graph_C}$.
 
-A section of such a file (for $G1$) is shown in Fig.~\ref{fig:rdfFile}. In that example, there is only one distinct predicate for all triples. The number of predicates is always one at first. The amount of predicates has a similar effect on both compressors and is therefore omitted at first. But in Ch.~\ref{sec:evalHDT} that effect will be discussed in more detail.
+A section of such a file (for $G1$) is shown in Fig.~\ref{fig:rdfFile}. In that example, there is only one distinct predicate for all triples. This is because, we first want to focus on the effect of the hub and authority patterns. The impact of an increasing number of predicates will be evaluated afterwards.
 
-Apart from that, blank nodes and literals are not used here. For both compressors, blank nodes and literals are being handled analogously to URI nodes. Therefore they are not needed at this point, in order to show the behavior of HDT and GRP in the above described scenario.
 
 \begin{figure}[h]
 	\centering

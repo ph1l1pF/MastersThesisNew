@@ -109,10 +109,10 @@ In graph theory, a star is a graph in which one node is connected to all other n
 In order to measure that we define the Star Pattern Similarity ($SPS$). Let $deg(n)$ be the degree of a node $n$. Let $N$ be a list of all nodes sorted by their $deg$-values in descending order.  Let $N_{top}$ be the first $x$ nodes of $N$. Hence, $N_{top}$ contains $x$ nodes with the highest degrees. $x$ should be chosen related to the size of $N$ (e.g. $x=\frac{|N|}{1000}$).  Then, $SPS$ is defined as follows:
 
 \begin{align*}
-SPS=\dfrac{\sum_{n \in N_{top}} deg(n)  }{\sum_{n \in N} deg(n)}
+SPS=\dfrac{\sum_{n \in N_{top}} deg(n)  }{\sum_{n \in N} deg(n)} \in [0,1]
 \end{align*}
 
-The higher the value of $SPS$ is, the more similar the graph is to the star pattern, because then there a few nodes connected to most of the edges of the graph.
+The higher the value of $SPS$ is, the more similar the graph is to the star pattern, because then there a few nodes have a high proportion of the sum of all degrees.
 
 The star pattern can be further divided into hub pattern and authority pattern. As the name suggests, the hub pattern corresponds to a graph in which a few nodes have very high outgoing degrees, the authority pattern is the opposing case (high ingoing degrees). That distinctions is needed in the following chapter.
 
@@ -132,7 +132,7 @@ elr = \dfrac{\text{number of different edge labels}}{\text{number of edges}}
 
 A lower value of $elr$ should increase the likelihood of a lower compression ratio.  However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $elr$.
 
-In~\cite{maneth}, the authors mentioned that a graph similar to the star pattern is beneficial for GRP, because GRP can create many digrams around those nodes with high degrees. In contrast to HDT, GRP does not rely on the hub pattern.
+In~\cite{maneth}, the authors mentioned that a graph similar to the star pattern is beneficial for GRP, because GRP can create many digrams around those nodes with high degrees whereby, in contrast to HDT, GRP does not rely on the hub pattern.
 
 
 \section{Compression Improvements}\label{sec:approachComprRatioImprovements}

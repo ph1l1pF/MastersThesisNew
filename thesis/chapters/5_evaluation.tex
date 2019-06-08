@@ -7,7 +7,7 @@ For the following evaluations, HDT-Java 2.0~\footnote{\label{foot:1}https://gith
 
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
-This chapter shows the evaluation results of the comparison between HDT and GRP. First, the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be illustrated. Based on those results, the two compressor will also be evaluated for real world data.
+This chapter shows the evaluation results of the comparison between HDT and GRP. First, result for the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be presented. Afterwards, the two compressors will also be evaluated for real world data.
 
 
 \subsection{Results for Synthetic Data}
@@ -231,7 +231,7 @@ Now the results of the evaluation are presented. First, the Semantic Web Dog Foo
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/dogFoodComprRatios}
+	\includegraphics[width=0.9\linewidth]{figures/4_evaluation/dogFoodComprRatios}
 	\caption{$CR(out_{dict})$. Comparison between Normal HDT and HDT + Huffman.}
 	\label{fig:dogfoodcomprratios}
 \end{figure}
@@ -291,27 +291,55 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/blankNodes}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/blankNodes}
 	\caption{Results for Blank Node ID improvements for Geo Coordinates (GC) files. \textbf{Normal HDT} uses long IDs. \textbf{Short IDs} uses integer IDs. \textbf{Omit IDs} does not store the IDs at all.}
 	\label{fig:blanknodes}
 \end{figure}
 
 
-\subsection{Final Result}
+\subsection{Final Results}
 
 In the previous chapters, the compression improvements (graph and dictionary) were evaluated individually. This final evaluation chapter compares all improvements together. This makes it possible to see which improvement parts accounts for which part of the total compression improvement. 
 
-To make this possible, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in this graph. Therefore, the DBPedia abstract text is added for each person from the data set (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. For this, the coordinates (polygons) for each country from the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, a graph is created on which all improvements can be evaluated.
+To make this possible, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person from the data set (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this is results in a graph on which all improvements can be evaluated.
+
+Fig.~\ref{fig:graphcompr} shows the graph compression improvements. For the ontology-based improvement of $Graph_{GRP}$ we write $Graph_{GRP+Ont}$.  It can be seen that $Graph_{GRP}$ already compresses better than $Graph_{HDT}$. $Graph_{GRP+Ont}$ brings only a small improvement. This due to the encoding problem discussed in Ch.~\ref{sec:evaluationOntKnowledge}.
+
+Fig.~\ref{fig:dictcompr} shows the results regarding the dictionary compression. By $Dict_{HDT++}$, the improved HDT dictionary compression (literals and blank node IDs) is denoted. Here, the improvement is significant although the used RDF graph does not contain as much literals as the abstract graphs used in Ch.~\ref{sec:evaluationLiterals}. 
+
+Finally, Fig.~\ref{fig:completecompr} shows both the graph and dictionary compressions in combination. HDT++ denotes the improved HDT (HDT++$=\{  Dict_{HDT++}, Graph_{HDT} \} $). GRP++ denotes the ontology-based graph compression improvement combined with the improved dictionary compression (GRP++ $=\{ Dict_{HDT++}, Graph_{GRP+Ont} \}$). The horizontal lines drawn through the bars denote the respective values of $CR_{Dict_C}$. That shows how big the portion of the dictionary is in the compressed data. 
+
+Apart from that, the difference between HDT++ and GRP++ is very small. This due to the fact that the graph ($out_{graph}$) is so much smaller than $out_{dict}$.
+
+GZip is used a baseline. Since it is a general compressor, it does not have a horizontal line. It is noticeable that GZip achieved a slightly better compression ratio than HDT++ and GRP++. However, as already mentioned in Ch.~\ref{ch:introduction}, the data compressed by Gzip is not query-able which makes it less usable.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/final/graphcompr}
+	\caption{Graph compression ratios ($CR_{Graph_C}$) for $Graph_{HDT}$, $Graph_{GRP}$ and $Graph_{GRP+Ont}$.}
+	\label{fig:graphcompr}
+\end{figure}
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/final/dictcompr}
+	\caption{Dictionary compression ratios ($CR_{Dict_C}$) for $Dict_{HDT}$ and $Dict_{HDT++}$.}
+	\label{fig:dictcompr}
+\end{figure}
 
 
 
 
 
-
-
-
-
-
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/final/completecompr}
+	\caption{Complete compression ratios ($CR_C$) for all compressors. Horizontal lines mark the values of $CR_{Dict_C}$. GZip is used as a baseline.}
+	\label{fig:completecompr}
+\end{figure}
 
 
 

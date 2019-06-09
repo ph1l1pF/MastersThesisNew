@@ -108,15 +108,15 @@ This chapter discusses how the structure of the input graph $in$ influences the 
 
 In graph theory, a star is a graph in which one node is connected to all other nodes. The other nodes are not connected to each other. While a star is an extreme case, there exist graphs with a few nodes having very high degrees. We denote them to be similar to the star pattern. 
 
-In order to measure that we define the Star Pattern Similarity ($SPS$). Let $deg(n)$ be the degree of a node $n$. Let $N$ be a list of all nodes sorted by their $deg$-values in descending order.  Let $N_{top}$ be the first $x$ nodes of $N$. Hence, $N_{top}$ contains $x$ nodes with the highest degrees. $x$ should be chosen related to the size of $N$ (e.g. $x=\frac{|N|}{1000}$).  Then, $SPS$ is defined as follows:
+In order to measure that we define the Star Pattern Similarity ($SPS$). Let $deg(n)$ be the degree of a node $n$. Let $N$ be a list of all nodes sorted by their $deg$-values in descending order.  Let $N_{top}$ be the first $x$ nodes of $N$. Hence, $N_{top}$ contains $x$ nodes with the highest degrees. $x$ should be chosen related to the size of $N$, we choose $x=0.001 \times |N|$.  Then, $SPS$ is defined as follows:
 
 \begin{align*}
 SPS=\dfrac{\sum_{n \in N_{top}} deg(n)  }{\sum_{n \in N} deg(n)} \in [0,1]
 \end{align*}
 
-The higher the value of $SPS$ is, the more similar the graph is to the star pattern, because then there a few nodes have a high proportion of the sum of all degrees.
+The higher the value of $SPS$ is, the more similar the graph is to the star pattern, because then there a few nodes having a high proportion of the sum of all degrees.
 
-The star pattern can be further divided into hub pattern and authority pattern. As the name suggests, the hub pattern corresponds to a graph in which a few nodes have very high outgoing degrees, the authority pattern is the opposing case (high ingoing degrees). That distinctions is needed in the following chapter.
+The star pattern can be further divided into hub pattern and authority pattern. As the name suggests, the hub pattern corresponds to a graph in which a few nodes have very high outgoing degrees, the authority pattern is the opposing case (high ingoing degrees). That distinction is needed in the following chapter.
 
 \subsubsection{HDT}
 
@@ -127,12 +127,12 @@ For GRP, that feature analysis is more complex. Since GRP constructs grammar rul
 
 Let 
 \begin{align*}
-elr = \dfrac{\text{number of different edge labels}}{\text{number of edges}} 
+ELR = \dfrac{\text{number of different edge labels}}{\text{number of edges}} 
 \end{align*}
 
 (edge label ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
 
-A lower value of $elr$ should increase the likelihood of a lower compression ratio.  However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $elr$.
+A lower value of $ELR$ should increase the likelihood of a lower compression ratio.  However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $ELR$.
 
 In~\cite{maneth}, the authors mentioned that a graph similar to the star pattern is beneficial for GRP, because GRP can create many digrams around those nodes with high degrees whereby, in contrast to HDT, GRP does not rely on the hub pattern.
 
@@ -157,7 +157,7 @@ This chapter is about elaborating the theoretical concepts of OWL and investigat
 
 \todo{besseres Bsp}
 
-There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} is used for every entity or property in the context of OWL.} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $elr$ can be reduced by adding it, which can lead to a better compression ratio. At the same time this will not result in an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
+There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} is used for every entity or property in the context of OWL.} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $ELR$ can be reduced by adding it, which can lead to a better compression ratio. At the same time this will not result in an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here the predicate $p$ is symmetric, so the edge from node 3 to 2 was added, $p_1$ is not symmetric. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. These two occurrences overlap and therefore cannot be applied both. However, it may be that one of the two occurrences cannot be replaced because the nodes involved are still connected to other nodes that are not shown in this figure. So the addition increases the probability that the digram can actually be replaced. At the same time the degree of nodes 2 and 3 is increased by one. But this should not really decrease the chance of finding other digrams in the graph, since 2 and 3 have already been connected before.
 
 
 \begin{figure}[h]
@@ -171,7 +171,7 @@ There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The 
 
 \subsubsection{Inverse Properties}\label{sec:approachInverse}
 
-One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $elr$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes were already connected before. 
+One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $ELR$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes were already connected before. 
 
 
 \subsubsection{Transitive Properties}\label{sec:approachTransitive}
@@ -194,7 +194,7 @@ The opposing approach is to add all \dtpsp But a strong argument against this ap
 
 \subsubsection{Equal Properties}\label{sec:approachEqualProperties}
 
-In OWL there are the properties {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $elr$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same but single nodes can be marked as the same as well.
+In OWL there are the properties {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $ELR$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same but single nodes can be marked as the same as well.
 
 
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}

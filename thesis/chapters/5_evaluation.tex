@@ -41,7 +41,7 @@ It can be seen that $CT_{GRP}$ is significantly higher than $CT_{HDT}$. It is on
 
 However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not comparable in terms of quality. Unfortunately, it is not possible say at this point whether a more professional implementation of GRP will also be slower than HDT.
 
-In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, it will now be shown how the compressor behave as that number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions is shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. The HDT curves can be recognized by the low fluctuations and the monotonic growth, where the GRP curves fluctuate more and do not have monotonic behavior. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first GRP is the blue one, the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which HDT compresses better. That continues, as the number of predicates is further increases. Hence, higher amounts of predicates have a higher impact on GRP than on HDT. However, the next chapter will show that there is now fixed value for $elr$ at which HDT is always better.
+In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, it will now be shown how the compressor behave as that number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions is shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. The HDT curves can be recognized by the low fluctuations and the monotonic growth, whereas the GRP curves fluctuate more and do not have monotonic behavior. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first GRP is the blue one, the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which HDT compresses better. That continues, as the number of predicates is further increases. Hence, higher amounts of predicates have a higher impact on GRP than on HDT. However, the next chapter will show that there is no fixed value for $ELR$ at which HDT is always better.
 
 
 \begin{figure}
@@ -54,9 +54,47 @@ In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct
 
 \subsection{Results for Real Data}
 
-The previous chapter used synthetic data to detect behavior of the compressor to certain changes in the structure of the input data. Now, real data will be used to compare the compression ratios of HDT and GRP. 
+The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. Now, real data will be used to compare the compression ratios of HDT and GRP. For this, several datasets will be used (DBPedia, Semantic Web Dog Food, WikiData, Open Government Data). 
 
+We use 33 different RDF  graphs. On 32 of those GRP achieves a better compression ratio than HDT. On average, $CR_{Graph_{HDT}}$ is 1.8 times higher than $CR_{Graph_{GRP}}$.
 
+In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman ($ SP $) correlation~\footnote{https://en.wikipedia.org/wiki/Spearman\%27s\_rank\_correlation\_coefficient} is used. That function produces values from $ -1 $ to $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation. The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher number of different predicates brings a compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. But the correlation is not as strong as with $ELR$. 
+
+$CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation is quite small. The correlation between $CR_{Graph_{HDT}}$ and $SPS$ is positive (but very close  to 0) which is reasonable, since $Graph_{HDT}$ only benefits from hub pattern, but $SPS$ is defined for the general star pattern.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		& $CR_{Graph_{GRP}}$ & $CR_{Graph_{HDT}}$ \\ 
+		\hline 
+		$ELR$ & $ 0.646 $ & $ 0.181 $  \\ 
+		\hline 
+		$SPS$ & $ -0.381 $ & $ 0.009 $ \\ 
+		\hline 
+	\end{tabular} 
+	\captionof{table}{Spearman correlation values.}	
+	\label{tab:spearman}
+\end{center}
+
+Fig.??? show the compression ratios for the datasets, respectively. It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$ then $CR_{Graph_C}$ will be smaller for $f_1$ (because $|f_1|>|f_2|$). So, only the values for one graph/file should be compared. 
+
+\begin{figure}[h]
+	\centering
+	\subfloat[DBPedia]{\includegraphics[width=\subfigWidth\textwidth]{figures/GRPvsHDT/realdata/dbpedia}\label{fig:compare1a}}
+	\hfill
+	\subfloat[Semantic Web Dog Food]{\includegraphics[width=\subfigWidth\textwidth]{figures/GRPvsHDT/realdata/dogfood}\label{fig:figcompare1b}}
+	\caption{$CR_{Graph{HDT}}$ and $CR_{Graph{HDT}}$.}
+	\label{fig:figcompare1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\subfloat[Government Open Data]{\includegraphics[width=\subfigWidth\textwidth]{figures/GRPvsHDT/realdata/opendata}\label{fig:compare2a}}
+	\hfill
+	\subfloat[WikiData]{\includegraphics[width=\subfigWidth\textwidth]{figures/GRPvsHDT/realdata/wikidata}\label{fig:figcompare2b}}
+	\caption{$CR_{Graph{HDT}}$ and $CR_{Graph{HDT}}$.}
+	\label{fig:figcompare2}
+\end{figure}
 
 \section{Compression Improvements}
 
@@ -82,7 +120,7 @@ Another interesting feature of the datasets is how many different relevant prope
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/ontology/totalNumbers}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/totalNumbers}
 	\caption{Number of different relevant properties for DBPedia and Wordnet.}
 	\label{fig:totalnumbers}
 \end{figure}
@@ -301,7 +339,7 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 
 In the previous chapters, the compression improvements (graph and dictionary) were evaluated individually. This final evaluation chapter compares all improvements together. This makes it possible to see which improvement parts accounts for which part of the total compression improvement. 
 
-To make this possible, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person from the data set (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this is results in a graph on which all improvements can be evaluated.
+In order to realize this, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person in the graph (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this results in a graph on which all improvements can be evaluated.
 
 Fig.~\ref{fig:graphcompr} shows the graph compression improvements. For the ontology-based improvement of $Graph_{GRP}$ we write $Graph_{GRP+Ont}$.  It can be seen that $Graph_{GRP}$ already compresses better than $Graph_{HDT}$. $Graph_{GRP+Ont}$ brings only a small improvement. This due to the encoding problem discussed in Ch.~\ref{sec:evaluationOntKnowledge}.
 
@@ -311,7 +349,12 @@ Finally, Fig.~\ref{fig:completecompr} shows both the graph and dictionary compre
 
 Apart from that, the difference between HDT++ and GRP++ is very small. This due to the fact that the graph ($out_{graph}$) is so much smaller than $out_{dict}$.
 
-GZip is used a baseline. Since it is a general compressor, it does not have a horizontal line. It is noticeable that GZip achieved a slightly better compression ratio than HDT++ and GRP++. However, as already mentioned in Ch.~\ref{ch:introduction}, the data compressed by Gzip is not query-able which makes it less usable.
+GZip is used a baseline. Since it is a general compressor, it does not have a horizontal line. It is noticeable that GZip achieved a slightly better compression ratio than HDT++ and GRP++. However, as already mentioned in Ch.~\ref{ch:introduction}, the data compressed by GZip is not query-able which makes it less usable.
+
+\todo{soll folgendes hier stehen oder nur in der summary?}
+In general, it can be concluded that the improvement makes a significant difference. The resulted compression ratio is almost as low as GZip's ratio. Considering the fact that data compressed by GRP++ or HDT++ is still query-able, it is reasonable to use one of them instead of a general compressor. With further improvements (will be discussed in Ch.~\ref{sec:futurework}) it could be that HDT++ or GRP++ outperform general compressors in many more cases.
+
+Moreover, it becomes clear that compressing the dictionary has a much bigger impact on $CR_C$ than compressing the graph. So, for future work it would be reasonable to focus on dictionary compression. However, one work around could be to compress multiple RDF files, which all have a similar dictionary, together. This way, the influences of the graphs can become bigger.
 
 
 \begin{figure}

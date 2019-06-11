@@ -21,7 +21,7 @@ As already mentioned, there are essentially three use cases for RDF data:
 	\item Processing/Consumption
 \end{enumerate}
 
-The idea is to make all these use cases easier / possible by compression, especially if very large amounts of data have to be handled. In the first two use cases, compression can be helpful by reducing the size of the data. Thus the data can be stored more compactly and above all can be transferred faster, which occurs frequently in reality and can become a problem due to possibly slow transfer speeds \todo{here possibly concrete numbers}.
+The idea is to make all these use cases easier / possible by compression, especially if very large amounts of data have to be handled. In the first two use cases, compression can be helpful by reducing the size of the data. Thus the data can be stored more compactly and above all can be transferred faster, which occurs frequently in reality and can become a problem due to possibly slow transfer speeds.
 
 The third use case (Processing/Consumption) is about reading or writing access to data. The more common case of read access is typically the execution of queries on RDF data. These are most often neighborhood queries. A compression algorithm can help in this respect by making it possible to answer such queries directly on the compressed graphs. This may even be faster than on the original data due to the reduced size.
 

@@ -72,6 +72,10 @@ Wordnet contains knowledge about the English language. Words that have the same 
 
 The NUTS (Nomenclature of Territorial Units for Statistics)~\footnote{http://nuts.geovocab.org/} contains the NUTS regions along with geographic information. It contains blank nodes and is therefore useful for the evaluation of the improvements regarding blank node IDs.
 
+\subsubsection{Government Open Data}
+
+This is RDF data~\footnote{http://opendatacommunities.org/home} published by the Ministry of Housing, Communities Local Government of the United Kingdom.
+
 \subsection{Ontology Knowledge}\label{sec:implementationOntKnowledge}
 
 This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} is used.
@@ -81,18 +85,16 @@ This chapter is about how to manipulate the RDF graphs to match the properties o
 First, all relevant properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
 
 \[
-\text{ {\tt <myProperty> <rdf:type> <owl:SymmetricProperty> .}}
+\text{ {\tt (myProperty, rdf:type, owl:SymmetricProperty)}}
 \] 
 
 This triple states that {\tt myProperty} is symmetric. The concept is analogous for inverse or transitive properties. 
 
 However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now it is possible to check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
 
-In Wordnet, transitive properties are explicitly given, but symmetric and inverse are not. It is necessary to determine them by understanding the meaning of Wordnet's relations. Properties connect different \enquote{synsets}. One of those properties is antonymy, which is like an opposite-relation between words. Therefore, the property can be seen as symmetric.
+In Wordnet, transitive properties are explicitly given, but symmetric and inverse are not. It is necessary to determine them by understanding the meaning of Wordnet's relations. Properties connect different \enquote{synsets}. One of those properties is {\tt antonym}, which is like an opposite-relation between words. Therefore, the property can be seen as symmetric. The properties {\tt hypernym} and {\tt hyponym} are inverse. However, this only holds for nouns, not for verbs. Hence, a sub graph of Wordnet, which only contains nouns, has to be created in order to use those inverse properties.
 
-\todo{inverse bei wordnet}
-
-After all symmetric properties have been found (they are shown in Ch.~\ref{ch:evaluation}), manipulations to the graph have to be executed.
+The following chapters show how the manipulations can be performed.
 
 \subsubsection{Symmetric Properties}
 
@@ -127,7 +129,7 @@ Assume that $ p1 $ and $ p2 $ are inverse properties. Listing~\ref{lst:inverseIn
 \[
 (p1,p2) \text{ and } (p2,p1)
 \]
-, in case the other direction exists. If the triples should be removed instead of adding them, a delete has to be performed which is shown in Listing~\ref{lst:inverseDelete}
+in case the other direction exists. If the triples should be removed instead of adding them, a delete has to be performed which is shown in Listing~\ref{lst:inverseDelete}
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for adding triples with the inverse properties p1 and p2., label=lst:inverseInsert,
 basicstyle=\ttfamily,frame=single,float=hbt,]

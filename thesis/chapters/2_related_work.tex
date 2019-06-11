@@ -18,10 +18,10 @@ An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays
 Similar to entities or properties each blank node has unique ID in order reference it in the graph. But in contrast to URIs, these IDs do not have a semantic meaning. That fact will be used in Ch.~\ref{sec:approachBlankNodes}.
 
 \subsection{Ontology}\label{sec:relatedworkOntology}
-In the Semantic Web, vocabularies define the concepts and relationships (also called "terms") that describe and represent a problem area. Vocabularies are used to classify the terms that can be used in a particular application, characterize possible relationships, and define possible restrictions on the use of these terms. In practice, vocabularies can be very complex (with several thousand terms) or very simple (describing only one or two concepts).
 
-There is no clear distinction between what is called "vocabularies" and "ontologies". The trend is to use the word "ontology" for more complex and possibly quite formal collections of terms, while "vocabulary" is used when such strict formalism is not necessarily used or only in a very loose sense. Vocabularies are the building blocks for inference techniques in the Semantic Web.
-\ac{OWL} \todo{anpassen}
+In an RDF graph, relationships between entities or properties are displayed. In addition, entities or properties can also be assigned to types. In an ontology relationships between these types can be defined. More importantly for this thesis, features of types or properties are also described there. An ontology is itself also an RDF graph, which is described in one of the languages RDFS~\footnote{https://www.w3.org/TR/rdf-schema/} or OWL~\footnote{https://www.w3.org/TR/owl-ref/} of which OWL is the more powerful one.~\cite{hitzler} 
+
+In the course of this thesis, ontologies will be used to achieve a better compression. More precisely, specific features of properties will be used to do that.
 
 \section{HDT}\label{related_work_hdt}
 
@@ -74,7 +74,7 @@ HDT has also procedures for answering queries, but those will not be mentioned h
 
 \section{Grammar-based Graph Compression}\label{related_work_grammar_based}
 
-In this section we will discuss two different approaches to grammar-based graph compression. First, ~\cite{mattdk} is introduced and briefly explained why the approach is less suitable for RDF. Then~\cite{maneth}, which the thesis will focus on, is introduced.
+In this chapter, we will discuss two different approaches to grammar-based graph compression. First, ~\cite{mattdk} is introduced and briefly explained why the approach is less suitable for RDF. Then~\cite{maneth}, which the thesis will focus on, is introduced.
 
 In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually small patterns are searched for, since it is possible to find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.
 

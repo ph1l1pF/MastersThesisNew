@@ -10,9 +10,9 @@ Here, two compressor models will be introduced, one for general compressors and 
 
 \subsection{General Compressor Model}\label{sec:generalcompressorModel}
 
-A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output $out$. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$. 
+A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output $out$. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$. An illustration can be seen in Fig.~\ref{fig:generalcompressorModel}. The terms $CT_C$ and $DCT_C$ denote the time for compression and decompression, respectively. They will be explained in more details in Ch.~\ref{sec:approachComprTime}.
 
-An example for a general compressor is GZip~\footnote{https://www.gzip.org/}.
+An example for a general compressor is GZip~\footnote{https://www.gzip.org/} which will be used in Ch.~\ref{sec:evaluationFinal} as a baseline for GRP and HDT.
 
 \begin{figure}
 	\centering
@@ -23,9 +23,9 @@ An example for a general compressor is GZip~\footnote{https://www.gzip.org/}.
 
 \subsection{RDF Compressor Model}\label{sec:compressorModel}
 
-This section introduces a formal model for an RDF compressor which can be seen as a sub class or extension of the general model in Ch.~\ref{sec:generalcompressorModel}. It is illustrated in Fig.~\ref{fig:compressorModel}. Here, the compressor $C$ is more complex as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in the context of HDT (see Ch.~\ref{related_work_hdt}). It assigns an ID to each URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
+This chapter introduces a formal model for an RDF compressor which can be seen as a sub class or extension of the general model in Ch.~\ref{sec:generalcompressorModel}. It is illustrated in Fig.~\ref{fig:compressorModel}. Here, the compressor $C$ is more complex, as it consists of two components. The first one is called $Dict_C$ and it handles the dictionary compression. That mechanism has already been introduced in the context of HDT (see Ch.~\ref{related_work_hdt}). It assigns an ID to each URI, literal or blank node ID of the graph and can then also further compress the dictionary (like in HDT with prefix trees). The result of $Dict_C$ is $out_{dict}$ which is displayed in the right of Fig.~\ref{fig:compressorModel}. 
 
-The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$ which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output $out$ ($out=\{out_{dict}, out_{graph}\} $). $out_{graph}$ and $out_{dict}$ can each be a single file or a set of files. 
+The IDs created by $Dict_C$ are then delivered to the second component, $Graph_C$, which is responsible for compressing the RDF graph. It only uses the IDs from $Dict_C$ and does not know about the URIs, literals and blank node IDs. Its result is called $out_{graph}$ which, together with $out_{dict}$, forms the complete output $out$ ($out=\{out_{dict}, out_{graph}\} $). $out_{graph}$ and $out_{dict}$ can each be a single file or a set of files. 
 
 \begin{figure}
 	\centering
@@ -37,7 +37,7 @@ The IDs created by $Dict_C$ are then delivered to the second component $Graph_C$
 
 \subsection{Existing RDF  Compressors}
 
-Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors discussed in this thesis and in which way they fulfill the model. As already explained in Ch.~\ref{related_work_hdt}, $Dict_{HDT}$ assigns IDs and compresses the dictionary. In contrast, $Dict_{GRP}$  only assigns IDs and omits the dictionary afterwards. $Dict_{GRP}$ is therefore not a real dictionary compressor. We solve this problem by replacing  $Dict_{GRP}$ with $Dict_{HDT}$. This way, comparing HDT and GRP in a fair way is possible. It must also be mentioned that $Graph_{HDT}$ includes the HDT header (see Ch.~\ref{related_work_hdt}). Even if the header is not needed for decompression, its size will be part of $out_{graph}$. But this is not a problem, because the header's size is so small that it does not add a significant amount to $out_{graph}$.
+Tab.~\ref{tab:compressorsOverview} shows an overview of the RDF compressors discussed in this thesis and in which way they fulfill the model from Ch.~\ref{sec:compressorModel}. As already explained in Ch.~\ref{related_work_hdt}, $Dict_{HDT}$ assigns IDs and compresses the dictionary. In contrast, $Dict_{GRP}$  only assigns IDs and omits the dictionary afterwards. $Dict_{GRP}$ is therefore not a real dictionary compressor. We solve this problem by replacing  $Dict_{GRP}$ with $Dict_{HDT}$. This way, comparing HDT and GRP in a fair way is possible. It must also be mentioned that $Graph_{HDT}$ includes the HDT header (see Ch.~\ref{related_work_hdt}). Even if the header is not needed for decompression, its size will be part of $out_{graph}$. But this is not a problem, because the header's size is so small that it does not add a significant amount to $out_{graph}$.
 
 \begin{center}
 	\begin{tabular}{|c|c|c|}
@@ -55,7 +55,7 @@ Table~\ref{tab:compressorsOverview} shows an overview of the RDF compressors dis
 
 \section{Key Performance Indicators}
 
-In the following two sections, key performance indicators for general and RDF compressors are introduced. Those indicators will be measured in order to determine the overall performance for the different compressors.
+In this chapter, key performance indicators for general and RDF compressors are introduced. Those indicators will be measured in order to determine the overall performance of the different compressors.
 
 \subsection{Compression Ratio}
 
@@ -75,34 +75,34 @@ CR_{Graph_C} = \dfrac{|out_{graph}|}{ |in|} \label{eq:graph}
 
 Eq.~\ref{eq:complete} defines the compression ratio for the whole output $out$. Therefore, it is applicable to general and RDF compressors.
 
-In contrast, Eq.~\ref{eq:dict} and~\ref{eq:graph} define the compression ratio only with regard to $out_{dict}$ and $out_{graph}$, respectively. They are only applicable for RDF compressors, since a general compressor has no distinction between $out_{dict}$ and $out_{graph}$. In some cases it is of interest to only consider either the dictionary or graph compression.
+In contrast, Eq.~\ref{eq:dict} and~\ref{eq:graph} define the compression ratio only with regard to $out_{dict}$ or $out_{graph}$, respectively. They are only applicable for RDF compressors, since a general compressor has no distinction between $out_{dict}$ and $out_{graph}$. In some cases, it is of interest to only consider either the dictionary or graph compression.
 
-Sometimes $CR$ is used instead of $CR_C$ if it is clear from the context, which compressor $C$ is considered.
+Sometimes, $CR$ is used instead of $CR_C$ if it is clear from the context, which compressor $C$ is considered.
 
 As shown in Fig.~\ref{fig:compressorModel}, $in$ can have different formats. That has to be taken into account with regard to $CR$ as those formats implicate different input sizes. When $CR$ of two compressors is compared, their input has to have the same format.
 
-\subsection{(De-)Compression Time}
+\subsection{(De-)Compression Time}\label{sec:approachComprTime}
 
-Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depends on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds. $CT_C$ and $DCT_C$ are also shown in Fig.~\ref{fig:generalcompressorModel} and~\ref{fig:compressorModel}. They are defined the same for general compressors and RDF compressors. Furthermore, $CT_C$ and $DCT_C$ are only measured for the whole compressor $C$, not for $Dict_C$ or $Graph_C$.
+Another key performance indicator of a compressor $C$ is its compression time ($CT_C$) and decompression time ($DCT_C$). These metrics also depend on the input data and indicate the run time needed for compression and decompression of the data, respectively. The run time is typically measured in milliseconds. $CT_C$ and $DCT_C$ are also shown in Fig.~\ref{fig:generalcompressorModel} and~\ref{fig:compressorModel}. They are defined the same for general compressors and RDF compressors. Furthermore, $CT_C$ and $DCT_C$ are only measured for the whole compressor $C$, not for $Dict_C$ or $Graph_C$.
 
 Analogously to $CR$, if is clear from the context which compressor is considered, $CT$ and $DCT$ are used instead of $CT_C$ and $DCT_C$, respectively.
 
 
 \section{GRP vs HDT}\label{sec:approachGRPvsHDT}
 
-In this chapter, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain properties of RDF graphs are discussed.
+In this chapter, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain features of RDF graphs are discussed.
 
-The question is whether there are certain properties/features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
+The question is whether there are certain features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
 
 As HDT and GRP use the same method for compressing the dictionary ($Dict_{HDT}$), we only compare $Graph_{HDT}$ and $Graph_{GRP}$ in this chapter.
 
-\subsection{Relation Between Structure of Data and Compression Ratio}\label{sec:relationDataStructureComprRatio}
+%\subsection{Relation Between Structure of Data and Compression Ratio}\label{sec:relationDataStructureComprRatio}
 
-This chapter discusses how the structure of the input graph $in$ influences the compression ratios ($CR_{Graph_C}$) for GRP and HDT. In order to realize that it is necessary to first introduce the star pattern.
+%Now, it is discussed how the structure of the input graph $in$ influences the compression ratios ($CR_{Graph_C}$) for GRP and HDT. In order to realize that it is necessary to first introduce the star pattern.
 
-\subsubsection{Star Pattern}
+\subsection{Star Pattern}\label{sec:approachStarPattern}
 
-In graph theory, a star is a graph in which one node is connected to all other nodes. The other nodes are not connected to each other. While a star is an extreme case, there exist graphs with a few nodes having very high degrees. We denote them to be similar to the star pattern. 
+In graph theory, a star~\footnote{https://en.wikipedia.org/wiki/Star\_(graph\_theory)} is a graph in which one node is connected to all other nodes. The other nodes are not connected to each other. While a star is an extreme case, there exist graphs with a few nodes having very high degrees. We denote them to be similar to the star pattern. 
 
 In order to measure that we define the Star Pattern Similarity ($SPS$). Let $deg(n)$ be the degree of a node $n$. Let $N$ be a list of all nodes sorted by their $deg$-values in descending order.  Let $N_{top}$ be the first $x$ nodes of $N$. Hence, $N_{top}$ contains $x$ nodes with the highest degrees. $x$ should be chosen related to the size of $N$, we choose $x=0.001 \times |N|$.  Then, $SPS$ is defined as follows:
 
@@ -112,30 +112,29 @@ SPS=\dfrac{\sum_{n \in N_{top}} deg(n)  }{\sum_{n \in N} deg(n)} \in [0,1]
 
 The higher the value of $SPS$ is, the more similar the graph is to the star pattern, because then there a few nodes having a high proportion of the sum of all degrees.
 
-The star pattern can be further divided into hub pattern and authority pattern. As the name suggests, the hub pattern corresponds to a graph in which a few nodes have very high outgoing degrees, the authority pattern is the opposing case (high ingoing degrees). That distinction is needed in the following chapter.
+The star pattern can be further divided into the hub and authority patterns. As the name suggests, the hub pattern corresponds to a graph in which a few nodes have very high outgoing degrees, the authority pattern is the opposing case (high ingoing degrees). That distinction is needed in the following chapter.
 
-\subsubsection{HDT}
+\subsection{HDT}
 
 Now, HDT's behavior with respect to the input is discussed. As HDT's way of compressing the graph structure is fairly simple compared to GRP, there do not seem to be many potential features of the input data that have a high impact on HDT's compression ratio. But one feature is clearly visible: When Fig.~\ref{fig:hdt_overview} is considered, it is noticeable that the number of 1's in $B_p$ becomes less if there are a only a few different subjects. This enables HDT to store $B_p$ more efficiently and, thus, \CRGraph{HDT} becomes smaller. Consequently, HDT should perform better if the graph is similar to the hub pattern.
 
-\subsubsection{GRP}
-For GRP, that input feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio tends to be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns.
-
-Let 
+\subsection{GRP}\label{sec:approachFeaturesGRP}
+For GRP, that input feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio tends to be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns. Let
+ 
 \begin{align*}
 ELR = \dfrac{\text{number of different edge labels}}{\text{number of edges}} 
 \end{align*}
 
-(edge label ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
+(Edge Label Ratio) be the ratio of the edge labels or properties to the total number of edges of the graph. 
 
-A lower value of $ELR$ should increase the likelihood of a lower compression ratio.  However, if the graph structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $ELR$.
+A lower value of $ELR$ should increase the likelihood of a lower compression ratio for GRP.  However, if the graph's structure becomes unfavorable for GRP, the compression ratio may still be worse at a lower value for $ELR$.
 
-In~\cite{maneth}, the authors mentioned that a graph similar to the star pattern is beneficial for GRP, because GRP can create many digrams around those nodes with high degrees whereby, in contrast to HDT, GRP does not rely on the hub pattern.
+In~\cite{maneth}, the authors mention that a graph similar to the star pattern is beneficial for GRP, because GRP can create many digrams around those nodes with high degrees whereby, in contrast to HDT, GRP does not rely on the hub pattern.
 
 
 \section{Compression Improvements}\label{sec:approachComprRatioImprovements}
 
-First comparisons of $Graph_{HDT}$ and $Graph_{GRP}$ (see~Ch.~\ref{sec:evaluationHDTvsGRP}) showed that  $Graph_{GRP}$ achieves a better compression ratio in many cases. Since this thesis' topic is grammar-based compression, Ch.~\ref{sec:approachOntKnowledge} will focus on improving $Graph_{GRP}$. But Ch.~\ref{sec:approachDictImprovements} is about the improvement of $Dict_{HDT}$ which is used for both HDT and GRP.
+First comparisons of $Graph_{HDT}$ and $Graph_{GRP}$ (see~Ch.~\ref{sec:evaluationHDTvsGRP}) showed that  $Graph_{GRP}$ achieves a better compression ratio in many cases. Since this thesis' topic is grammar-based compression, Ch.~\ref{sec:approachOntKnowledge} will focus on improving $Graph_{GRP}$. But Ch.~\ref{sec:approachDictImprovements} is about the improvement of $Dict_{HDT}$ which is used by both HDT and GRP.
 
 
 
@@ -143,11 +142,11 @@ First comparisons of $Graph_{HDT}$ and $Graph_{GRP}$ (see~Ch.~\ref{sec:evaluatio
 
 As already discussed in Ch.~\ref{sec:relatedworkOntology}, an ontology contains meta data about an RDF graph.
 
-This chapter will investigate whether it is possible to change the structure of an RDF graph by applying knowledge from its ontology so that it is better compressible for GRP, but at the same time remains semantically equivalent to the original graph. In this way no data would be lost after the compression.
+This chapter will investigate whether it is possible to change the structure of an RDF graph by applying knowledge from its ontology so that it is better compressible for GRP, but at the same time remains semantically equivalent to the original graph. In this way, no data would be lost after the compression.
 
-In Ch.~\ref{sec:relationDataStructureComprRatio} it has already been mentioned that GRP makes use of much more complex sub structures than HDT. It will therefore be interesting to see how applying ontology knowledge influences GRP's compression ratio.
+In Ch.~\ref{sec:approachFeaturesGRP}, it has already been mentioned that GRP makes use of much more complex sub structures than HDT. It will therefore be interesting to see how applying ontology knowledge influences GRP's compression ratio.
 
-This chapter is about elaborating the theoretical concepts of OWL and investigating how they can be used for grammar-based compression.
+In the following chapters, some concepts of OWL are introduced and it is analyzed how they can be used in order to produce a graph structure which is favorable for GRP.
 
 \subsubsection{Symmetric Properties}
 
@@ -190,19 +189,19 @@ The opposing approach is to add all \dtpsp But a strong argument against this ap
 
 \subsubsection{Equal Properties}\label{sec:approachEqualProperties}
 
-In OWL there are the properties {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $ELR$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same but single nodes can be marked as the same as well.
+In~\cite{owl}, there are the properties {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but is does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $ELR$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same but single nodes can be marked as the same as well.
 
 
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}
 
 
-According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memory of a compression output. First results in Ch.~\ref{ch:evaluation} also show that. It is therefore worth investigating whether the dictionary can be compressed better. It can be taken advantage of certain features of the dictionary to achieve that. In order to do that we use $Dict_{HDT}$ as the basis and further improve it.
+According to~\cite{hdt}, the dictionary ($out_{dict}$) makes up most of the memory of the complete output $out$. First results of Ch.~\ref{sec:evaluationHDTvsGRP} also show that. It is therefore worth investigating whether the dictionary can be compressed better. It can be taken advantage of certain features of the dictionary to achieve that. In order to do that we use $Dict_{HDT}$ as the basis and further improve it.
 
 \subsubsection{Literals}\label{sec:approachLiterals}
 
-Objects in RDF can be literals. Literals typically contain constant values and usually have no common prefixes. Therefore the compression of HDT is not suitable for these. It would be possible to use different compression techniques for different types of data values (integer, double, string, etc.). The thesis will focus on compressing strings.
+Objects in RDF can be literals. Literals typically contain constant values and usually have no common prefixes. Therefore, the compression of \DHDT{} is not suitable for these. It would be possible to use different compression techniques for different types of data values (integer, double, string, etc.). The thesis will focus on compressing strings.
 
-Since those strings can contain whole flow texts, a text compression would probably be well applicable. An example of such a text compression is a Huffman Code~\cite{huffman}. Here, every single character of a text is binary coded, whereby frequently occurring characters get short and rare characters get longer codes. These codes are expressed by a binary Huffman tree. An example can be seen in Fig.~\ref{fig:huffmantree}. Each leaf contains a symbol whereas the ones and zeros on the path to the symbol define its code. The tree is constructed in such a way that paths to frequent characters are shorter than those to rare characters. The whole procedures can be seen in~\cite{huffman}.
+Since those strings can contain whole flow texts, a text compression would probably be well applicable. An example of such a text compression is a Huffman Code~\cite{huffman}. Here, every single character of a text is binary coded, whereby frequently occurring characters get short and rare characters get longer codes. These codes are expressed by a binary Huffman tree. An example can be seen in Fig.~\ref{fig:huffmantree}. Each leaf contains a symbol whereas the ones and zeros on the path to the symbol define its code. The tree is constructed in such a way that paths to frequent characters are shorter than those to rare characters. The whole procedure can be seen in~\cite{huffman}.
 
 \begin{figure}
 	\centering
@@ -213,7 +212,7 @@ Since those strings can contain whole flow texts, a text compression would proba
 
 \subsubsection{Blank Nodes}\label{sec:approachBlankNodes}
 
-As already mentioned in Ch.~\ref{sec:relatedworkRDF} every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random strings are assigned to the blank nodes, which are quite long. They also have no common prefixes, which makes the HDT dictionary compression ineffective here. 
+As already mentioned in Ch.~\ref{sec:relatedworkRDF}, every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random strings are assigned to the blank nodes, which are quite long. They also have no common prefixes, which makes \DHDT{} ineffective here. 
 
 To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can be used to get short IDs. 
 

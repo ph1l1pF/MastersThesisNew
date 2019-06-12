@@ -7,11 +7,11 @@ This chapter will explain how the different approaches of Ch.~\ref{ch:approach} 
 \todo{nochmal angucken}
 In this chapter, it will be explained how the comparison between HDT and GRP is implemented.
 
-As has just explained, HDT can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So it gets worse the further away the graph is from this pattern. The most unfavorable graph structure for HDT is therefore the authority pattern.
+As has just explained, \GHDT{} can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So, \CRGraph{HDT} gets higher the further away the graph is from this pattern. The most unfavorable graph structure for \GHDT{} is therefore the authority pattern (see Ch.~\ref{sec:approachStarPattern}).
 
-The task is to create a series of RDF graphs $(G_1,...,G_m)$ that first correspond to the hub pattern and then continue to change in the direction of the authority pattern. That can be done using Alg.~\ref{alg:BuildGraphs}. The first input parameter $steps$ influences how many graphs will be created. It has to chosen high enough to ensure a smooth transition from the hub to authority pattern. The second parameter $nodesFactor$ influences the amount of nodes of the graphs. Concrete values for the parameter are not important to mention.
+The task is to create a series of RDF graphs $(G_1,...,G_m)$ that first correspond to the hub pattern and then continue to change in the direction of the authority pattern. That can be done using Alg.~\ref{alg:BuildGraphs}. The first input parameter $steps$ influences how many graphs will be created, as it defines by which amount the number of subjects ($subj$) is increased in every iteration of the while loop. It has to chosen low enough to ensure a smooth transition from the hub to authority pattern. The second parameter $nodesFactor$ influences the amount of nodes of the graphs. Concrete values for the parameter are not important to mention.
 
-An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_pattern}. All graphs ($G_1$ to $G_m$) have the same number of nodes and edges. That is ensured by Line~\ref{line:buildgraph} in Alg.~\ref{alg:BuildGraphs}. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This goes on and on until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
+An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_pattern}. All graphs ($G_1$ to $G_m$) have the same number of nodes and edges. That is ensured by Line~\ref{line:buildgraph} in Alg.~\ref{alg:BuildGraphs}. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This continues until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
 
 \begin{algorithm}
 	\caption{BuildGraphs ($steps$, $ nodesFactor$)}\label{alg:BuildGraphs}
@@ -19,7 +19,7 @@ An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_p
 	\State $n \leftarrow nodesFactor*steps$ // $n$ is number of nodes
 	\State $subj \leftarrow 1$
 	\State $i \leftarrow 1$
-	\While{$subj\le n$ }
+	\While{$subj < n$ }
 		\State $obj \leftarrow$ $n-subj$ 
 		\State $G_i \leftarrow$ build graph with $subj$ subjects and $obj$ objects\label{line:buildgraph}
 		\State  $subj\leftarrow subj+steps$
@@ -36,9 +36,9 @@ An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_p
 	\label{fig:star_pattern}
 \end{figure}
 
-It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length and ensuring that every RDF graph also has the same number of triples. This same size is important for the evaluation, since only the graph's structure is of interest here. An unequal size of the RDF files would lead to undesired effects in terms of $CR_{Graph_C}$.
+It is also ensured that each of the generated files has exactly the same size. This is made possible by ensuring that each URI has the same length and that every RDF graph also has the same number of triples. This same size is important for the evaluation, since only the graph's structure is of interest here. An unequal size of the RDF files would lead to undesired effects in terms of $CR_{Graph_C}$.
 
-A section of such a file (for $G1$) is shown in Fig.~\ref{fig:rdfFile}. In that example, there is only one distinct predicate for all triples. This is because, we first want to focus on the effect of the hub and authority patterns. The impact of an increasing number of predicates will be evaluated afterwards.
+A section of such a file (for $G_1$) is shown in Fig.~\ref{fig:rdfFile}. In that example, there is only one distinct predicate for all triples. This is because, we first want to focus on the effect of the hub and authority patterns. The impact of an increasing number of predicates will be evaluated afterwards.
 
 
 \begin{figure}[h]
@@ -54,7 +54,7 @@ This chapter introduces the implementation details of Ch.~\ref{sec:approachCompr
 
 \subsection{Datasets}\label{sec:implementationDatasets}
 
-Here, an overview about the different datasets, that have been used for the evaluation, is given. Although the datasets are used in Ch.~\ref{ch:evaluation}, they are presented here, since some implementation details are dependent on the data.
+Here, an overview of the different datasets, that have been used for the evaluation, is given. Although the datasets are used in Ch.~\ref{ch:evaluation}, they are presented here, since some implementation details are dependent on the data.
 
 \subsubsection{Semantic Web Dog Food}
 
@@ -62,11 +62,11 @@ Semantic Web Dog Food~\footnote{http://www.scholarlydata.org/dumps/} is a collec
 
 \subsubsection{DBPedia}
 
-DBPedia~\footnote{https://wiki.dbpedia.org/Downloads2015-04} is an RDF version of the knowledge from Wikipedia. It contains many different data files of a quite big size, with some of them having hundreds of millions of triples. Also, DBPedia includes an ontology that is used for the evaluation.
+DBPedia~\footnote{https://wiki.dbpedia.org/Downloads2015-04} is an RDF version of the knowledge from Wikipedia. It contains many different data files of a quite big size, with some of them having hundreds of millions of triples. Also, DBPedia includes an ontology that is used for the improvements regarding Ch.~\ref{sec:implementationOntKnowledge}.
 
 \subsubsection{Wordnet}
 
-Wordnet contains knowledge about the English language. Words that have the same meaning are grouped in to the same \enquote{synset}. Those sets are the nodes in an RDF graph and relations between them are edges/properties.
+Wordnet~\footnote{http://wordnet-rdf.princeton.edu/about} contains knowledge about the English language. Words that have the same meaning are grouped in to the same \enquote{synset}. Those sets are the nodes in an RDF graph and relations between them are edges/properties. It also has an ontology which is useful for Ch.~\ref{sec:implementationOntKnowledge}.
 
 \subsubsection{Nuts-RDF}
 
@@ -78,11 +78,11 @@ This is RDF data~\footnote{http://opendatacommunities.org/home} published by the
 
 \subsection{Ontology Knowledge}\label{sec:implementationOntKnowledge}
 
-This chapter is about how to manipulate the RDF graphs to match the properties of Ch.~\ref{sec:approachOntKnowledge}. For this the query language SPARQL~\cite{sparql} is used.
+This chapter is about how to manipulate the RDF graphs to match the features of Ch.~\ref{sec:approachOntKnowledge}. For this, the query language SPARQL~\cite{sparql} is used.
 
 
 \subsubsection{Gathering Relevant Properties}
-First, all relevant properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
+DBPedia and Wordnet are used here, since both of them have ontologies. First, all relevant (symmetric, inverse, transitive) properties must be determined. This information should normally be directly contained in the ontology of the data, by triples of the form:
 
 \[
 \text{ {\tt (myProperty, rdf:type, owl:SymmetricProperty)}}
@@ -90,11 +90,11 @@ First, all relevant properties must be determined. This information should norma
 
 This triple states that {\tt myProperty} is symmetric. The concept is analogous for inverse or transitive properties. 
 
-However, this is not the case with DBPedia. In their ontology such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. Now it is possible to check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given.
+However, this is not the case with DBPedia. In their ontology, such triples do not occur for the symmetric or inverse cases (only for transitive properties). Symmetric and inverse properties have to be determined in a different way. In DBPedia's ontology the equivalent properties of Wikidata~\footnote{https://www.wikidata.org/wiki/Wikidata:Main\_Page} are given. It is possible to check in the Wikidata ontology whether the properties are symmetric or inverse, because there the information is given. Thus, it can be  back-traced which DBPedia properties are relevant.
 
 In Wordnet, transitive properties are explicitly given, but symmetric and inverse are not. It is necessary to determine them by understanding the meaning of Wordnet's relations. Properties connect different \enquote{synsets}. One of those properties is {\tt antonym}, which is like an opposite-relation between words. Therefore, the property can be seen as symmetric. The properties {\tt hypernym} and {\tt hyponym} are inverse. However, this only holds for nouns, not for verbs. Hence, a sub graph of Wordnet, which only contains nouns, has to be created in order to use those inverse properties.
 
-The following chapters show how the manipulations can be performed.
+After all relevant properties have been gathered, the manipulations (as suggested in Ch.~\ref{sec:approachOntKnowledge}) can be executed. The following chapters show how that can be achieved.
 
 \subsubsection{Symmetric Properties}
 
@@ -109,7 +109,7 @@ WHERE{
 }
 \end{lstlisting}
 
-That update has to be executed for each symmetric property $p$. If it is desired to remove the second triple, a delete update would have to executed. That delete is shown in Listing~\ref{lst:symmetricDelete}.
+That update has to be executed for each symmetric property $p$. If it is desired to remove the second triple, a delete update would have to be executed. That delete is shown in Listing~\ref{lst:symmetricDelete}.
 
 
 \begin{lstlisting}[captionpos=b, caption=SPARQL update for removing triples with the symmetric property p., label=lst:symmetricDelete,
@@ -121,7 +121,7 @@ FILTER (EXISTS {?o ?p ?s } && (str(?s) > str(?o) )
 }
 \end{lstlisting}
 
-Here it has to be taken care that not to delete both directions, this can be done by using a filter.
+Here, it has to be taken care not to delete both directions, this can be done by using a filter.
 
 \subsubsection{Inverse Properties}
 
@@ -180,11 +180,11 @@ FILTER (NOT EXISTS {?s ?p ?o })
 
 Real datasets are quite big and it can happen that there are only a few relevant properties (symmetric/inverse/transitive). Even if there are many of those properties it can be that they do not occur often in the data. In that case, the effect of manipulating the data cannot have a big impact on the compression ratio. However, it is still desired to investigate if the effect is possibly there. Therefore, it is necessary to form a smaller graph in which those relevant properties occur often. So, a procedure to build a sub graph is needed.
 
-First, all triples $t_1,...,t_n$ are collected which contain one of the relevant properties. It would now be possible to randomly add a number of remaining triples in order to get a more diversified graph. But that would result in a graph far away from the original and would probably not contain structural patterns from the original one.
+First, all triples $t_1,...,t_n$ are collected which contain one of the relevant properties. It would be possible to randomly add a number of remaining triples in order to get a more diversified graph. But that would result in a graph far away from the original and would probably not contain structural patterns from the original one.
 
 Therefore, we choose to add triples that are directly connect to the subjects or objects of $t_1,...,t_n$. By doing that, a real sub graph is extracted out of the original graph.
 
-The procedure is illustrated in Fig.~\ref{fig:subgraph}. There $p$ is the only relevant property. Consequently, the green triples are collected in the first step. The red triples are collected in the second step, because they are connected to triples from the first step.
+The procedure is illustrated in Fig.~\ref{fig:subgraph}. There, $p$ is the only relevant property. Consequently, the green triples are collected in the first step. The red triples are collected in the second step, because they are connected to triples from the first step.
 
 \begin{figure}
 	\centering
@@ -193,19 +193,19 @@ The procedure is illustrated in Fig.~\ref{fig:subgraph}. There $p$ is the only r
 	\label{fig:subgraph}
 \end{figure}
 
-The results of Ch.~\ref{sec:evaluationHDTvsGRP} have also shown that GRP has a quite high run time even for smaller graphs. It was also mentioned in~\cite{maneth} that the rudimentary implementation (see Ch.~\ref{sec:relatedworkGRPImpl}) cannot handle very large graphs. However, we still want to evaluate GRP for real datasets which are often very large. To solve this problem, a realistic sub graph of the big graphs has to be extracted. As mentioned earlier, choosing random triples does not fulfill that. Hence, we choose an approach similar to the one shown in Fig.~\ref{fig:subgraph}. But here we start with some entity $e$ (not with a set of desired properties). Analogously to the other approach, we gather all triples $e$ is part of and then add triples which the newly gathered entities $e_1,...,e_n$ are part of. That step is repeated a few times until some defined number of triples has been reached. The result graph is called $e$-based subgraph.
+The results of Ch.~\ref{sec:evaluationHDTvsGRP} have also shown that GRP has a quite high run time even for smaller graphs. It was also mentioned in~\cite{maneth} that the rudimentary implementation (see Ch.~\ref{sec:relatedworkGRPImpl}) cannot handle very large graphs. However, we still want to evaluate GRP for real datasets which are often very large. To solve this problem, a realistic sub graph of the big graphs has to be extracted. As mentioned earlier, choosing random triples does not fulfill that. Hence, we choose an approach similar to the one shown in Fig.~\ref{fig:subgraph}. But here we start with some entity $e$ (not with a set of desired properties). Analogously to the other approach, we gather all triples $e$ is part of. This gives us new entities $e_1,...,e_n$. Then, triples are added which $e_1,...,e_n$ are part of. That routine is repeated a few times until some defined number of triples has been reached. 
 
 
 
 \subsection{Dictionary Improvements}\label{sec:implementationDictImprovements}
 
-For the dictionary improvements, HDT's dictionary compression is used as a basis. Therefore, the HDT-Java code~\footnote{https://github.com/rdfhdt/hdt-java} has been extended.
+For the dictionary improvements, HDT's dictionary compression (\DHDT{}) is used as a basis. Therefore, the HDT-Java code~\footnote{https://github.com/rdfhdt/hdt-java} has been extended.
 
 \subsubsection{Literals}\label{sec:implementationLiterals}
 
 As already mentioned in Ch.~\ref{sec:approachDictImprovements}, literals will be compressed using a Huffman code. To achieve that, HDT is changed such that it does not compress literals by prefix trees, but rather gives the literals to the newly created {\tt HuffmanHandler}, which compresses all literals and finally stores them in a binary format. In order to make that possible, the {\tt HuffmanHandler} has to traverse all literals in the beginning of the compression to establish a Huffman Tree.
 
-In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started at the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one if the current node's character in case the current node is leaf. Otherwise it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
+In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started at the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one if the current node is a leaf. Otherwise, it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
 
 \begin{algorithm}
 	\caption{EncodeNode (TreeNode node)}\label{alg:HuffmanEncode}
@@ -232,7 +232,7 @@ Now, two approaches, which have both been implemented, for improving the compres
 
 The first approach is to use shorter IDs (e.g. numbers from 1 to $n$). Then, during the run time a mapping from old ID to new ID is maintained by the new class {\tt BlankNodeHandler} in order to make sure that the same blank node will get the same new ID if it occurs multiple times. That mapping does not have to be stored persistently and will therefore be omitted once the compression is finished.
 
-The second approach is to omit blank node IDs completely. The HDT code is changed in such a way that skips blank nodes in the process of storing the dictionary. HDT must then be changed so that it can handle the case in which it does not find a corresponding string in the dictionary for a certain short ID. At this point it would know directly that the considered node is a blank node and the longer blank node ID is unimportant. Such a situation will occur when a decompression is performed. That mechanism has not been implemented, because this thesis is only interested in potential compression ratio improvements.
+The second approach is to omit blank node IDs completely. The HDT code is changed in such a way that skips blank nodes in the process of storing the dictionary. HDT must then be changed so that it can handle the case in which it does not find a corresponding string in the dictionary for a certain short ID. At this point, it would know that the considered node is a blank node and the longer blank node ID is unimportant. Such a situation will occur when a decompression is performed. That mechanism has not been implemented, because this thesis is only interested in potential compression ratio improvements.
 
 
 

@@ -1,21 +1,21 @@
 % !TeX spellcheck = en_US
 \chapter{Summary and Future Work}\label{ch:summary_and_discussion}
 
-This last chapter concludes the thesis by firstly summarizing its most important results in a compact form and secondly,  discussing what future work might be interesting to do in the area of RDF compression.
+This last chapter concludes the thesis by firstly summarizing its most important results in a compact form and secondly,  discussing  future work in the area of RDF compression.
 
 \section{Summary}
 
 Due to the constantly growing size of the Semantic Web, scalability problems can occur in terms of storage, transmission and consumption of knowledge graphs. At this point, compression can help by reducing the size of the graphs. The focus of this thesis was on storage and transfer, since grammar-based compression, which was considered here, is best suited for these use cases. 
 
-The first part of the thesis was to compare GRP with HDT. There, it was shown that GRP achieves a better compression ratio in the vast majority of the used datasets. Moreover, it was shown that the structure of the input data has a much higher effect for GRP than for HDT, because GRP can build much more complex sub structures. In terms of the run time, HDT clearly outperforms GRP.
+The first part of the thesis was to compare GRP with HDT. There, it was shown that GRP achieves a better compression ratio in the vast majority of the used datasets. Moreover, it was shown that the structure of the input data has a much higher effect for GRP than for HDT, because GRP can build much more complex sub structures. In terms of the run time, HDT clearly outperforms GRP. Generally, it can be concluded that GRP is a good alternative to HDT in terms of the compression ratio.
 
 Based on those results, the next task was to improve the compression ratio. Here, the first sub task was to improve the graph component $(Graph_{GRP})$ of GRP by applying knowledge from the ontology of an RDF graph. The results showed that GRP can find much more patterns (digrams) after symmetric and inverse triples were added and transitive triples were removed. The problem was that the grammar encoding method of GRP cannot take full advantage of that improvement.
 
-The second sub task was to improve the dictionary component of HDT ($Dict_{HDT}$) which is also used by GRP. As the results have shown, compressing long literals by using a Huffman Code brings a significant improvement. Also, the blank node improvement results in a much lower compression ratio.
+The second sub task was to improve the dictionary component of HDT ($Dict_{HDT}$) which is also used by GRP. As the results have shown, compressing long literals by using a Huffman Code brings a significant improvement. Also, handling blank node IDs more efficiently results in a much lower compression ratio if the graph contains a high number of blank nodes.
 
 The final evaluation results showed that the dictionary has a much higher effect on the compression ratio than the graph which is an important insight for future research on this topic.
 
-Generally, the thesis has shown that grammar-based graph compression is suitable for RDF and also delivers better results than HDT in most cases. Moreover, it was shown that there is much potential in terms of improving the dictionary compression.
+In conclusion, the thesis has shown that grammar-based graph compression is suitable for RDF and also delivers better results than HDT in most cases. Moreover, it was shown that there is much potential in terms of improving the dictionary compression.
 
 \section{Future Work}\label{sec:futurework}
 
@@ -28,12 +28,13 @@ The topic of RDF compression covered in this thesis can be divided into two aspe
 		\item [- Node-based compression:] GRP is an edge-based compressor, which means that it replaces edges of a graph by non terminal edges. However, there are also grammar-based compressors which are edge- and node-based, thus also replacing nodes by non terminal nodes. It would be interesting to see whether they can outperform GRP for RDF graphs. Currently, such a compressor is under development as an extension of~\cite{mattdk}.
 		\item [- Better grammar encoding:] In Ch.~\ref{sec:related_workGrammarEncoding}, it has already been stated that the grammar encoding method of GRP is not always working well (especially the $k^2$-tree for storing the start rule). Therefore, a different method can be chosen which maybe delivers better results.
 		\item [- Compress multiple graphs together:] As already mentioned in Ch.~\ref{sec:approachEqualProperties}, it is possible to compress multiple graphs at once. Then, properties or entities can be replaced by equal properties or entities, respectively. This would enable $Graph_{GRP}$ to produce a better compression.
-		\item [- Query evaluation:] This thesis did not investigate the query run times for GRP. The authors of~\cite{maneth} have already proven that neighborhood queries are very slow on graphs compressed by GRP. However, according to~\cite{maneth}, reachability queries are faster on compressed graphs than on original ones. Therefore, it could be worse comparing those query run times to HDT's query speeds.
+		\item [- Query evaluation:] This thesis did not investigate the query run times for GRP. The authors of~\cite{maneth} have already proven that neighborhood queries are very slow on graphs compressed by GRP. However, according to~\cite{maneth}, reachability queries are faster on compressed graphs than on original ones. Therefore, it could be worthwhile to compare those query run times to HDT's query speeds. That could show if GRP is also a good alternative to HDT with regard to reachability queries which can also be done using SPARQL.
 	\end{description}
 	\item Dictionary Compression
 	\begin{description}
 		\item [- More compression methods for literals:] As explained in Ch.~\ref{sec:approachLiterals}, the thesis focused on string compression via Huffman Coding. But in literals there can be many other data types. It would be sensible to have a separate compression technique for each of those data types. That would probably result in a better compression ratio.
-		\item[- Compress multiple dictionaries together:] This task is similar to compressing multiple graphs together. It can also make a difference with respect to the dictionary. If multiple RDF files have similar dictionaries (many overlapping URIs or literals) those could be merged into one main dictionary which would then be compressed. Of course, this is no trivial task, because it is necessary to differentiate the different smaller dictionaries, but there can be an elegant solution for that.
+		\item[- Pre-computed Huffman Trees:] In this thesis, pre-computed Huffman Trees were not used, because they do not contain all special symbols occuring in the data. The problem with self-computed Huffman Trees is that this significantly increases the run time. Hence, it could make sense to pre-compute Huffman Trees (e.g. for DBPedia) including all necessary symbols. Then, the same tree could be used for several files (e.g. all files from DBPedia).
+		\item[- Compress multiple dictionaries together:] This task is similar to compressing multiple graphs together. It can also make a difference with respect to the dictionary. If multiple RDF files have similar dictionaries (many overlapping URIs or literals) those could be merged into one main dictionary which would then be compressed. Of course, this is no trivial task, because it is necessary to differentiate the different smaller dictionaries in order to be able to restore all original graphs and their respective dictionaries.
 	\end{description}
 \end{itemize}
 

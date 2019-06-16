@@ -1,18 +1,23 @@
 % !TeX spellcheck = en_US
 \chapter{Evaluation}\label{ch:evaluation}
 
-This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach} and~\ref{ch:implementation}.  First, the comparison of GRP and HDT is evaluated. Second, the evaluation results for the compression improvements are presented.
+This chapter is about the evaluation of the several approaches presented in Ch.~\ref{ch:approach} and~\ref{ch:implementation}.  First, the performances of GRP and HDT are compared. Second, the proposed compression improvements are evaluated.
 
 For the following experiments, HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
 
+\section{Dataset Overview}
+\todo{übersicht}
+You need to describe the datasets somewhere, including a) how they are generated or where do they come from (there are papers for the first three datasets) and b) what are their features (e.g., \# triples, \# resources, etc.)
+Especially the ELR and SPS values should be listed as well.
+
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
-This chapter shows the evaluation results of the comparison between HDT and GRP. First, result for the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be presented. Afterwards, the two compressors will also be evaluated for real world data.
+This chapter shows the evaluation results of the comparison between HDT and GRP. First, results for the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be presented. Afterwards, the two compressors will also be evaluated for real world data.
 
 
 \subsection{Results for Synthetic Data}
 
-Fig.~\ref{fig:grpvshdt1} shows the results for the synthetically generated data (see Ch.~\ref{sec:implementationGRPvsHDT}). Fig.~\ref{fig:ratiosBothWithoutDict} shows the compression ratios without the size of the dictionary. As expected, $CR_{Graph_{HDT}}$ gets bigger as the graphs are further away from the hub pattern. Moreover, \GGRP{} compresses better if the graph is similar to the star pattern (greater value of $SPS$), as stated earlier. It is noticeable that $CR_{Graph_{GRP}}$ fluctuates much more than $CR_{Graph_{HDT}}$ and the impact of the star pattern similarity is much higher for \GGRP{}.
+Fig.~\ref{fig:grpvshdt1} shows the results for the synthetically generated data (see Ch.~\ref{sec:implementationGRPvsHDT}). Fig.~\ref{fig:ratiosBothWithoutDict} shows the compression ratios without the size of the dictionary. As expected, $CR_{Graph_{HDT}}$ becomes higher, as the graphs are further away from the hub pattern. Moreover, \GGRP{} compresses better if the graph is similar to the star pattern (greater value of $SPS$), as stated earlier. It is noticeable that $CR_{Graph_{GRP}}$ fluctuates much more than $CR_{Graph_{HDT}}$ and the impact of the star pattern similarity is much higher for \GGRP{}.
 
 Fig.~\ref{fig:ratiosBothWithDict} shows the values of \CR{HDT} and \CR{GRP}. It can be seen that the curves behave differently than in Fig.~\ref{fig:ratiosBothWithoutDict}, since the dictionary size $|out_{dict}|$ is much bigger than $|out_{graph}|$. As both GRP and HDT use the same dictionary compressor ($Dict_{HDT}$), they have been increased by the same amount and therefore \CR{GRP} is smaller than \CR{HDT}. Furthermore, it is noticeable that $|out_{dict}|$ is bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
@@ -35,9 +40,9 @@ Apart from the compression ratio, the run time is also important for the overall
 \end{figure}
 
 
-It can be seen that $CT_{GRP}$ is significantly higher than $CT_{HDT}$. It is on average ca. 48 times as high. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not comparable in terms of quality. Unfortunately, it is not possible to say whether a more professional implementation of GRP will also be slower than HDT.
+It can be seen that $CT_{GRP}$ is on average 48 times higher than $CT_{HDT}$. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not on the same level in terms of quality. Unfortunately, it is not possible to say whether a more professional implementation of GRP will also be slower than HDT.\todo{Laufzeiten?}
 
-In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, it will now be shown how the compressors behave as that number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions is shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. The \GHDT{} curves can be recognized by the low fluctuations and the monotonic growth, whereas the \GGRP{} curves fluctuate more and do not have monotonic behavior. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first \GGRP{} curve is the blue one, the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
+In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as that number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions is shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. The \GHDT{} curves can be recognized by the low fluctuations and the monotonic growth, whereas the \GGRP{} curves fluctuate more and do not have a monotonic behavior. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first \GGRP{} curve is the blue one, the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
 
 
 \begin{figure}
@@ -46,15 +51,17 @@ In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct
 	\caption{$CR_{Graph_C}$-values for HDT and GRP. GRP's curves can be recognized by the higher fluctuations. Same colors indicate that the number of distinct predicates is the same. The two dashed lines show the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ holds.} 
 	\label{fig:bothwithoutdictincreasingpreds}
 \end{figure}
+\todo{grafik anders machen}
 
 
-\subsection{Results for Real Data}
 
-The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. Now, real data will be used to compare the compression ratios of \GHDT{} and \GGRP{}. For this, several datasets will be used (DBPedia, Semantic Web Dog Food, WikiData and Open Government Data). 
+\subsection{Results for Real World Data}
+
+The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. First, real data will be used to compare the compression ratios of \GHDT{} and \GGRP{}. Thus, several datasets will be used (DBPedia, Semantic Web Dog Food, WikiData and Open Government Data).
 
 33 different RDF  graphs are used. On 31 of those \GGRP{} achieves a better compression ratio than \GHDT{}. On average, $CR_{Graph_{HDT}}$ is 1.8 times higher than $CR_{Graph_{GRP}}$.
 
-In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman correlation~\footnote{https://en.wikipedia.org/wiki/Spearman\%27s\_rank\_correlation\_coefficient} is used. That function produces values from $ -1 $ to $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation. The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher numbers of different predicates bring a higher compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. But the correlation is not as strong as with $ELR$. 
+In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman correlation~\footnote{https://en.wikipedia.org/wiki/Spearman\%27s\_rank\_correlation\_coefficient} is used. That correlation coefficient produces values between $ -1 $ and $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation. The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher numbers of different predicates lead to a higher compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. Although it has to be noted that for the latter case, the correlation is not as strong as with $ELR$. 
 
 $CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation is quite small. The correlation between $CR_{Graph_{HDT}}$ and $SPS$ is positive (but very close  to 0) which is reasonable, since $Graph_{HDT}$ only benefits from hub pattern, but $SPS$ is defined for the general star pattern.
 
@@ -74,7 +81,39 @@ $CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation i
 	\label{tab:spearman}
 \end{center}
 
-Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for the datasets, respectively. It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$, then $CR_{Graph_C}$ will be smaller for $f_1$ (because $|f_1|>|f_2|$). So, only the values for one graph/file should be compared. 
+Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for the datasets, respectively. It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$, then $CR_{Graph_C}$ will be smaller for $f_1$. This is because $|f_1|>|f_2|$ is true and $CR_{Graph_C}=\frac{in}{out_{graph}}$ (with $in\in \{f_1,f_2\}$ in this case). Therefore, the compression ratios of the two approaches can only be compared if they were achieved on the same input file.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline 
+		Short Name & Long Name & \#Triples & \#Resources & $ELR$ & $SPS$ \\ 
+		\hline
+		DF0 & dc-2010-complete-alignments & 5919 & 821 & 0.008 & 0.0 \\
+		\hline
+		DF1 & ekaw-2012-complete-alignments & 13114 & 1604 & 0.004 & 0.052 \\
+		\hline
+		DF2 & eswc-2006-complete-alignments & 6654 & 1259 & 0.004 & 0.071 \\
+		\hline
+		DF3 & eswc-2009-complete-alignments & 9462 & 1247 & 0.004 & 0.054 \\
+		\hline
+		DF4 & eswc-2010-complete-alignments & 18122 & 2226 & 0.002 & 0.091 \\
+		\hline
+		DF5 & eswc-2011-complete-alignments & 25865 & 3071 & 0.002 & 0.114 \\
+		\hline
+		DF6 & iswc-2002-complete-alignments & 13450 & 1953 & 0.003 & 0.057 \\
+		\hline
+		DF7 & iswc-2003-complete-alignments & 18039 & 2565 & 0.002 & 0.102 \\
+		\hline
+		DF8 & iswc-2005-complete-alignments & 28149 & 3877 & 0.001 & 0.132 \\
+		\hline
+		DF9 & iswc-2010-complete-alignments & 32022 & 3842 & 0.001 & 0.116 \\
+		\hline 
+	\end{tabular} 
+	\captionof{table}{Datasets for the comparison of GRP and HDT.}	
+	\label{tab:comparisonDatasets}
+\end{center}
+
+
 
 \begin{figure}[h]
 	\centering
@@ -84,6 +123,7 @@ Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for t
 	\caption{$CR_{Graph{HDT}}$ and $CR_{Graph{GRP}}$.}
 	\label{fig:compare1}
 \end{figure}
+\todo{DB0-DB10 erklären}
 
 \begin{figure}[h]
 	\centering
@@ -100,10 +140,10 @@ This chapter evaluates the compression improvements. First, results for the grap
 
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
 
-In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. Here, not only the file size of the output ($|out_{graph}|$) will be measured. Since these approaches have the intention to improve the ability for $Graph_{GRP}$ to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because after the encoding of the grammar it might happen that, despite the fact that the grammar is smaller after the manipulations, that effect is not visible in the value of $|out_{graph}|$. 
+In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. Here, not only the file size of the output ($|out_{graph}|$) will be measured. Since these approaches have the intention to improve the ability for $Graph_{GRP}$ to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because the GRP's grammar encoding does not always produce a smaller result on a smaller grammar (as mentioned in Ch.~\ref{sec:related_workGrammarEncoding}).
 
 \subsubsection{Occurrence of Properties}
-First, it is interesting to consider how often the relevant properties occur in real datasets.  For that, DBPedia and Wordnet will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties is necessary to observe a real effect of the data manipulations. Consequently, those sub graphs (see Ch.~\ref{sec:implementationSubGraphs}) are used in the following evaluations.
+First, it is considered how often the relevant properties\todo{übersicht properties} occur in real datasets.  For that, DBPedia and Wordnet will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties is necessary to observe the effect of the data manipulations. Consequently, those sub graphs (see Ch.~\ref{sec:implementationSubGraphs}) are used in the following evaluations.
 
 \begin{figure}
 	\centering
@@ -112,7 +152,7 @@ First, it is interesting to consider how often the relevant properties occur in 
 	\label{fig:ontoccurrences}
 \end{figure}
 
-Another interesting feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that these numbers of are quite low, especially for symmetric properties, considering the fact that these datasets are very large (millions of triples). That is also a reason for the low relative amounts in Fig.~\ref{fig:ontoccurrences}.
+Another feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that these amounts of are relatively small, especially for symmetric properties, considering the fact that these datasets are very large (millions of triples). That is also a reason for the low relative amounts in Fig.~\ref{fig:ontoccurrences}.
 
 \begin{figure}
 	\centering
@@ -124,11 +164,11 @@ Another interesting feature of the datasets is how many different relevant prope
 
 
 \subsubsection{Evaluation Process}
-Now, the overall process of applying ontology knowledge and evaluating whether it results in a better compression is explained. Fig.~\ref{fig:overallprocess} shows the implemented of the process. First, the original graph or sub graph is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
+Here, the overall process, which is used to evaluate the ontology-based manipulations, will be explained. Fig.~\ref{fig:overallprocess} illustrates the process. First, the original graph or sub graph is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
 
 In the next step, relevant properties have to be determined and the original graph will be manipulated. Then the manipulated graph is given to GRP. In addition, the relevant ontology triples have to be compressed and stored as well. Otherwise, the original graph could not be restored. Both graphs together are merged together into one graph called $in_2$ which is then compressed by GRP and the result is called $out_2$. 
 
-Finally, $|out_1|$ and $|out_2|$ have to be compared. The next chapter will explain how that is done.
+Finally, $out_1$ and $out_2$ have to be compared. The next chapter will explain how that is done.
 
 \begin{figure}
 	\centering
@@ -137,11 +177,11 @@ Finally, $|out_1|$ and $|out_2|$ have to be compared. The next chapter will expl
 	\label{fig:overallprocess}
 \end{figure}
 
-The evaluation process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So, there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. This way, it is noticeable what the manipulations bring individually. A combined evaluation will be done in Ch.~\ref{sec:evaluationFinal}.
+The evaluation process must be executed for the different manipulation aspects (symmetric, inverse etc.) independently. So, there is one manipulated graph where all symmetric edges are added or removed, and analogously for the other manipulations. Finally, it is also possible to execute the process for one graph in which all different manipulations have been applied. This way, it is noticeable which effect the manipulations have, individually. A combined evaluation will be done in Ch.~\ref{sec:evaluationFinal}.
 
 \subsubsection{Metrics}
 
-This chapter explains how the two outputs $out_1$ and $out_2$ are compared. Since the ontology-based manipulations are intended to achieve a better compression by enabling $Graph_{GRP}$ to produce a smaller grammar, it is interesting to not only compare $out_1$ and $out_2$ at the file size level, but also in terms of their grammar/graph sizes. A reasonable metric for the size of a grammar/graph is its number of edges. In order to compare $out_1$ and $out_2$ with respect to their grammar/graph edge amounts, the metrics Input Edge Ratio ($IER$) and Output Edge Ratio ($OER$)  are defined: 
+This chapter explains how the two outputs $out_1$ and $out_2$ are compared. Since the ontology-based manipulations are intended to achieve a better compression by enabling $Graph_{GRP}$ to produce a smaller grammar, $out_1$ and $out_2$ are not only compared at the file size level, but also in terms of their graph sizes. A reasonable metric for the size of a graph is its number of edges. In order to compare $out_1$ and $out_2$ with respect to their edge amounts, the metrics Input Edge Ratio ($IER$) and Output Edge Ratio ($OER$)  are defined: 
 
 \begin{align*}
 IER&=\frac {\text{number of edges in } in_2} {\text{number of edges in  } in_1}
@@ -159,7 +199,7 @@ SR=\frac {|out_{graph_2}|} {|out_{graph_1}|}
 
 Here, $out_{graph}$ is used instead of $out$. Normally, the dictionary size ($out_{dict}$) should also be taken into account, because the added ontology triples have increased $|out_{dict_2}|$. However, due to the very small amount of relevant properties that increase is not even noticeable and can be omitted. 
 
-If $SR<1$ holds then the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is in the end more relevant than the grammar level, because it is the real amount necessary to store the compressed data.
+If $SR<1$ holds then the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is in the end more relevant than the grammar level, because it is the size needed to store the compressed data.
 
 
 
@@ -167,7 +207,7 @@ If $SR<1$ holds then the manipulation has resulted in an improvement at the file
 
 First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. As expected, $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for \GGRP{} and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
 
-Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from Ch.~\ref{sec:related_workGrammarEncoding}, that the encoding does not always work well, is supported by these results. 
+Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from Ch.~\ref{sec:related_workGrammarEncoding}, that GRP's encoding method does not always work well, is supported by these results. 
 
 
 
@@ -177,9 +217,10 @@ Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation
 	\caption{Results for adding symmetric properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
 	\label{fig:symmetricAddResults}
 \end{figure}
+\todo{horizontale linie bei 1}
 
 
-In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it is possible to see that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. Nevertheless, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable. To further investigate the removal case, the decompressed version of the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
+In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it can be seen that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. Nevertheless, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable. To further investigate the removal case, the decompressed version of the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
 
 \begin{figure}
 	\centering
@@ -190,7 +231,7 @@ In order to show that adding symmetric properties is more beneficial than removi
 
 
 
-The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:symmetricAddResults}, since a higher amount of edges has been added. The fact that both $OER$ and $SR$ are lower than 1, support our hypothesis that adding symmetric edges is more beneficial than removing them. So, we conclude that adding symmetric edges enables $Graph_{GRP}$ to find more digrams, and thus producing a smaller grammar.
+The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:symmetricAddResults}, since a higher amount of edges has been added. The fact that both $OER$ and $SR$ are lower than 1, supports our hypothesis that adding symmetric edges is more beneficial than removing them. So, we conclude that adding symmetric edges enables $Graph_{GRP}$ to find more digrams, and thus producing a smaller graph.
 
 \begin{figure}
 	\centering
@@ -203,9 +244,9 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Inverse Properties}
 
-Next, the manipulation based on inverse properties is being evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has already been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better end result for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
+Next, the usage of inverse properties is evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has already been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better end result for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
 
-For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is significantly smaller than 1. Hence, in this case, the manipulation has delivered a positive result. On the file size level, the result is also better ($OER=0.9$).
+For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is significantly smaller than 1. Hence, in this case, the manipulation has delivered a positive result. On the file size level, the result is also better ($SR=0.9$).
 
 \begin{figure}
 	\centering
@@ -214,9 +255,9 @@ For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is si
 	\label{fig:inverseAddResults}
 \end{figure}
 
-In the case of DBPedia, a reason for the negative result can be that DBPedia has a relatively high number of different inverse properties. Therefore, adding all the edges with many different URIs to the relatively small graph in Fig.~\ref{fig:inverseAddResults} (2000 triples) does not have an effect that is positive enough to compensate the high amount of edges added to it. In order to further investigate that, a graph that is ten times bigger, is created. The results for it are shown in Fig.~\ref{fig:inverseAddResultsBigger}. It can be seen that the results are now much better. While $IER$ is about 2 again, $OER=0.85$ is now much smaller and also $SR=0.91$ is smaller. So, it can be stated that adding inverse properties has a positive effect on the graph compression potential, as mentioned in Ch.~\ref{sec:approachInverse}.
+In the case of DBPedia, a reason for the negative result can be that DBPedia has a relatively high number of different inverse properties. Therefore, adding all the edges with many different URIs to the relatively small graph in Fig.~\ref{fig:inverseAddResults} (2000 triples) does not have an effect that is positive enough to compensate the high amount of edges added to it. In order to further investigate that, a graph that is ten times bigger, is created. The results for it are shown in Fig.~\ref{fig:inverseAddResultsBigger}. It can be seen that the results are much better. While $IER$ is about 2 again, $OER=0.85$ is much smaller and also $SR=0.91$ is smaller. So, it can be stated that adding inverse properties has a positive effect on the graph compression potential, as mentioned in Ch.~\ref{sec:approachInverse}.
 
-The opposing approach (removing triples with inverse properties) is not explicitly evaluated here, because in Fig.~\ref{fig:inverseAddResults} and~\ref{fig:inverseAddResultsBigger} it is already recognizable that a graph with less inverse pairs of triples produces a worse compression ratio.
+The opposing approach (removing triples with inverse properties) is not explicitly evaluated here, because in Fig.~\ref{fig:inverseAddResults} and~\ref{fig:inverseAddResultsBigger} it is already recognizable that a graph with less inverse pairs of triples produces a worse compression ratio.\todo{inverse entfernen machen}
 
 \begin{figure}
 	\centering
@@ -241,7 +282,7 @@ The results for removing \dtps can be seen in Fig.~\ref{fig:ratiotransitivesDele
 	\label{fig:ratiotransitivesDelete}
 \end{figure}
 
-Next, the opposing approach (adding \textit{direct transitive paths}) is evaluated. The results are illustrated in Fig.~\ref{fig:ratiotransitivesAdd}. Obviously, $ IER>1 $ holds, since many edges have been added. $OER\approx3.5$ is significantly high, which means that adding \dtps has resulted in a much larger end result, on the grammar level. In contrast to Fig.~\ref{fig:ratiotransitivesDelete}, $IER<OER$ holds here, but that supports the hypothesis that adding \dtps makes $Graph_{GRP}$ find less digrams (see Ch.~\ref{sec:approachTransitive}). On the file size level, $SR\approx1.8$ is higher than 1, but the result is not as bad as on the grammar level. 
+Next, the opposing approach (adding \textit{direct transitive paths}) is evaluated. The results are illustrated in Fig.~\ref{fig:ratiotransitivesAdd}. Obviously, $ IER>1 $ holds, since many edges have been added. $OER\approx3.5$ is significantly high, which means that adding \dtps has resulted in a much larger result, on the grammar level. In contrast to Fig.~\ref{fig:ratiotransitivesDelete}, $IER<OER$ holds here, which supports the hypothesis that adding \dtps makes $Graph_{GRP}$ find less digrams (see Ch.~\ref{sec:approachTransitive}). On the file size level, $SR\approx1.8$ is higher than 1, but the result is not as bad as on the grammar level. 
 
 Thus, it can be concluded that removing \dtps results in a better compression, and adding them delivers a worse compression. Although \dtps do not exist in the considered datasets, they still can exist in other datasets. The evaluation results have shown that removing \dtps leads to a insignificant improvement. 
 
@@ -255,18 +296,18 @@ Thus, it can be concluded that removing \dtps results in a better compression, a
 
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 
-This chapter evaluates the approaches from Ch.~\ref{sec:implementationDictImprovements} which are intended to improve the dictionary compressor \DHDT{} which is used by HDT and GRP. First, the Huffman compression of literals is evaluated and afterwards, the improvements regarding blank node IDs. 
+In this chapter, the approaches from Ch.~\ref{sec:implementationDictImprovements} which are intended to improve the dictionary compressor \DHDT{} (which is used by HDT and GRP), are evaluated. First, the Huffman compression of literals is evaluated and afterwards, the improvements regarding blank node IDs are discussed. 
 
 
 \subsubsection{Literals}\label{sec:evaluationLiterals}
 
-As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as it is likely to get a better compression than the with the prefix-based compression of HDT.
+As already mentioned, a self-generated Huffman code was used to compress the literals of an RDF graph, as it is likely to get a better compression than with the prefix-based compression of HDT.
 
-Now the results of the evaluation are presented. First, the Semantic Web Dog Food data set is used. This is well suited for an evaluation, since both literals and URIS are included here. Fig.~\ref{fig:dogfoodcomprratiosSub} shows \CRDict{HDT} for a subset of the data (DF0 - DF9). 
+Thus, the results of the evaluation are presented. First, the Semantic Web Dog Food data set is used. This is well suited for an evaluation, since both literals and URIS are included here. Fig.~\ref{fig:dogfoodcomprratiosSub} shows \CRDict{HDT} for a subset of the data (DF0 - DF9). 
 
-It can be seen that the use of the Huffman code only brings a small improvement in some cases. In some cases Normal \DHDT{} even compresses better than \DHDT{} with Huffman.
+It can be seen that the usage of the Huffman code only brings a small improvement in some cases. In some cases Normal \DHDT{} even compresses better than \DHDT{} with Huffman.
 
-This is because the data does not have a very high proportion of literals. Also, literals are rather short here. This can be seen in Fig.~\ref{fig:dogfoodliteralanalysis} showing the relative proportion of literals and the average length of a literal. The proportion of literals in the triples is never higher than 17.5\% and the highest average literal length is about 12. Hence, these are single words rather than whole texts. Only in cases where both the proportion and the literal length are relatively high, an improvement can be seen (e.g. DF9).
+This is because the data does not have a very high proportion of literals. Also, literals are rather short here. This can be seen in Fig.~\ref{fig:dogfoodliteralanalysis} showing the relative literal amount ($\frac{\#literals}{\#triples}$) and the average length of a literal. The proportion of literals in the triples is never higher than 17.5\% and the highest average literal length is about 12. Hence, these are single words rather than whole texts. Only in cases where both the proportion and the literal length are relatively high, an improvement can be seen (e.g. DF9).
 
 
 \begin{figure}[h]
@@ -274,13 +315,14 @@ This is because the data does not have a very high proportion of literals. Also,
 	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
 	\hfill
 	\subfloat[Relative amounts of literals and average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodLiteralAnalysis}\label{fig:dogfoodliteralanalysis}}
-	\caption{Relation between literal percentage and literal length (right) and $CR(out_{dict})$ (left) for Semantic Web Dog Food Data.}
+	\caption{Compression ratios~(\ref{fig:dogfoodcomprratiosSub}) and features of the same files~(\ref{fig:dogfoodliteralanalysis}).}
 	\label{fig:dogfood}
 \end{figure}
+\todo{std deviations}
 
 Next, the DBPedia data set is considered, because it has a different structure of data. Here, graphs are considered which contain the abstracts of Wikipedia, because these are longer texts. In addition, there are abstracts in different languages, so it can be seen whether some languages are better suited for Huffman than others.
 
-Fig.~\ref{fig:dbAbstractscomprratiosSub} shows \CRDict{HDT} for the abstract files. The abbreviations stand for the languages the abstracts are written in. It can be seen that Huffman significantly improves \CRDict{HDT} here. The reason for this can be seen in Fig.~\ref{fig:dbAbstractsliteralanalysis}, where the average literal length is illustrated. The relative proportion of literals is not shown this time, since it is 100\% for all files. The average literal length varies between languages, but is generally much higher than in Semantic Web Dog Food. Therefore, the improvement is much greater here.
+Fig.~\ref{fig:dbAbstractscomprratiosSub} shows \CRDict{HDT} for the abstract files. The abbreviations stand for the languages the abstracts are written in. It can be seen that Huffman significantly improves \CRDict{HDT} here. The reason for this can be seen in Fig.~\ref{fig:dbAbstractsliteralanalysis}, where the average literal length is illustrated. The relative literal amount is not shown this time, since it is 100\% for all files. The average literal length varies between languages, but is generally much higher than in Semantic Web Dog Food. Therefore, the improvement is much greater here.
 
 Another phenomenon can also be seen here: Although the English file contains the longest literals by far, the improvement by Huffman here is not as big as, for example, in the Bulgarian file. In the English case, the Huffman code is less effective, because there are fewer different characters than in the other languages. Huffman is generally more efficient on large alphabets, according to~\cite{huffman}.
 
@@ -313,7 +355,7 @@ Generally, it can be said that the use of a standard Huffman code could be worth
 
 \subsubsection{Blank Nodes}\label{sec:evaluationBlankNodes}
 
-This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that, the Nuts-RDF dataset is used as it contains solely blank nodes as subjects and objects. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal \DHDT{} even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs that are as long as those used by $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement which is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
+This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. For that, the Nuts-RDF dataset is used as it contains much more blank nodes than many other datasets. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF. It can be seen that Normal \DHDT{} even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs that are as long as those used by $Dict_{HDT}$. Using short IDs already brings a significant improvement as it delivers a compression ratio between 0.76 and 0.89. So, the compression is now really reducing the size of the files. Omitting the blank node IDs results in further slight improvement which is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
 
 
 \begin{figure}
@@ -325,10 +367,11 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 
 
 \subsection{Final Results}\label{sec:evaluationFinal}
+\todo{final run times}
 
 In the previous chapters, the compression improvements (graph and dictionary) were evaluated individually. This final evaluation chapter compares all improvements together. This makes it possible to see which improvement accounts for which portion of the overall improvement. 
 
-In order to realize this, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person in the graph (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this results in a graph on which all improvements can be evaluated.
+In order to realize this, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person in the graph (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this results in a graph on which all improvements have an effect.
 
 Fig.~\ref{fig:graphcompr} shows the graph compression improvements. For the ontology-based improvement of $Graph_{GRP}$ we write $Graph_{GRP+Ont}$.  It can be seen that $Graph_{GRP}$ already compresses better than $Graph_{HDT}$. $Graph_{GRP+Ont}$ brings only a small improvement. This due to the encoding problem discussed in Ch.~\ref{sec:evaluationOntKnowledge}.
 

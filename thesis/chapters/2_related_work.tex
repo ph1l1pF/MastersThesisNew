@@ -150,7 +150,15 @@ Condition 1 and 2 ensure that the two edges of $o$ form a graph isomorphic to $d
 
 \subsubsection{Example Digram Replacement}
 
-\todo{Bsp}
+In order to better comprehend how GRP is working, an example is shown in Fig.~\ref{fig:examplereplacement}. On the left, there is an uncompressed graph with two occurrences of the same digram. After the compression, these two occurrences are replaced by edges labeled with A. The compressed graph and the digram can be seen on the right. In the digram, the black nodes are external, i.e., they are still present in the compressed graph. Only the white node and its attached edges (labeled a and b) do not exist anymore. It is important to notice that the node ordering in A is not related with the node ordering in the graph. Every digram is itself a (hyper-)graph and has its own order which is necessary for decompression. Due to direction of the A-edges, it is stored which of the attached nodes corresponds to which external node in A. As an example, the edge from node 1 to 4 is considered. Since 4 is the end node, it is clear that it corresponds to the external node 3 in A, because 3 is bigger than 1, which is the number of the other external node in A. 
+The digram shown in here is only one specific kind. There are many more digram which can be seen in~\cite{maneth}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/relatedwork/exampleReplacement}
+	\caption{Replacement of two occurrences of the digram A. Original graph is on the left. Compressed graph and digram are on the right.}
+	\label{fig:examplereplacement}
+\end{figure}
 
 \subsubsection{Algorithm}
 

@@ -4,7 +4,7 @@
 This chapter will explain how the different approaches of Ch.~\ref{ch:approach} have been implemented. First, the comparison of HDT and GRP is discussed. Second, improvements for both graph and dictionary compression are presented.
 
 \section{GRP vs HDT}\label{sec:implementationGRPvsHDT}
-\todo{nochmal angucken}
+
 In this chapter, it will be explained how the comparison between HDT and GRP is implemented.
 
 As has just explained, \GHDT{} can compress a graph that is similar to a hub pattern (few subjects, many objects) very well. So, \CRGraph{HDT} gets higher the further away the graph is from this pattern. The most unfavorable graph structure for \GHDT{} is therefore the authority pattern (see Ch.~\ref{sec:approachStarPattern}).
@@ -16,7 +16,7 @@ An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_p
 \begin{algorithm}
 	\caption{BuildGraphs ($steps$, $ nodesFactor$)}\label{alg:BuildGraphs}
 	\begin{algorithmic}[1]
-	\State $n \leftarrow nodesFactor*steps$ // $n$ is number of nodes
+	\State $n \leftarrow nodesFactor*steps$ // $n$ is the number of nodes
 	\State $subj \leftarrow 1$
 	\State $i \leftarrow 1$
 	\While{$subj < n$ }

@@ -102,7 +102,7 @@ As HDT and GRP use the same method for compressing the dictionary ($Dict_{HDT}$)
 
 \subsection{Star Pattern}\label{sec:approachStarPattern}
 
-In graph theory, a star~\footnote{https://en.wikipedia.org/wiki/Star\_(graph\_theory)} is a graph in which one node is connected to all other nodes. The other nodes are not connected to each other. While a star is an extreme case, there exist graphs with a few nodes having very high degrees. We denote them to be similar to the star pattern. 
+According to~\cite{stargraph}, a star is a graph in which one node is connected to all other nodes. The other nodes are not connected to each other. While a star is an extreme case, there exist graphs with a few nodes having very high degrees. We denote them to be similar to the star pattern. 
 
 In order to measure that we define the Star Pattern Similarity ($SPS$). Let $deg(n)$ be the degree of a node $n$. Let $N$ be a list of all nodes sorted by their $deg$-values in descending order.  Let $N_{top}$ be the first $x$ nodes of $N$. Hence, $N_{top}$ contains $x$ nodes with the highest degrees. $x$ should be chosen related to the size of $N$, we choose $x=0.001 \times |N|$.  Then, $SPS$ is defined as follows:
 
@@ -116,7 +116,7 @@ The star pattern can be further divided into the hub and authority patterns. As 
 
 \subsection{HDT}
 
-Now, HDT's behavior with respect to the input is discussed. As HDT's way of compressing the graph structure is fairly simple compared to GRP, there do not seem to be many potential features of the input data that have a high impact on HDT's compression ratio. But one feature is clearly visible: When Fig.~\ref{fig:hdt_overview} is considered, it is noticeable that the number of 1's in $B_p$ becomes less if there are a only a few different subjects. This enables HDT to store $B_p$ more efficiently and, thus, \CRGraph{HDT} becomes smaller. Consequently, HDT should perform better if the graph is similar to the hub pattern.
+Next, HDT's behavior with respect to the input is discussed. As HDT's way of compressing the graph structure is fairly simple compared to GRP, there do not seem to be many potential features of the input data that have a high impact on HDT's compression ratio. But one feature is clearly visible: When Fig.~\ref{fig:hdt_overview} is considered, it is noticeable that the number of 1's in $B_p$ becomes less if there are a only a few different subjects. This enables HDT to store $B_p$ more efficiently and, thus, \CRGraph{HDT} becomes smaller. Consequently, HDT should perform better if the graph is similar to the hub pattern.
 
 \subsection{GRP}\label{sec:approachFeaturesGRP}
 For GRP, that input feature analysis is more complex. Since GRP constructs grammar rules by using the graph's structure, it can make use of sub graphs that are much more complex than the star pattern HDT is using. There can be many features that can lead to different constructible grammar rules. Those will not be discussed here, as these pattern can become arbitrarily complex, because they can be nested among each other. But one insight is that GRP's compression ratio tends to be bigger when there are more different predicates in the graph. This is true, because GRP's grammar rules are based on repeating patterns and, hence, repeating edge labels as part of these patterns. Let

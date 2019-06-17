@@ -55,9 +55,6 @@ In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct
 The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. First, real data will be used to compare the compression ratios of \GHDT{} and \GGRP{}. 
 
 \subsubsection{Dataset Overview}
-\todo{übersicht
-You need to describe the datasets somewhere, including a) how they are generated or where do they come from (there are papers for the first three datasets) and b) what are their features (e.g., \# triples, \# resources, etc.)
-Especially the ELR and SPS values should be listed as well.}
 
 Here, an overview of the used datasets is provided. The following datasets are used in this chapter: DBPedia, Semantic Web Dog Food, WikiData and Open Government Data. Tab.~\ref{tab:comparisonDatasets} shows the files that are used, as well as their number of triples and resources. Also, their values for $ELR$ and $SPS$ are shown. It has to be noted that the entity-based sub graphs are limited to 50000 triples.
 
@@ -164,7 +161,7 @@ Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for t
 	\caption{$CR_{Graph{HDT}}$ and $CR_{Graph{GRP}}$.}
 	\label{fig:compare1}
 \end{figure}
-\todo{DB0-DB10 erklären}
+
 
 \begin{figure}[h]
 	\centering
@@ -290,7 +287,6 @@ Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation
 	\caption{Results for adding symmetric properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
 	\label{fig:symmetricAddResults}
 \end{figure}
-\todo{horizontale linie bei 1}
 
 
 In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it can be seen that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. Nevertheless, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable. To further investigate the removal case, the decompressed version of the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
@@ -485,7 +481,19 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 
 In the previous chapters, the compression improvements (graph and dictionary) were evaluated individually. This final evaluation chapter compares all improvements together. This makes it possible to see which improvement accounts for which portion of the overall improvement. 
 
-In order to realize this, an RDF graph is generated from several graphs. The graph used in Ch.~\ref{sec:evaluationOntKnowledge} serves as a basis. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person in the graph (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this results in a graph on which all improvements have an effect.
+In order to realize this, an RDF graph is generated from several graphs. The graph $DB_{inv}$ from Tab.~\ref{tab:ontologyKnowledgeDatasets} serves as a basis, as it contains inverse and symmetric properties. However, there are not many long literals in it. Therefore, the DBPedia abstract text is added for each person in the graph (from the abstract data set from Ch.~\ref{sec:evaluationLiterals}). Next, blank nodes are added to the graph. Thus, the coordinates (polygons) for each country of the graph are added. The data set from Ch.~\ref{sec:evaluationBlankNodes} is used for that. Finally, this results in a graph on which all improvements have an effect. In Tab.~\ref{tab:finalDataset}, the features of that graph can be seen.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline 
+		 \#Triples & \#Resources & \#Literals & \#Triples with blank nodes \\ 
+		\hline
+		101193 &59565 & 6058 & 230 \\
+		\hline 
+	\end{tabular} 
+	\captionof{table}{RDF file for the final evaluations.}	
+	\label{tab:finalDataset}
+\end{center}
 
 Fig.~\ref{fig:graphcompr} shows the graph compression improvements. For the ontology-based improvement of $Graph_{GRP}$ we write $Graph_{GRP+Ont}$.  It can be seen that $Graph_{GRP}$ already compresses better than $Graph_{HDT}$. $Graph_{GRP+Ont}$ brings only a small improvement. This due to the encoding problem discussed in Ch.~\ref{sec:evaluationOntKnowledge}.
 
@@ -497,7 +505,6 @@ Apart from that, the difference between HDT++ and GRP++ is very small. This due 
 
 GZip is used a baseline. Since it is a general compressor, it does not have a horizontal line. It is noticeable that GZip achieved a slightly better compression ratio than HDT++ and GRP++. However, as already mentioned in Ch.~\ref{ch:introduction}, the data compressed by GZip is not query-able which makes it less usable.
 
-\todo{soll folgendes hier stehen oder nur in der summary?}
 In general, it can be concluded that the improvement makes a significant difference. The resulted compression ratio is almost as low as GZip's ratio. Considering the fact that data compressed by GRP++ or HDT++ is still query-able, it is reasonable to use one of them instead of a general compressor. With further improvements (will be discussed in Ch.~\ref{sec:futurework}) it could be that HDT++ or GRP++ outperform general compressors in many more cases.
 
 Moreover, it becomes clear that compressing the dictionary has a much bigger impact on $CR_C$ than compressing the graph. So, for future work it would be reasonable to focus on dictionary compression. However, one work around could be to compress multiple RDF files, which all have a similar dictionary, together. This way, the influences of the graphs can become bigger.

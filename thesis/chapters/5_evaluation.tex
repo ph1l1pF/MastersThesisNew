@@ -5,11 +5,6 @@ This chapter is about the evaluation of the several approaches presented in Ch.~
 
 For the following experiments, HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
 
-\section{Dataset Overview}
-\todo{übersicht}
-You need to describe the datasets somewhere, including a) how they are generated or where do they come from (there are papers for the first three datasets) and b) what are their features (e.g., \# triples, \# resources, etc.)
-Especially the ELR and SPS values should be listed as well.
-
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
 This chapter shows the evaluation results of the comparison between HDT and GRP. First, results for the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be presented. Afterwards, the two compressors will also be evaluated for real world data.
@@ -57,9 +52,85 @@ In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct
 
 \subsection{Results for Real World Data}
 
-The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. First, real data will be used to compare the compression ratios of \GHDT{} and \GGRP{}. Thus, several datasets will be used (DBPedia, Semantic Web Dog Food, WikiData and Open Government Data).
+The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. First, real data will be used to compare the compression ratios of \GHDT{} and \GGRP{}. 
 
-33 different RDF  graphs are used. On 31 of those \GGRP{} achieves a better compression ratio than \GHDT{}. On average, $CR_{Graph_{HDT}}$ is 1.8 times higher than $CR_{Graph_{GRP}}$.
+\subsubsection{Dataset Overview}
+\todo{übersicht
+You need to describe the datasets somewhere, including a) how they are generated or where do they come from (there are papers for the first three datasets) and b) what are their features (e.g., \# triples, \# resources, etc.)
+Especially the ELR and SPS values should be listed as well.}
+
+Here, an overview of the used datasets is provided. The following datasets are used in this chapter: DBPedia, Semantic Web Dog Food, WikiData and Open Government Data. Tab.~\ref{tab:comparisonDatasets} shows the files that are used, as well as their number of triples and resources. Also, their values for $ELR$ and $SPS$ are shown. It has to be noted that the entity-based sub graphs are limited to 50000 triples.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline 
+		Short Name & Long Name & \#Triples & \#Resources & $ELR$ & $SPS$ \\ 
+		\hline
+		DF0 & dc-2010-complete-alignments & 5919 & 821 & 0.008 & 0.000043 \\
+		\hline
+		DF1 & ekaw-2012-complete-alignments & 13114 & 1604 & 0.004 & 0.052 \\
+		\hline
+		DF2 & eswc-2006-complete-alignments & 6654 & 1259 & 0.004 & 0.071 \\
+		\hline
+		DF3 & eswc-2009-complete-alignments & 9462 & 1247 & 0.004 & 0.054 \\
+		\hline
+		DF4 & eswc-2010-complete-alignments & 18122 & 2226 & 0.002 & 0.091 \\
+		\hline
+		DF5 & eswc-2011-complete-alignments & 25865 & 3071 & 0.002 & 0.114 \\
+		\hline
+		DF6 & iswc-2002-complete-alignments & 13450 & 1953 & 0.003 & 0.057 \\
+		\hline
+		DF7 & iswc-2003-complete-alignments & 18039 & 2565 & 0.002 & 0.102 \\
+		\hline
+		DF8 & iswc-2005-complete-alignments & 28149 & 3877 & 0.001 & 0.132 \\
+		\hline
+		DF9 & iswc-2010-complete-alignments & 32022 & 3842 & 0.001 & 0.116 \\
+		\hline 
+		\hline
+		DB0 & external-links\_en & 50000 & 54931 & 2.0E-5 & 0.038 \\
+		\hline
+		DB1 & geo-coordinates\_en & 50000 & 12505 & 8.0E-5 & 0.2 \\
+		\hline
+		DB2 & homepages\_en & 50000 & 98584 & 2.0E-5 & 0.006 \\
+		\hline
+		DB3 & instance-types-transitive\_en & 50000 & 7722 & 2.0E-5 & 0.229 \\
+		\hline
+		DB4 & instance-types\_en & 50000 & 35677 & 2.0E-5 & 0.387 \\
+		\hline
+		DB5 & mappingbased-properties\_en & 50000 & 21590 & 0.01502 & 0.028 \\
+		\hline
+		DB6 & persondata\_en & 50000 & 10631 & 1.8E-4 & 0.112 \\
+		\hline
+		DB7 & transitive-redirects\_en & 50000 & 82318 & 2.0E-5 & 0.022 \\
+		\hline
+		\hline
+		OD0 & 00f1dbeb-4ba1-4dac-92ec-a49f525391e8 & 50000 & 6094 & 4.39E-4 & 0.294 \\
+		\hline
+		OD1 & 4eb92c99-76fe-4987-a475-8cfe7cd2108c & 50000 & 6613 & 1.99E-4 & 0.23 \\
+		\hline
+		OD2 & 95414599-bfc3-4472-931f-bb5f15db26e4 & 50000 & 5349 & 3.59E-4 & 0.376 \\
+		\hline
+		OD3 & ac7e4a31-ab86-496b-98a9-71538653e294 & 50000 & 5349 & 3.59E-4 & 0.376 \\
+		\hline
+		OD4 & e4342f74-dd87-4667-8c31-4df19ae55b2e & 50000 & 6616 & 1.99E-4 & 0.247 \\
+		\hline
+		\hline
+		WD0 & wikidata-20190426-lexemes-BETA & 50000 & 9443 & 0.004 & 0.201 \\
+		\hline
+		WD1 & wikidata-20190510-lexemes-BETA & 50000 & 9569 & 0.004 & 0.2 \\
+		\hline
+		WD2 & wikidata-20190517-lexemes-BETA & 50000 & 9729 & 0.004 & 0.2 \\
+		\hline
+		WD3 & wikidata-20190524-lexemes-BETA & 50000 & 9740 & 0.004 & 0.2 \\
+		\hline
+		WD4 & wikidata-20190607-lexemes-BETA & 50000 & 9742 & 0.004 & 0.2 \\
+		\hline
+	\end{tabular} 
+	\captionof{table}{RDF files for the comparison of GRP and HDT. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
+	\label{tab:comparisonDatasets}
+\end{center}
+
+On most of the used RDF graphs, \GGRP{} achieves a better compression ratio than \GHDT{}. On average, $CR_{Graph_{HDT}}$ is 1.8 times higher than $CR_{Graph_{GRP}}$.
 
 In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman correlation~\footnote{https://en.wikipedia.org/wiki/Spearman\%27s\_rank\_correlation\_coefficient} is used. That correlation coefficient produces values between $ -1 $ and $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation. The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher numbers of different predicates lead to a higher compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. Although it has to be noted that for the latter case, the correlation is not as strong as with $ELR$. 
 
@@ -81,37 +152,7 @@ $CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation i
 	\label{tab:spearman}
 \end{center}
 
-Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for the datasets, respectively. It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$, then $CR_{Graph_C}$ will be smaller for $f_1$. This is because $|f_1|>|f_2|$ is true and $CR_{Graph_C}=\frac{in}{out_{graph}}$ (with $in\in \{f_1,f_2\}$ in this case). Therefore, the compression ratios of the two approaches can only be compared if they were achieved on the same input file.
-
-\begin{center}
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline 
-		Short Name & Long Name & \#Triples & \#Resources & $ELR$ & $SPS$ \\ 
-		\hline
-		DF0 & dc-2010-complete-alignments & 5919 & 821 & 0.008 & 0.0 \\
-		\hline
-		DF1 & ekaw-2012-complete-alignments & 13114 & 1604 & 0.004 & 0.052 \\
-		\hline
-		DF2 & eswc-2006-complete-alignments & 6654 & 1259 & 0.004 & 0.071 \\
-		\hline
-		DF3 & eswc-2009-complete-alignments & 9462 & 1247 & 0.004 & 0.054 \\
-		\hline
-		DF4 & eswc-2010-complete-alignments & 18122 & 2226 & 0.002 & 0.091 \\
-		\hline
-		DF5 & eswc-2011-complete-alignments & 25865 & 3071 & 0.002 & 0.114 \\
-		\hline
-		DF6 & iswc-2002-complete-alignments & 13450 & 1953 & 0.003 & 0.057 \\
-		\hline
-		DF7 & iswc-2003-complete-alignments & 18039 & 2565 & 0.002 & 0.102 \\
-		\hline
-		DF8 & iswc-2005-complete-alignments & 28149 & 3877 & 0.001 & 0.132 \\
-		\hline
-		DF9 & iswc-2010-complete-alignments & 32022 & 3842 & 0.001 & 0.116 \\
-		\hline 
-	\end{tabular} 
-	\captionof{table}{Datasets for the comparison of GRP and HDT.}	
-	\label{tab:comparisonDatasets}
-\end{center}
+Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for the datasets, respectively. It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$, then $CR_{Graph_C}$ will be smaller for $f_1$. This is because $|f_1|>|f_2|$ is true and $CR_{Graph_C}=\frac{out_{graph}}{in}$ (with $in\in \{f_1,f_2\}$ in this case). Therefore, the compression ratios of the two approaches can only be compared if they were achieved on the same input file.
 
 
 
@@ -142,8 +183,40 @@ This chapter evaluates the compression improvements. First, results for the grap
 
 In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. Here, not only the file size of the output ($|out_{graph}|$) will be measured. Since these approaches have the intention to improve the ability for $Graph_{GRP}$ to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because the GRP's grammar encoding does not always produce a smaller result on a smaller grammar (as mentioned in Ch.~\ref{sec:related_workGrammarEncoding}).
 
+\subsubsection{Dataset Overview}
+
+Tab.~\ref{tab:ontologyKnowledgeDatasets} shows an overview of the data used for the ontology-based manipulations. \textit{MBP} stands for \textit{mappingbased-properties\_en}. $DB_{full}$ is the full version of \textit{MBP} of and $WN_{full}$ is the full version of Wordnet. The other datasets are adjusted to show the effects of the manipulations better. They contain a higher proportion of the relevant properties.
+
+\begin{center}
+	\todo{werte für MBP}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline 
+		Short Name & Long Name & \#Triples & \#Resources & $ELR$ & $SPS$ \\ 
+	    \hline
+		$DB_{full}$ & MBP& 0 & 0 & 0.0 & 0.0 \\
+		\hline
+	    $DB_{inv}$ & MBP\_manyinverses & 1097 & 1473 & 0.037 & 0.022 \\
+		\hline
+		$DB_{sym}$ & MBP\_manysymmetrics & 19954 & 18785 & 0.008 & 0.037 \\
+		\hline
+		$DB_{tra}$ & MBP\_manytransitives & 1994 & 1147 & 0.101 & 0.0 \\
+		\hline
+		\hline
+		$WN_{full}$ & wordnet & 2637168 & 601641 & 0.0 & 0.223 \\
+		\hline
+		$WN_{inv}$ & wordnet\_manyinverses & 1999 & 1351 & 0.008 & 0.113 \\
+		\hline
+		$WN_{sym}$ & wordnet\_manysymmetrics & 1999 & 2283 & 0.003 & 0.058 \\
+		\hline
+		$WN_{tra}$ & wordnet\_manytransitives & 3988 & 2033 & 0.004 & 0.08 \\
+		\hline
+	\end{tabular} 
+	\captionof{table}{RDF files for the ontology-based improvements. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
+	\label{tab:ontologyKnowledgeDatasets}
+\end{center}
+
 \subsubsection{Occurrence of Properties}
-First, it is considered how often the relevant properties\todo{übersicht properties} occur in real datasets.  For that, DBPedia and Wordnet will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties is necessary to observe the effect of the data manipulations. Consequently, those sub graphs (see Ch.~\ref{sec:implementationSubGraphs}) are used in the following evaluations.
+First, it is considered how often the relevant properties\todo{übersicht properties} occur in real datasets.  For that, $DB_{full}$ and $WN_{full}$ will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties is necessary to observe the effect of the data manipulations. Consequently, those sub graphs (see Ch.~\ref{sec:implementationSubGraphs}) are used in the following evaluations.
 
 \begin{figure}
 	\centering
@@ -152,7 +225,7 @@ First, it is considered how often the relevant properties\todo{übersicht proper
 	\label{fig:ontoccurrences}
 \end{figure}
 
-Another feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that these amounts of are relatively small, especially for symmetric properties, considering the fact that these datasets are very large (millions of triples). That is also a reason for the low relative amounts in Fig.~\ref{fig:ontoccurrences}.
+Another feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that these amounts of are relatively small, especially for symmetric properties, considering the fact that these datasets are relatively large. That is also a reason for the low relative amounts in Fig.~\ref{fig:ontoccurrences}.
 
 \begin{figure}
 	\centering
@@ -184,9 +257,9 @@ The evaluation process must be executed for the different manipulation aspects (
 This chapter explains how the two outputs $out_1$ and $out_2$ are compared. Since the ontology-based manipulations are intended to achieve a better compression by enabling $Graph_{GRP}$ to produce a smaller grammar, $out_1$ and $out_2$ are not only compared at the file size level, but also in terms of their graph sizes. A reasonable metric for the size of a graph is its number of edges. In order to compare $out_1$ and $out_2$ with respect to their edge amounts, the metrics Input Edge Ratio ($IER$) and Output Edge Ratio ($OER$)  are defined: 
 
 \begin{align*}
-IER&=\frac {\text{number of edges in } in_2} {\text{number of edges in  } in_1}
+IER&=\frac {\text{\#edges in } in_2} {\text{\#edges in  } in_1}
 \\\\
-OER&=\frac {\text{number of edges in } out_2} {\text{number of edges in } out_1}
+OER&=\frac {\text{\#edges in } out_2} {\text{\#edges in } out_1}
  \end{align*}
  
 $IER$ shows how many edges have been added or removed by the manipulation which indicates how big the impact of the manipulation is. $OER$  shows whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
@@ -205,7 +278,7 @@ If $SR<1$ holds then the manipulation has resulted in an improvement at the file
 
 \subsubsection{Symmetric Properties}
 
-First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results. As expected, $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for \GGRP{} and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
+First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results whereby $DB_{sym}$ and $WN_{sym}$ are used. As expected, $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for \GGRP{} and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
 
 Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from Ch.~\ref{sec:related_workGrammarEncoding}, that GRP's encoding method does not always work well, is supported by these results. 
 
@@ -244,7 +317,7 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 
 \subsubsection{Inverse Properties}
 
-Next, the usage of inverse properties is evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has already been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better end result for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
+Next, the usage of inverse properties is evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. Here, $DB_{inv}$ and $WN_{inv}$ are used. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has already been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better end result for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
 
 For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is significantly smaller than 1. Hence, in this case, the manipulation has delivered a positive result. On the file size level, the result is also better ($SR=0.9$).
 
@@ -269,7 +342,7 @@ The opposing approach (removing triples with inverse properties) is not explicit
 
 \subsubsection{Transitive Properties}
 
-The final evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others (symmetric or inverse). It is therefore more difficult to find data where this manipulation can be executed. In DBPedia, we could not find a graph in which \tps exist (defined in Ch.~\ref{sec:approachTransitive}). Thus, only Wordnet will be used here, since it contains \tpsp
+The final evaluated ontology-based manipulation is adding or removing triples with transitive properties. The problem with the transitive case is that it is more restrictive than the others (symmetric or inverse). It is therefore more difficult to find data where this manipulation can be executed. In $DB_{tra}$, there are no \tps (defined in Ch.~\ref{sec:approachTransitive}). Thus, only $WN_{tra}$ will be used here, since it contains \tpsp
 
 First, the approach suggested in Ch.~\ref{sec:approachTransitive}, to remove \textit{direct transitive paths}, is evaluated. Unfortunately, those edges do not exist in Wordnet. To circumvent that problem, an artificial graph has been created in the following way:  The original graph has been divided into two halves (via its list of triples). In the first half, all possible \dtps are added. Afterwards, the manipulated first half is merged with the untouched second half again. This gives us a graph in which both adding and removing \dtps is possible. So, both approaches can be evaluated.
 
@@ -297,6 +370,21 @@ Thus, it can be concluded that removing \dtps results in a better compression, a
 \subsection{Dictionary Improvements}\label{sec:evaluationDictImprovements}
 
 In this chapter, the approaches from Ch.~\ref{sec:implementationDictImprovements} which are intended to improve the dictionary compressor \DHDT{} (which is used by HDT and GRP), are evaluated. First, the Huffman compression of literals is evaluated and afterwards, the improvements regarding blank node IDs are discussed. 
+
+\subsubsection{Dataset Overview}
+
+Tab.~\ref{tab:dictImproveDatasets} shows the datasets which were used for evaluating the dictionary improvements. $ELR$ and $SPS$ are not shown here, since they are not relevant for the dictionary compression.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		Short Name & Long Name & \#Triples & \#Resources \\ 
+		\hline
+	\end{tabular} 
+	\captionof{table}{RDF files for the dictionary improvements. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
+	\label{tab:dictImproveDatasets}
+\end{center}
+
 
 
 \subsubsection{Literals}\label{sec:evaluationLiterals}

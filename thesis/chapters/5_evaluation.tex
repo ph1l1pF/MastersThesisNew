@@ -373,16 +373,42 @@ In this chapter, the approaches from Ch.~\ref{sec:implementationDictImprovements
 
 \subsubsection{Dataset Overview}
 
-Tab.~\ref{tab:dictImproveDatasets} shows the datasets which were used for evaluating the dictionary improvements. $ELR$ and $SPS$ are not shown here, since they are not relevant for the dictionary compression.
+Tab.~\ref{tab:HuffImproveDatasets} shows the datasets which were used for evaluating the Huffman improvements. $ELR$ and $SPS$ are not shown here, since they are not relevant for the dictionary compression. Moreover, the datasets used in Ch.~\ref{sec:evaluationLiterals} (with the names DF0-DF9) are the same as in Tab.~\ref{tab:comparisonDatasets} and are therefore not shown in Tab.~\ref{tab:HuffImproveDatasets}.
+
+Tab.~\ref{tab:BlankImproveDatasets} shows the files used for the blank node improvements. Here, also the number of triples with blank nodes is presented (includes triples with at least one blank node).
 
 \begin{center}
 	\begin{tabular}{|c|c|c|c|}
 		\hline 
 		Short Name & Long Name & \#Triples & \#Resources \\ 
 		\hline
+		AB\_EN & long-abstracts\_en\_small & 10000 & 10000 \\
+		\hline
+		AB\_BG & long-abstracts-en-uris\_bg\_small & 10000 & 10000  \\
+		\hline
+		AB\_FR & long-abstracts-en-uris\_fr\_small & 10000 & 10000 \\
+		\hline
+		AB\_RU & long-abstracts-en-uris\_ru\_small & 10000 & 10000 \\
+		\hline
 	\end{tabular} 
-	\captionof{table}{RDF files for the dictionary improvements. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
-	\label{tab:dictImproveDatasets}
+	\captionof{table}{RDF files for the Huffman evaluations. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
+	\label{tab:HuffImproveDatasets}
+\end{center}
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline 
+		Short Name & Long Name & \#Triples & \#Resources & \#Triples with blank nodes \\ 
+		\hline
+		GC1 & DEE\_geometry & 213 & 12 & 211 \\
+		\hline
+		GC2 & PL1\_geometry & 357 & 12 & 355 \\
+		\hline
+		GC3 & TR2\_geometry & 280 & 14 & 278 \\
+		\hline
+	\end{tabular} 
+	\captionof{table}{RDF files for the blank node evaluations. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
+	\label{tab:BlankImproveDatasets}
 \end{center}
 
 
@@ -403,10 +429,10 @@ This is because the data does not have a very high proportion of literals. Also,
 	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
 	\hfill
 	\subfloat[Relative amounts of literals and average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodLiteralAnalysis}\label{fig:dogfoodliteralanalysis}}
-	\caption{Compression ratios~(\ref{fig:dogfoodcomprratiosSub}) and features of the same files~(\ref{fig:dogfoodliteralanalysis}).}
+	\caption{Compression ratios~(\ref{fig:dogfoodcomprratiosSub}) and features of the same files~(\ref{fig:dogfoodliteralanalysis}) from Semantic Web Dog Food.}
 	\label{fig:dogfood}
 \end{figure}
-\todo{std deviations}
+
 
 Next, the DBPedia data set is considered, because it has a different structure of data. Here, graphs are considered which contain the abstracts of Wikipedia, because these are longer texts. In addition, there are abstracts in different languages, so it can be seen whether some languages are better suited for Huffman than others.
 
@@ -419,7 +445,7 @@ Another phenomenon can also be seen here: Although the English file contains the
 	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsComprRatios}\label{fig:dbAbstractscomprratiosSub}}
 	\hfill
 	\subfloat[Average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsLiteralAnalysis}\label{fig:dbAbstractsliteralanalysis}}
-	\caption{Relation between literal length (b) and compression ratios (a) for DBPedia Abstracts (Abbreviations denote the languages the abstracts are written in).}
+	\caption{Compression ratios~(\ref{fig:dbAbstractscomprratiosSub}) and features of the same files~(\ref{fig:dbAbstractsliteralanalysis}) from DBPedia.}
 	\label{fig:dbAbstracts}
 \end{figure}
 

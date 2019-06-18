@@ -129,7 +129,9 @@ Here, an overview of the used datasets is provided. The following datasets are u
 
 On most of the used RDF graphs, \GGRP{} achieves a better compression ratio than \GHDT{}. On average, $CR_{Graph_{HDT}}$ is 1.8 times higher than $CR_{Graph_{GRP}}$.
 
-In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman correlation~\footnote{https://en.wikipedia.org/wiki/Spearman\%27s\_rank\_correlation\_coefficient} is used. That correlation coefficient produces values between $ -1 $ and $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation. The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher numbers of different predicates lead to a higher compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. Although it has to be noted that for the latter case, the correlation is not as strong as with $ELR$. 
+In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman correlation is used. That correlation coefficient produces values between $ -1 $ and $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation.~\cite{spearman} 
+
+The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher numbers of different predicates lead to a higher compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. Although it has to be noted that for the latter case, the correlation is not as strong as with $ELR$. 
 
 $CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation is quite small. The correlation between $CR_{Graph_{HDT}}$ and $SPS$ is positive (but very close  to 0) which is reasonable, since $Graph_{HDT}$ only benefits from hub pattern, but $SPS$ is defined for the general star pattern.
 
@@ -326,7 +328,6 @@ For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is si
 
 In the case of DBPedia, a reason for the negative result can be that DBPedia has a relatively high number of different inverse properties. Therefore, adding all the edges with many different URIs to the relatively small graph in Fig.~\ref{fig:inverseAddResults} (2000 triples) does not have an effect that is positive enough to compensate the high amount of edges added to it. In order to further investigate that, a graph that is ten times bigger, is created. The results for it are shown in Fig.~\ref{fig:inverseAddResultsBigger}. It can be seen that the results are much better. While $IER$ is about 2 again, $OER=0.85$ is much smaller and also $SR=0.91$ is smaller. So, it can be stated that adding inverse properties has a positive effect on the graph compression potential, as mentioned in Ch.~\ref{sec:approachInverse}.
 
-The opposing approach (removing triples with inverse properties) is not explicitly evaluated here, because in Fig.~\ref{fig:inverseAddResults} and~\ref{fig:inverseAddResultsBigger} it is already recognizable that a graph with less inverse pairs of triples produces a worse compression ratio.\todo{inverse entfernen machen}
 
 \begin{figure}
 	\centering
@@ -335,6 +336,15 @@ The opposing approach (removing triples with inverse properties) is not explicit
 	\label{fig:inverseAddResultsBigger}
 \end{figure}
 
+
+The opposing approach (removing triples with inverse properties) is evaluated as well. Thus, the same technique, which was already used for symmetric properties, is used again. Hence, for DBPedia the graph $out_2$ of Fig.~\ref{fig:inverseAddResultsBigger} is used as $in_1$ and for Wordnet the graph $out_2$ of Fig.~\ref{fig:inverseAddResults} is used as $in_1$. The results are illustrated in Fig.~\ref{fig:inverseAddResults2}. There, it can be seen that the values for $IER$ are higher than before, as expected. Correspondingly, the $OER$-values are lower, which supports the hypothesis that removing inverse triples leads to an unfavorable graph structure for GRP.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosInverseAdd2}
+	\caption{Results for adding inverse properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$). In contrast to Fig.~\ref{fig:inverseAddResults} and~\ref{fig:inverseAddResultsBigger}, the input graph $in_1$ contains only one direction for each triple with an inverse property.}
+	\label{fig:inverseAddResults2}
+\end{figure}
 
 \subsubsection{Transitive Properties}
 

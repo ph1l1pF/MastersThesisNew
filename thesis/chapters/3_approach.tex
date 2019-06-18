@@ -150,10 +150,18 @@ In the following chapters, some concepts of OWL are introduced and it is analyze
 
 \subsubsection{Symmetric Properties}
 
-\todo{evtl anderes Bsp}
+There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} is used for every entity or property in the context of OWL.} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $ELR$ can be reduced by adding it, which can lead to a better compression ratio. Furthermore, digram occurrences like in Fig.~\ref{fig:symDirectReplacement} can be constructed after the edges are added. In this example, $p$ is the only symmetric property. Hence, the green edges were added to the graph on the left. This leads to a graph in which to occurrences of the digram A can be found. The compressed graph is shown on the right side. The A-edges are indirected, because the digram A contains only one external node. Therefore, it is clear that the nodes 3 and 6 each correspond to that external node. It can be seen that adding symmetric edges can produce digram occurrences which contain the two corresponding symmetric edges. It is likely that GRP finds many of those digrams after a huge amount of symmetric edges was added to a graph.
 
-There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} is used for every entity or property in the context of OWL.} which expresses that a certain other predicate $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $ELR$ can be reduced by adding it, which can lead to a better compression ratio. At the same time this will not result in an unfavorable structure. The procedure is illustrated in Fig.~\ref{fig:symmetricMat}. That graph shall be seen as a sub graph of a much larger graph. Here, $p$ is the only symmetric property. Hence, the green edges were added to the graph. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. So, the addition delivers a better compression potential here. At the same time, the degrees of  the nodes 2, 3, 5 and 6 are increased by one. But this should not really decrease the chance of finding other digrams in the graph, since those nodes were already connected before.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/approach/symmetricMatEx2}
+	\caption{A sub graph with the symmetric predicate $p$ (on the left side). The green edges have been added. Afterwards, two occurrences of the digram A can be found. The compressed graph is shown on the right side.}
+	\label{fig:symDirectReplacement}
+\end{figure}
 
+In Ch.~\ref{sec:relatedworkExDigramReplacement}, it was shown that more edges can also lead to a worse compression ratio, since external nodes are not allowed to be connected to other nodes in the graph. So, it could be argued that adding symmetric edges makes GRP find less digram occurrences. But this is not the case, since the nodes, which the symmetric edges are added to, were already connected before. An example supporting this argument can be seen in Fig.~\ref{fig:symmetricMatIndirect}. In Fig.~\ref{fig:symmetricMat}, a graph is shown whereby $p$ is the only symmetric property. Hence, the green edges were added to the graph. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can now be found twice, whereas it was previously found only once. So, the addition delivers a better compression potential here. At the same time, the degrees of  the nodes 2, 3, 5 and 6 are increased by one. But this should not really decrease the chance of finding other digrams in the graph, since those nodes were already connected before.
+
+The replacement of the digram in Fig.~\ref{fig:symmetricMatDigram} is not illustrated here, as that digram type was already explained in Ch.~\ref{sec:relatedworkExDigramReplacement}.
 
 \begin{figure}[h]
 	\centering
@@ -161,12 +169,12 @@ There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The 
 	\hfill
 	\subfloat[The digram that can be found twice in the graph of Fig.~\ref{fig:symmetricMat} after the green edges were added.]{\includegraphics[width=0.45\textwidth]{figures/approach/symmetricMatDigram}\label{fig:symmetricMatDigram}}
 	\caption{Visualization of the benefits of adding symmetric edges to the graph. $p$ is symmetric, all other properties are not.}
-	\label{}
+	\label{fig:symmetricMatIndirect}
 \end{figure}
 
 \subsubsection{Inverse Properties}\label{sec:approachInverse}
 
-One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. The approach is similar to the symmetric properties. It is reasonable to argue in a similar way for adding those edges to graph here. It can decrease $ELR$ if there are many occurrences of a few inverse properties. Also, adding those edges will not really make the graph's structure more complex since all the nodes were already connected before. 
+One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty} it can be the case that only one of the two triples is explicitly mentioned. It is reasonable to argue in a similar way for adding those edges to the graph here. It can decrease $ELR$ if there are many occurrences of a few inverse properties. Also, the added edges can directly produce a high number of digram occurrences which the two edges are part of (similar to Fig.~\ref{fig:symDirectReplacement}). Furthermore, it will not create an unfavorable graph structure, but enable GRP to find other digram occurrences (similar to Fig.~\ref{fig:symmetricMatIndirect}).
 
 
 \subsubsection{Transitive Properties}\label{sec:approachTransitive}

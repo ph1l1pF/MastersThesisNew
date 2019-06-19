@@ -101,15 +101,15 @@ Here, an overview of the used datasets is provided. The following datasets are u
 		DB7 & transitive-redirects\_en & 50000 & 82318 & 2.0E-5 & 0.022 \\
 		\hline
 		\hline
-		OD0 & 00f1dbeb-4ba1-4dac-92ec-a49f525391e8 & 50000 & 6094 & 4.39E-4 & 0.294 \\
+		OD0 & 00f1dbeb-4ba1-4dac-92ec-a49f525 & 50000 & 6094 & 4.39E-4 & 0.294 \\
 		\hline
-		OD1 & 4eb92c99-76fe-4987-a475-8cfe7cd2108c & 50000 & 6613 & 1.99E-4 & 0.23 \\
+		OD1 & 4eb92c99-76fe-4987-a475-8cfe7cdc & 50000 & 6613 & 1.99E-4 & 0.23 \\
 		\hline
-		OD2 & 95414599-bfc3-4472-931f-bb5f15db26e4 & 50000 & 5349 & 3.59E-4 & 0.376 \\
+		OD2 & 95414599-bfc3-4472-931f-bb5f15d & 50000 & 5349 & 3.59E-4 & 0.376 \\
 		\hline
-		OD3 & ac7e4a31-ab86-496b-98a9-71538653e294 & 50000 & 5349 & 3.59E-4 & 0.376 \\
+		OD3 & ac7e4a31-ab86-496b-98a9-7153865 & 50000 & 5349 & 3.59E-4 & 0.376 \\
 		\hline
-		OD4 & e4342f74-dd87-4667-8c31-4df19ae55b2e & 50000 & 6616 & 1.99E-4 & 0.247 \\
+		OD4 & e4342f74-dd87-4667-8c31-4df19ae & 50000 & 6616 & 1.99E-4 & 0.247 \\
 		\hline
 		\hline
 		WD0 & wikidata-20190426-lexemes-BETA & 50000 & 9443 & 0.004 & 0.201 \\
@@ -215,37 +215,41 @@ Tab.~\ref{tab:ontologyKnowledgeDatasets} shows an overview of the data used for 
 \end{center}
 
 \subsubsection{Occurrence of Properties}
-First, it is considered how often the relevant properties\todo{übersicht properties} occur in real datasets.  For that, $DB_{full}$ and $WN_{full}$ will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{number of occurrences}}{\text{number of triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties is necessary to observe the effect of the data manipulations. Consequently, those sub graphs (see Ch.~\ref{sec:implementationSubGraphs}) are used in the following evaluations.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\linewidth]{figures/4_evaluation/ontOccurrences}
-	\caption{Relative amount of transitive/symmetric/inverse properties in real datasets.}
-	\label{fig:ontoccurrences}
-\end{figure}
+In the following, symmetric, inverse or transitive properties are called relevant properties.
 
-Another feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that these amounts of are relatively small, especially for symmetric properties, considering the fact that these datasets are relatively large. That is also a reason for the low relative amounts in Fig.~\ref{fig:ontoccurrences}.
-
-
+First, it is considered which relevant properties occur in real world datasets. Tab.~\ref{tab:ontologyKnowledgeRelevantProperties} shows the relevant properties for DBPedia and Wordnet. It can be concluded that these amounts are relatively small, especially for symmetric properties, considering the fact that these datasets are relatively large. 
 
 \begin{center}
 	\begin{tabular}{|c|c|c|}
 		\hline 
 		& DBPedia & Wordnet \\ 
 		\hline 
-		URL Prefix & http://dbpedia.org/ontology/ & http://wordnet-rdf.princeton.edu/ontology\# \\
-		\hline
+		URL Prefix & \makecell{http://dbpedia.org/\\ontology/} & \makecell{http://wordnet-rdf.princeton.edu/\\ontology\#} \\
 		\hline
 		Symmetric & spouse & antonym \\ 
 		\hline 
-		Inverse &  & (hypernym, hyponym) \\ 
+		Inverse & \makecell{(doctoralStudent, doctoralAdvisor)\\(mother, child)\\(father, child) \\(follows, followedBy)} & (hypernym, hyponym) \\ 
 		\hline 
-		Transitive &  &  \\ 
+		Transitive & \makecell{isPartOf\\province\\locatedInArea\\city\\district\\county\\settlement} & \makecell{cause\\substance\_holonym\\part\_holonym\\entail\\member\_holonym\\member\_meronym\\instance\_hypernym\\instance\_hyponym\\hyponym\\par\_meronym\\substance\_meronym\\hypernym} \\ 
 		\hline 
 	\end{tabular} 
 	\captionof{table}{Overview of the relevant properties of DBPedia and Wordnet.}	
 	\label{tab:ontologyKnowledgeRelevantProperties}
 \end{center}
+
+Next, it is considered how often the relevant properties occur in the datasets.  Thus, $DB_{full}$ and $WN_{full}$ will be analyzed. Fig.~\ref{fig:ontoccurrences} shows how often the relevant properties occur. (Relative amount = $\frac{\text{\#occurrences}}{\text{\#triples}}$). It can be noticed that the amounts are quite low. This supports the hypothesis from Ch.~\ref{sec:implementationOntKnowledge} that building sub graphs with higher amounts of relevant properties is necessary to observe the effect of the data manipulations. Consequently, those sub graphs (see Ch.~\ref{sec:implementationSubGraphs}) are used in the following evaluations.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/4_evaluation/ontOccurrences}
+	\caption{Relative amount of transitive/symmetric/inverse properties in real datasets.}
+	\label{fig:ontoccurrences}
+\end{figure}
+
+
+
+
 
 
 \subsubsection{Evaluation Process}

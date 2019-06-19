@@ -37,31 +37,34 @@ Apart from the compression ratio, the run time is also important for the overall
 
 It can be seen that $CT_{GRP}$ is on average 48 times higher than $CT_{HDT}$. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not on the same level in terms of quality. Unfortunately, it is not possible to say whether a more professional implementation of GRP will also be slower than HDT.\todo{Laufzeiten?}
 
-In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as the number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions are shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first curves are the ones with the smallest points , the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
+In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as the number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed  four times with an increasing number of predicates each time. The plots for those executions are shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. The curves with same line styles have to be compared, since those pairs have the same number of predicates. The fourth execution is marked by the solid red lines and this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
 
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/GRPvsHDT/bothWithoutDictIncreasingPreds}
-	\caption{$CR_{Graph_C}$-values for HDT and GRP. Same punctuation styles indicate that the number of distinct predicates is the same. The two solid lines show the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ holds.} 
-	\label{fig:bothwithoutdictincreasingpreds}
-\end{figure}
-
-\begin{tabular}{|c|c|}
-	\hline 
-	Iteration & Line Style \\ 
-	\hline 
-	1 & \textbf{$\cdot$} \\ 
-	\hline 
-	2 & -- -- \\ 
-	\hline 
-	3 & $\triangle$ \\ 
-	\hline 
-	4 & --- \\ 
-	\hline 
-\end{tabular} 
-
-
+\begin{table}[ht]
+	\begin{minipage}[b]{1\linewidth}
+		\centering
+		\begin{tabular}{|c|c|}
+			\hline 
+			Iteration & Line Style \\ 
+			\hline 
+			1 & $ \cdot \cdot$ \\ 
+			\hline 
+			2 & -- -- \\ 
+			\hline 
+			3 & \rotatebox[origin=c]{-180}{$\triangle \triangle$} \\ 
+			\hline 
+			4 & --- \\ 
+			\hline 
+		\end{tabular}
+		\caption{Legend for the line styles in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. A higher iteration number indicates a higher number of predicates.}
+		\label{tab:legend}
+	\end{minipage}\hfill
+	\begin{minipage}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figures/GRPvsHDT/bothWithoutDictIncreasingPreds}
+		\captionof{figure}{$CR_{Graph_C}$-values for HDT and GRP. Same line styles indicate that the number of distinct predicates is the same (legend is shown in Tab.~\ref{tab:legend}). The two solid lines (iteration 4) show the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ holds.}
+		\label{fig:bothwithoutdictincreasingpreds}
+	\end{minipage}
+\end{table}
 
 \subsection{Results for Real World Data}
 
@@ -71,6 +74,7 @@ The previous chapter used synthetic data to detect the behavior of the compresso
 
 Here, an overview of the used datasets is provided. The following datasets are used in this chapter: DBPedia, Semantic Web Dog Food, WikiData and Open Government Data. Tab.~\ref{tab:comparisonDatasets} shows the files that are used, as well as their number of triples and resources. Also, their values for $ELR$ and $SPS$ are shown. It has to be noted that the entity-based sub graphs are limited to 50000 triples.
 
+\FloatBarrier
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline 
@@ -139,6 +143,8 @@ Here, an overview of the used datasets is provided. The following datasets are u
 	\captionof{table}{RDF files for the comparison of GRP and HDT. URLs to the datasets are in Ch.~\ref{sec:implementationDatasets}.}	
 	\label{tab:comparisonDatasets}
 \end{center}
+
+\FloatBarrier
 
 On most of the used RDF graphs, \GGRP{} achieves a better compression ratio than \GHDT{}. On average, $CR_{Graph_{HDT}}$ is 1.8 times higher than $CR_{Graph_{GRP}}$.
 
@@ -254,7 +260,7 @@ Next, it is considered how often the relevant properties occur in the datasets. 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/4_evaluation/ontOccurrences}
+	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontOccurrences}
 	\caption{Relative amount of transitive/symmetric/inverse properties in real datasets.}
 	\label{fig:ontoccurrences}
 \end{figure}

@@ -37,16 +37,29 @@ Apart from the compression ratio, the run time is also important for the overall
 
 It can be seen that $CT_{GRP}$ is on average 48 times higher than $CT_{HDT}$. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not on the same level in terms of quality. Unfortunately, it is not possible to say whether a more professional implementation of GRP will also be slower than HDT.\todo{Laufzeiten?}
 
-In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as that number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions is shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. The \GHDT{} curves can be recognized by the low fluctuations and the monotonic growth, whereas the \GGRP{} curves fluctuate more and do not have a monotonic behavior. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first \GGRP{} curve is the blue one, the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
+In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as the number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed a few times with an increasing number of predicates each time. The plots for those executions are shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. For  instance, the first curves are the ones with the smallest points , the second is the green curve. The curves with same colors have to be compared, since those pairs have the same number of predicates. The third execution is marked by the dashed red lines, because this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\linewidth]{figures/GRPvsHDT/bothWithoutDictIncreasingPreds}
-	\caption{$CR_{Graph_C}$-values for HDT and GRP. GRP's curves can be recognized by the higher fluctuations. Same colors indicate that the number of distinct predicates is the same. The two dashed lines show the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ holds.} 
+	\includegraphics[width=\linewidth]{figures/GRPvsHDT/bothWithoutDictIncreasingPreds}
+	\caption{$CR_{Graph_C}$-values for HDT and GRP. Same punctuation styles indicate that the number of distinct predicates is the same. The two solid lines show the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ holds.} 
 	\label{fig:bothwithoutdictincreasingpreds}
 \end{figure}
-\todo{grafik anders machen}
+
+\begin{tabular}{|c|c|}
+	\hline 
+	Iteration & Line Style \\ 
+	\hline 
+	1 & \textbf{$\cdot$} \\ 
+	\hline 
+	2 & -- -- \\ 
+	\hline 
+	3 & $\triangle$ \\ 
+	\hline 
+	4 & --- \\ 
+	\hline 
+\end{tabular} 
 
 
 
@@ -187,12 +200,11 @@ In this chapter, it will be evaluated whether using meta data from the ontology 
 Tab.~\ref{tab:ontologyKnowledgeDatasets} shows an overview of the data used for the ontology-based manipulations. \textit{MBP} stands for \textit{mappingbased-properties\_en}. $DB_{full}$ is the full version of \textit{MBP} of and $WN_{full}$ is the full version of Wordnet. The other datasets are adjusted to show the effects of the manipulations better. They contain a higher proportion of the relevant properties.
 
 \begin{center}
-	\todo{werte für MBP}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline 
 		Short Name & Long Name & \#Triples & \#Resources & $ELR$ & $SPS$ \\ 
 	    \hline
-		$DB_{full}$ & MBP& 0 & 0 & 0.0 & 0.0 \\
+		$DB_{full}$ & MBP& 32018293 & 4803076 & 0.04 & 0.158 \\
 		\hline
 	    $DB_{inv}$ & MBP\_manyinverses & 1097 & 1473 & 0.037 & 0.022 \\
 		\hline

@@ -226,13 +226,26 @@ First, it is considered how often the relevant properties\todo{übersicht proper
 
 Another feature of the datasets is how many different relevant properties they contain. Fig.~\ref{fig:totalnumbers} illustrates the results. It can be concluded that these amounts of are relatively small, especially for symmetric properties, considering the fact that these datasets are relatively large. That is also a reason for the low relative amounts in Fig.~\ref{fig:ontoccurrences}.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/totalNumbers}
-	\caption{Number of different relevant properties for DBPedia and Wordnet.}
-	\label{fig:totalnumbers}
-\end{figure}
 
+
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+		\hline 
+		& DBPedia & Wordnet \\ 
+		\hline 
+		URL Prefix & http://dbpedia.org/ontology/ & http://wordnet-rdf.princeton.edu/ontology\# \\
+		\hline
+		\hline
+		Symmetric & spouse & antonym \\ 
+		\hline 
+		Inverse &  & (hypernym, hyponym) \\ 
+		\hline 
+		Transitive &  &  \\ 
+		\hline 
+	\end{tabular} 
+	\captionof{table}{Overview of the relevant properties of DBPedia and Wordnet.}	
+	\label{tab:ontologyKnowledgeRelevantProperties}
+\end{center}
 
 
 \subsubsection{Evaluation Process}

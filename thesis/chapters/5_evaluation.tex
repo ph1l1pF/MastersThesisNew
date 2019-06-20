@@ -209,7 +209,7 @@ Tab.~\ref{tab:ontologyKnowledgeDatasets} shows an overview of the data used for 
 	    \hline
 		$DB_{full}$ & MBP& 32018293 & 4803076 & 0.04 & 0.158 \\
 		\hline
-	    $DB_{inv}$ & MBP\_manyinverses & 1097 & 1473 & 0.037 & 0.022 \\
+	    $DB_{inv}$ & MBP\_manyinverses & 1097 & 935 & 0.037 & 0.022 \\
 		\hline
 		$DB_{sym}$ & MBP\_manysymmetrics & 19954 & 18785 & 0.008 & 0.037 \\
 		\hline
@@ -301,10 +301,10 @@ Here, $out_{graph}$ is used instead of $out$. Normally, the dictionary size ($ou
 
 If $SR<1$ holds then the manipulation has resulted in an improvement at the file size level, otherwise not. Of course, the file size level is, in the end, more relevant than the grammar level, because it is the size needed to store the compressed data.
 
-
+\clearpage
 \subsubsection{Symmetric Properties}
 
-First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results whereby $DB_{sym}$ and $WN_{sym}$ are used. As expected, $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for \GGRP{} and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia, and about 0.5 for Wordnet.
+First, the approach suggested in Ch.~\ref{sec:approachOntKnowledge} to add all possible triples with symmetric edges will be evaluated. Fig.~\ref{fig:symmetricAddResults} illustrates the results whereby $DB_{sym}$ and $WN_{sym}$ are used for DBPedia and Wordnet, respectively. As expected, $IER$ is bigger than 1, as edges have been added to the graph. For both DBPedia and Wordnet, $IER$ is about 1.4. Also, it can be noticed that $OER<1$ holds, which means that adding symmetric triples is indeed beneficial for \GGRP{} and even brings a significant improvement on the grammar level as $OER$ is about 0.8 for DBPedia and about 0.5 for Wordnet.
 
 Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation has delivered a better result. However, the improvement is not as good as on the grammar level. So, the statement from Ch.~\ref{sec:related_workGrammarEncoding}, that GRP's encoding method does not always work well, is supported by these results. 
 
@@ -318,7 +318,7 @@ Furthermore, $SR<1$ is true. Hence, also on the file size level the manipulation
 \end{figure}
 
 
-In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it can be seen that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. Nevertheless, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable. To further investigate the removal case, the decompressed version of the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better, since $in_1$ is a graph where all symmetric edges have been removed before hand.
+In order to show that adding symmetric properties is more beneficial than removing them, the results of the removal case are also shown (see Fig.~\ref{fig:symmetricDeleteResults}). There, it can be seen that $IER<1$ holds, since edges have been removed. But $IER$ is still quite close to 1, because there are not many cases in which an edge could be removed. Hence, in most cases only one of the two directions for symmetric properties is present in the graph. Both $OER$ and $SR$ are close or equal to 1, which indicates that adding symmetric edges is more beneficial for $Graph_{GRP}$. Nevertheless, it can still be argued that there are only a few cases in which edges were removed and that the potentially positive effect is therefore not recognizable. To further investigate the removal case, the decompressed version of the graph $out_2$ from Fig.~\ref{fig:symmetricDeleteResults} is taken as the input $in_1$ for a new evaluation. So, $in_1$ will be an artificial graph in which for each symmetric property only one direction of the triples exist. This extreme case can show whether adding or removing symmetric edges will be better.
 
 \begin{figure}
 	\centering
@@ -338,11 +338,10 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 	\label{fig:symmetricAddResults2}
 \end{figure}
 
-
-
+\clearpage
 \subsubsection{Inverse Properties}
 
-Next, the usage of inverse properties is evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. Here, $DB_{inv}$ and $WN_{inv}$ are used. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has already been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better end result for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
+Next, the usage of inverse properties is evaluated. First, the approach presented in Ch.~\ref{sec:approachInverse} (adding triples with inverse properties) is considered. Here, $DB_{inv}$ and $WN_{inv}$ have been used for DBPedia and Wordnet, respectively. The results are shown in Fig.~\ref{fig:inverseAddResults}. For DBPedia, the size of the input graph has been doubled ($IER=2.1$). But $OER=0.99$ is almost 1, thus the manipulation has not resulted in a better compression for DBPedia. $SR$ is even bigger than 1, so the end result is worse on the file size level.
 
 For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is significantly smaller than 1. Hence, in this case, the manipulation has delivered a positive result. On the file size level, the result is also better ($SR=0.9$).
 
@@ -353,7 +352,7 @@ For Wordnet, $IER$ is smaller than for DBPedia and more importantly, $OER$ is si
 	\label{fig:inverseAddResults}
 \end{figure}
 
-In the case of DBPedia, a reason for the negative result can be that DBPedia has a relatively high number of different inverse properties. Therefore, adding all the edges with many different URIs to the relatively small graph in Fig.~\ref{fig:inverseAddResults} (2000 triples) does not have an effect that is positive enough to compensate the high amount of edges added to it. In order to further investigate that, a graph that is ten times bigger, is created. The results for it are shown in Fig.~\ref{fig:inverseAddResultsBigger}. It can be seen that the results are much better. While $IER$ is about 2 again, $OER=0.85$ is much smaller and also $SR=0.91$ is smaller. So, it can be stated that adding inverse properties has a positive effect on the graph compression potential, as mentioned in Ch.~\ref{sec:approachInverse}.
+In the case of DBPedia, a reason for the negative result can be that DBPedia has a relatively high number of different inverse properties. Therefore, adding all the edges with many different URIs to the relatively small graph in Fig.~\ref{fig:inverseAddResults} (1097 triples) does not have an effect that is positive enough to compensate the high amount of edges added to it. In order to further investigate that, a graph that is ten times bigger, is created. The results for it are shown in Fig.~\ref{fig:inverseAddResultsBigger} which are much better. While $IER$ is about 2 again, $OER=0.85$ is much smaller and also $SR=0.91$ is smaller. So, it can be stated that adding inverse properties has a positive effect on the graph compression potential, as mentioned in Ch.~\ref{sec:approachInverse}.
 
 
 \begin{figure}
@@ -363,15 +362,16 @@ In the case of DBPedia, a reason for the negative result can be that DBPedia has
 	\label{fig:inverseAddResultsBigger}
 \end{figure}
 
-
-The opposing approach (removing triples with inverse properties) is evaluated as well. Thus, the same technique, which was already used for symmetric properties, is used again. Hence, for DBPedia the graph $out_2$ of Fig.~\ref{fig:inverseAddResultsBigger} is used as $in_1$ and for Wordnet the graph $out_2$ of Fig.~\ref{fig:inverseAddResults} is used as $in_1$. The results are illustrated in Fig.~\ref{fig:inverseAddResults2}. There, it can be seen that the values for $IER$ are higher than before, as expected. Correspondingly, the $OER$-values are lower, which supports the hypothesis that removing inverse triples leads to an unfavorable graph structure for GRP.
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosInverseAdd2}
 	\caption{Results for adding inverse properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$). In contrast to Fig.~\ref{fig:inverseAddResults} and~\ref{fig:inverseAddResultsBigger}, the input graph $in_1$ contains only one direction for each triple with an inverse property.}
 	\label{fig:inverseAddResults2}
 \end{figure}
+
+
+The opposing approach (removing triples with inverse properties) is evaluated as well. Thus, the same technique, which was already used for symmetric properties, is used again. Hence, for DBPedia the graph $out_2$ of Fig.~\ref{fig:inverseAddResultsBigger} is used as $in_1$ and for Wordnet the graph $out_2$ of Fig.~\ref{fig:inverseAddResults} is used as $in_1$. The results are illustrated in Fig.~\ref{fig:inverseAddResults2}. There, it can be seen that the values for $IER$ are higher than before, as expected. Correspondingly, the $OER$-values are lower, which supports the hypothesis that removing inverse triples leads to an unfavorable graph structure for GRP.
+
 
 \subsubsection{Transitive Properties}
 

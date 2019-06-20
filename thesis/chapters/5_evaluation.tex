@@ -5,16 +5,10 @@ This chapter is about the evaluation of the several approaches presented in Ch.~
 
 For the following experiments, HDT-Java 2.0~\footnote{\label{foot:1}https://github.com/rdfhdt/hdt-java/releases/tag/v2.0} (the currently newest version) has been used. For GRP the implementation presented in Ch.~\ref{sec:relatedworkGRPImpl} has been used. The evaluated datasets are the ones introduced in Ch.~\ref{sec:implementationDatasets}.
 
+
 \section{GRP vs HDT}\label{sec:evaluationHDTvsGRP}
 
 This chapter shows the evaluation results of the comparison between HDT and GRP. First, results for the synthetically generated graphs from Ch.~\ref{sec:implementationGRPvsHDT} will be presented. Afterwards, the two compressors will also be evaluated for real world data.
-
-
-\subsection{Results for Synthetic Data}
-
-Fig.~\ref{fig:grpvshdt1} shows the results for the synthetically generated data (see Ch.~\ref{sec:implementationGRPvsHDT}). Fig.~\ref{fig:ratiosBothWithoutDict} shows the compression ratios without the size of the dictionary. As expected, $CR_{Graph_{HDT}}$ becomes higher, as the graphs are further away from the hub pattern. Moreover, \GGRP{} compresses better if the graph is similar to the star pattern (greater value of $SPS$), as stated earlier. It is noticeable that $CR_{Graph_{GRP}}$ fluctuates much more than $CR_{Graph_{HDT}}$ and the impact of the star pattern similarity is much higher for \GGRP{}.
-
-Fig.~\ref{fig:ratiosBothWithDict} shows the values of \CR{HDT} and \CR{GRP}. It can be seen that the curves behave differently than in Fig.~\ref{fig:ratiosBothWithoutDict}, since the dictionary size $|out_{dict}|$ is much bigger than $|out_{graph}|$. As both GRP and HDT use the same dictionary compressor ($Dict_{HDT}$), they have been increased by the same amount and therefore \CR{GRP} is smaller than \CR{HDT}. Furthermore, it is noticeable that $|out_{dict}|$ is bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
 \begin{figure}[h]
 	\centering
@@ -25,7 +19,12 @@ Fig.~\ref{fig:ratiosBothWithDict} shows the values of \CR{HDT} and \CR{GRP}. It 
 	\label{fig:grpvshdt1}
 \end{figure}
 
-Apart from the compression ratio, the run time is also important for the overall performance. Fig.~\ref{fig:runtimes} shows the average value of $CT$ for both compressors, respectively. For this, the same scenario with the star pattern (and only one distinct predicate) was used. It has been executed 100 times to get a sophisticated run time measurement, because $CT$ depends on the current CPU workload of the computer. Decompression is not supported by the currently implemented version of GRP and therefore decompression evaluations will be omitted.
+\subsection{Results for Synthetic Data}
+
+Fig.~\ref{fig:grpvshdt1} shows the results for the synthetically generated data (see Ch.~\ref{sec:implementationGRPvsHDT}). Fig.~\ref{fig:ratiosBothWithoutDict} shows the compression ratios without the size of the dictionary. As expected, $CR_{Graph_{HDT}}$ becomes higher, as the graphs are further away from the hub pattern. Moreover, \GGRP{} compresses better if the graph is similar to the star pattern (greater value of $SPS$), as stated earlier. It is noticeable that $CR_{Graph_{GRP}}$ fluctuates much more than $CR_{Graph_{HDT}}$ and the impact of the star pattern similarity is much higher for \GGRP{}.
+
+
+Fig.~\ref{fig:ratiosBothWithDict} shows the values of \CR{HDT} and \CR{GRP}. It can be seen that the curves behave differently than in Fig.~\ref{fig:ratiosBothWithoutDict}, since the dictionary size $|out_{dict}|$ is much bigger than $|out_{graph}|$. As both GRP and HDT use the same dictionary compressor ($Dict_{HDT}$), they have been increased by the same amount and therefore \CR{GRP} is smaller than \CR{HDT}. Furthermore, it is noticeable that $|out_{dict}|$ is bigger when the graph is further away from the star pattern. $Dict_{HDT}$ seems to be more inefficient when there are about as many subject as objects. 
 
 \begin{figure}
 	\centering
@@ -34,6 +33,9 @@ Apart from the compression ratio, the run time is also important for the overall
 	\label{fig:runtimes}
 \end{figure}
 
+Apart from the compression ratio, the run time is also important for the overall performance. Fig.~\ref{fig:runtimes} shows the average value of $CT$ for both compressors, respectively. For this, the same scenario with the star pattern (and only one distinct predicate) was used. It has been executed 100 times to get a sophisticated run time measurement, because $CT$ depends on the current CPU workload of the computer. Decompression is not supported by the currently implemented version of GRP and therefore decompression evaluations will be omitted.
+
+\FloatBarrier
 
 It can be seen that $CT_{GRP}$ is on average 48 times higher than $CT_{HDT}$. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So they are not on the same level in terms of quality. Unfortunately, it is not possible to say whether a more professional implementation of GRP will also be slower than HDT.\todo{Laufzeiten?}
 
@@ -66,6 +68,7 @@ In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct
 	\end{minipage}
 \end{table}
 
+\FloatBarrier
 \subsection{Results for Real World Data}
 
 The previous chapter used synthetic data to detect the behavior of the compressors to certain changes in the structure of the input data. First, real data will be used to compare the compression ratios of \GHDT{} and \GGRP{}. 
@@ -436,6 +439,7 @@ Tab.~\ref{tab:BlankImproveDatasets} shows the files used for the blank node impr
 	\label{tab:HuffImproveDatasets}
 \end{center}
 
+\pagebreak
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|}
 		\hline 
@@ -520,7 +524,7 @@ This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlan
 	\label{fig:blanknodes}
 \end{figure}
 
-
+\FloatBarrier
 \subsection{Final Results}\label{sec:evaluationFinal}
 \todo{final run times}
 

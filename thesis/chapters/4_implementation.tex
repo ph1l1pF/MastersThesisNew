@@ -11,23 +11,23 @@ As has just explained, \GHDT{} can compress a graph that is similar to a hub pat
 
 The task is to create a series of RDF graphs $(G_1,...,G_m)$ that first correspond to the hub pattern and then continue to change in the direction of the authority pattern. That can be done using Alg.~\ref{alg:BuildGraphs}. The first input parameter $steps$ influences how many graphs will be created, as it defines by which amount the number of subjects ($subj$) is increased in every iteration of the while loop. It has to chosen low enough to ensure a smooth transition from the hub to authority pattern. The second parameter $nodesFactor$ influences the amount of nodes of the graphs. Concrete values for the parameter are not important to mention.
 
-An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_pattern}. All graphs ($G_1$ to $G_m$) have the same number of nodes and edges. That is ensured by Line~\ref{line:buildgraph} in Alg.~\ref{alg:BuildGraphs}. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This continues until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
-
 \begin{algorithm}
 	\caption{BuildGraphs ($steps$, $ nodesFactor$)}\label{alg:BuildGraphs}
 	\begin{algorithmic}[1]
-	\State $n \leftarrow nodesFactor*steps$ // $n$ is the number of nodes
-	\State $subj \leftarrow 1$
-	\State $i \leftarrow 1$
-	\While{$subj < n$ }
+		\State $n \leftarrow nodesFactor*steps$ // $n$ is the number of nodes
+		\State $subj \leftarrow 1$
+		\State $i \leftarrow 1$
+		\While{$subj < n$ }
 		\State $obj \leftarrow$ $n-subj$ 
 		\State $G_i \leftarrow$ build graph with $subj$ subjects and $obj$ objects\label{line:buildgraph}
 		\State  $subj\leftarrow subj+steps$
 		\State  $i\leftarrow i+1$
-	\EndWhile
-	\State \Return $(G_1,...,G_m)$
+		\EndWhile
+		\State \Return $(G_1,...,G_m)$
 	\end{algorithmic}
 \end{algorithm}
+
+An example output of Alg.~\ref{alg:BuildGraphs} is shown in Fig.~\ref{fig:star_pattern}. All graphs ($G_1$ to $G_m$) have the same number of nodes and edges. That is ensured by Line~\ref{line:buildgraph} in Alg.~\ref{alg:BuildGraphs}. $G_1$ has only one subject connected to all objects. $G_2$ then has two subjects more and correspondingly 2 objects less. This continues until there is only one object that is connected to all subjects ($G_m$). The edges are randomly distributed among the nodes, so that all nodes have a similar degree and each node has at least a degree of one.
 
 \begin{figure}[h]
 	\centering
@@ -205,7 +205,7 @@ For the dictionary improvements, HDT's dictionary compression (\DHDT{}) is used 
 
 As already mentioned in Ch.~\ref{sec:approachDictImprovements}, literals will be compressed using a Huffman code. To achieve that, HDT is changed such that it does not compress literals by prefix trees, but rather gives the literals to the newly created {\tt HuffmanHandler}, which compresses all literals and finally stores them in a binary format. In order to make that possible, the {\tt HuffmanHandler} has to traverse all literals in the beginning of the compression to establish a Huffman Tree.
 
-In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Algorithm~\ref{alg:HuffmanEncode} which has to be started at the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one if the current node is a leaf. Otherwise, it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
+In addition, the Huffman code/tree itself has to be stored in order to be able to decompress the data. There is no standard way for storing the binary tree. One approach can be seen in Alg.~\ref{alg:HuffmanEncode} which has to be started at the root node. That method creates an unambiguous bit representation of the tree. It traverses the tree in a depth-first-search-manner and writes a one if the current node is a leaf. Otherwise, it writes a zero and the procedure is then called recursively for the current node's children. This encoding is unambiguous, because each node is either a leaf or has exactly two children.
 
 \begin{algorithm}
 	\caption{EncodeNode (TreeNode node)}\label{alg:HuffmanEncode}

@@ -10,16 +10,16 @@ Here, two compressor models will be introduced, one for general compressors and 
 
 \subsection{General Compressor Model}\label{sec:generalcompressorModel}
 
-A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output $out$. That step is called compression. Decompression can be described as tasking $out$ as an input and producing $in$. An illustration can be seen in Fig.~\ref{fig:generalcompressorModel}. The terms $CT_C$ and $DCT_C$ denote the time for compression and decompression, respectively. They will be explained in more details in Ch.~\ref{sec:approachComprTime}.
-
-An example for a general compressor is GZip~\footnote{https://www.gzip.org/} which will be used in Ch.~\ref{sec:evaluationFinal} as a baseline for GRP and HDT.
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/approach/model_general}
 	\caption{Visualization of the General Compressor Model.}
 	\label{fig:generalcompressorModel}
 \end{figure}
+
+A general purpose compressor $C$ can be described as follows: $C$ takes an input $in$ and produces an output $out$. That step is called compression. Decompression can be described as taking $out$ as an input and producing $in$. An illustration can be seen in Fig.~\ref{fig:generalcompressorModel}. The terms $CT_C$ and $DCT_C$ denote the time for compression and decompression, respectively. They will be explained in more details in Ch.~\ref{sec:approachComprTime}.
+
+An example for a general compressor is GZip~\footnote{https://www.gzip.org/} which will be used in Ch.~\ref{sec:evaluationFinal} as a baseline for GRP and HDT.
 
 \subsection{RDF Compressor Model}\label{sec:compressorModel}
 
@@ -159,10 +159,6 @@ There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The 
 	\label{fig:symDirectReplacement}
 \end{figure}
 
-In Ch.~\ref{sec:relatedworkExDigramReplacement}, it was shown that more edges can also lead to a worse compression ratio, since internal nodes of a digram are not allowed to be connected to other nodes in the graph. So, it could be argued that adding symmetric edges makes GRP find less digram occurrences. But this is not the case, since the nodes, which the symmetric edges are added to, were already connected before. An example supporting this argument can be seen in Fig.~\ref{fig:symmetricMatIndirect}. In Fig.~\ref{fig:symmetricMat}, a graph is shown whereby $p$ is the only symmetric property. Hence, the green edges were added to the graph. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can be found twice, whereas it was previously found only once. So, the addition delivers a better compression potential here. At the same time, the degrees of  the nodes 2, 3, 5 and 6 are increased by one. But this should not decrease the probability of finding other digrams in the graph, since those nodes were already connected before.
-
-The replacement of the digram in Fig.~\ref{fig:symmetricMatDigram} is not illustrated here, as that digram type was already explained in Ch.~\ref{sec:relatedworkExDigramReplacement}.
-
 \begin{figure}[h]
 	\centering
 	\subfloat[A sub graph to which the green edges were added. Two occurrences of the digram in Fig.~\ref{fig:symmetricMatDigram} are marked by red ovals.]{\includegraphics[width=0.45\textwidth]{figures/approach/symmetricMat}\label{fig:symmetricMat}}
@@ -171,6 +167,12 @@ The replacement of the digram in Fig.~\ref{fig:symmetricMatDigram} is not illust
 	\caption{Visualization of the benefits of adding symmetric edges to the graph. $p$ is symmetric, all other properties are not.}
 	\label{fig:symmetricMatIndirect}
 \end{figure}
+
+In Ch.~\ref{sec:relatedworkExDigramReplacement}, it was shown that more edges can also lead to a worse compression ratio, since internal nodes of a digram are not allowed to be connected to other nodes in the graph. So, it could be argued that adding symmetric edges makes GRP find less digram occurrences. But this is not the case, since the nodes, which the symmetric edges are added to, were already connected before. An example supporting this argument can be seen in Fig.~\ref{fig:symmetricMatIndirect}. In Fig.~\ref{fig:symmetricMat}, a graph is shown whereby $p$ is the only symmetric property. Hence, the green edges were added to the graph. Due to the addition, the digram of Fig.~\ref{fig:symmetricMatDigram} can be found twice, whereas it was previously found only once. So, the addition delivers a better compression potential here. At the same time, the degrees of  the nodes 2, 3, 5 and 6 are increased by one. But this should not decrease the probability of finding other digrams in the graph, since those nodes were already connected before.
+
+The replacement of the digram in Fig.~\ref{fig:symmetricMatDigram} is not illustrated here, as that digram type was already explained in Ch.~\ref{sec:relatedworkExDigramReplacement}.
+
+
 
 \subsubsection{Inverse Properties}\label{sec:approachInverse}
 
@@ -183,7 +185,7 @@ In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProp
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.6\textwidth]{figures/approach/transitiveMat}
+	\includegraphics[width=0.5\textwidth]{figures/approach/transitiveMat}
 	\caption{A sub graph with the transitive predicate $p$.}
 	\label{fig:transitiveMat}
 \end{figure}

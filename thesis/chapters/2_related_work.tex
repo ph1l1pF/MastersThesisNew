@@ -76,6 +76,7 @@ In this chapter, two different approaches to grammar-based graph compression are
 
 In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually, small patterns are searched for, since it is possible to find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams, because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.
 
+\clearpage
 \subsection{Dürksen's Algorithm}
 
 An approach to grammar-based compression of graphs was developed in~\cite{mattdk}. Here, the authors assume a hyper graph with node and edge labels. Such a graph can be seen in Fig.~\ref{fig:transformation} on the left. To simplify the compression, a transformation is now executed, in which a new node is inserted for each edge $e$, which then has the same label as $e$. The original structure of the graph is obtained by connecting two nodes, which were previously connected by an edge, indirectly by the new node. The result of the transformation is a graph, which only has node labels, but no edge labels. Moreover, hyper edges (edges with more than two incident nodes) are no longer present due to the transformation.

@@ -1,7 +1,6 @@
 % !TeX spellcheck = en_US
 \chapter{Introduction}\label{ch:introduction}
 
-\section{Motivation}
 The majority of data on the Internet is unstructured, because it is mainly text. That makes it difficult for machines to extract knowledge from the data and answer specific queries. In the context of the Semantic Web, an attempt is made to build a knowledge base using structured data. A possible framework for structured data is the \ac{RDF}\footnote{https://www.w3.org/RDF/}, in which triples of the form $ (subject, predicate, object) $ are used in order to express certain facts. A set of triples naturally forms a graph, whereas the different $subjects$ and $objects$ are nodes and the $predicates$ are edges of that graph. As those graphs express facts, they are called knowledge graphs.
 
 In reality, such knowledge graphs can become very large with millions or even billions of nodes and edges. The following three use cases can then become very hard or even infeasible: storage, transmission and processing. One way to circumvent this problem is using compression. There are many existing compressors which work for all kinds of data, but the problem is that the compressed data is not query-able. Also, their compression might not be so strong, since they do not take advantage of the special features of RDF. For these reasons RDF-specific compression techniques are of interest. An example of such an RDF compressor is \ac{HDT} from~\cite{hdt}. Here, the data is made smaller by a compact representation of the triples. 
@@ -10,7 +9,7 @@ There is a completely different technique which is called grammar-based compress
 
 In this thesis, it will be investigated to what extent grammar-based compression is suitable for RDF and whether it delivers even better results than HDT.
 
-\pagebreak
+\clearpage
 \section{General Idea}
 
 As already mentioned, there are essentially three use cases for RDF data:
@@ -33,11 +32,9 @@ As stated in~\cite{maneth}, a graph compressed by GRP is not well suited for tho
 
 In Ch.~\ref{ch:related_work}, the necessary fundamentals are presented. It will mainly be about the two compressors HDT and GRP. 
 
-Ch.~\ref{ch:approach} deals with the approaches for the different aspects of the thesis. There, they will only be presented in a theoretical manner whereas in Ch.~\ref{ch:implementation} the implementation details will be presented.
+The following parts of the thesis consist of two main tasks. The first one is comparing GRP with HDT. First results will show that GRP outperforms HDT in many cases. Therefore, the second task is to suggest improvements of GRP, which can partly also be used for HDT.
 
-In Ch.~\ref{ch:evaluation}, the approaches to the different tasks will be evaluated using real RDF data in order to confirm the theoretical hypotheses stated before.
-
-Finally, the results of the thesis are summarized in Ch.~\ref{ch:summary_and_discussion} and the future work on this topic is presented.
+In Ch.~\ref{ch:approach}, a formal model for compressors is introduced, which will be used in all following chapters. Afterwards, approaches to the main tasks will be presented. Implementation details will be discussed in Ch.~\ref{ch:implementation}. In Ch.~\ref{ch:evaluation}, the approaches to the different tasks will be evaluated by using real world RDF data. Finally, the results of the thesis are summarized in Ch.~\ref{ch:summary_and_discussion} and future work on this topic is presented.
 
 
 

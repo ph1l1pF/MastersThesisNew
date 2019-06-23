@@ -72,7 +72,7 @@ The previous chapter used synthetic data to detect the behavior of the compresso
 
 \subsubsection{Dataset Overview}
 
-Here, an overview of the used RDF files is provided. They are contained in the following datasets: DBPedia, Semantic Web Dog Food, WikiData and Open Government Data. Tab.~\ref{tab:comparisonDatasets} shows the files that are used, as well as their number of triples and resources. Also, their values for $ELR$ and $SPS$ are shown. It has to be noted that the entity-based sub graphs are limited to 50000 triples.
+Here, an overview of the used RDF files is provided. They are contained in the following datasets: DBPedia, Semantic Web Dog Food, WikiData and Open Government Data (see Ch.~\ref{sec:implementationDatasets}). Tab.~\ref{tab:comparisonDatasets} shows the files that are used, as well as their number of triples and resources. Also, their values for $ELR$ and $SPS$ are shown. It has to be noted that the entity-based sub graphs are limited to 50000 triples.
 
 \FloatBarrier
 \begin{center}
@@ -150,9 +150,15 @@ On most of the used RDF graphs, \GGRP{} achieves a better compression ratio than
 
 In order to investigate the correlation between the pairs ($CR_{Graph_C},ELR$) and ($CR_{Graph_C},SPS$) the Spearman correlation is used. That correlation coefficient produces values between $ -1 $ and $ 1 $. Negative values imply a negative correlation, positive values imply a positive correlation. The value 0 means that there is no correlation.~\cite{spearman} 
 
-The results are shown in Tab.~\ref{tab:spearman}. Due to the value $0.646$ it becomes clear that higher numbers of different predicates lead to a higher compression ratio for $Graph_{GRP}$. In contrast, a higher value of $SPS$ implies a lower compression ratio for $Graph_{GRP}$, as expected. Although it has to be noted that for the latter case, the correlation is not as strong as with $ELR$. 
+The results are shown in Tab.~\ref{tab:spearman}.  It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$, $CR_{Graph_C}$ will be smaller for $f_1$. This is because $|f_1|>|f_2|$ is true and $CR_{Graph_C}=\frac{out_{graph}}{in}$ (with $in\in \{f_1,f_2\}$ in this case). Therefore, the compression ratios of the two approaches can only be compared if they were achieved on the same input file.
 
-$CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation is quite small. The correlation between $CR_{Graph_{HDT}}$ and $SPS$ is positive (but very close  to 0) which is reasonable, since $Graph_{HDT}$ only benefits from hub pattern, but $SPS$ is defined for the general star pattern.
+The just described effect also sophisticates the Spearman correlation values to some extent. However, due to the fact that the \CRGraph{C}-values do not fluctuate so much, the correlation values still provide a valid indication. Moreover, it is reasonable to compare the different correlation values with each other. For instance, it becomes clear that \GGRP{} has a positive correlation with $ELR$ and a negative correlation with $SPS$ and the correlation with $ELR$ is much higher in terms of their absolute values. 
+
+$CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation is quite small. The correlation between $CR_{Graph_{HDT}}$ and $SPS$ is positive (but very close  to 0) which is reasonable, since $Graph_{HDT}$ only benefits from the hub pattern, but $SPS$ is defined for the general star pattern.
+
+Generally, the correlation values of \GGRP{} are much higher than those of \GHDT{}. Hence, this supports the hypothesis from Ch.~\ref{sec:approachGRPvsHDT} that \GGRP{} constructs more complex sub structures and is therefore more dependent on the structure of the graph.
+
+Finally, Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for the datasets, respectively.
 
 \begin{figure}[h]
 	\centering
@@ -163,7 +169,6 @@ $CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation i
 	\label{fig:compare1}
 \end{figure}
 
-\todo{werte mit vorsicht genießen}
 \begin{center}
 	\begin{tabular}{|c|c|c|}
 		\hline 
@@ -177,8 +182,6 @@ $CR_{Graph_{HDT}}$ has a positive correlation with $ELR$, but that correlation i
 	\captionof{table}{Spearman correlation values.}	
 	\label{tab:spearman}
 \end{center}
-
-Fig.~\ref{fig:compare1} and~\ref{fig:compare2} show the compression ratios for the datasets, respectively. It has to be noticed that values of $CR_{Graph_C}$ are not comparable between different RDF files. This is due to the fact that $CR_{Graph_C}$ does not take the dictionary into account. Hence, if two files $f_1,f_2$ have the same graph structure, but $f_1$  is using longer URIs than $f2$, then $CR_{Graph_C}$ will be smaller for $f_1$. This is because $|f_1|>|f_2|$ is true and $CR_{Graph_C}=\frac{out_{graph}}{in}$ (with $in\in \{f_1,f_2\}$ in this case). Therefore, the compression ratios of the two approaches can only be compared if they were achieved on the same input file.
 
 
 \begin{figure}[h]
@@ -531,11 +534,11 @@ Fig.~\ref{fig:dictcompr} shows the results regarding the dictionary compression.
 
 Finally, Fig.~\ref{fig:completecompr} shows both the graph and dictionary compressions in combination. HDT++ denotes the improved HDT (HDT++$=\{  Dict_{HDT++}, Graph_{HDT} \} $). GRP++ denotes the ontology-based graph compression improvement combined with the improved dictionary compression (GRP++ $=\{ Dict_{HDT++}, Graph_{GRP+Ont} \}$). The horizontal lines drawn through the bars denote the respective values of $CR_{Dict_C}$. That shows how big the portion of the dictionary is in the compressed data. 
 
-Apart from that, the difference between HDT++ and GRP++ is very small. This due to the fact that the graph ($out_{graph}$) is so much smaller than $out_{dict}$.
+Apart from that, the difference between HDT++ and GRP++ is very small. This is due to the fact that the graph ($out_{graph}$) is so much smaller than $out_{dict}$.
 
-GZip is used a baseline. Since it is a general compressor, it does not have a horizontal line. It is noticeable that GZip achieved a slightly better compression ratio than HDT++ and GRP++. However, as already mentioned in Ch.~\ref{ch:introduction}, the data compressed by GZip is not query-able which makes it less usable.
+GZip is used as a baseline. Since it is a general compressor, it does not have a horizontal line. It is noticeable that GZip achieves a slightly better compression ratio than HDT++ and GRP++. However, as already mentioned in Ch.~\ref{ch:introduction}, the data compressed by GZip is not query-able which makes it less usable.
 
-In general, it can be concluded that the improvement compressors (HDT++ and GRP++) deliver a significant difference to HDT and GRP. The resulted compression ratio is almost as low as GZip's ratio. Considering the fact that data compressed by GRP++ or HDT++ is still query-able, it is reasonable to use one of them instead of a general compressor. With further improvements (will be discussed in Ch.~\ref{sec:futurework}) it could be that HDT++ or GRP++ outperform general compressors in many more cases.
+In general, it can be concluded that the improved compressors (HDT++ and GRP++) achieve a significantly lower compression ratio than HDT and GRP. The resulted compression ratio is almost as low as GZip's ratio. Considering the fact that data compressed by GRP++ or HDT++ is still query-able, it is reasonable to use one of them instead of a general compressor. With further improvements, which will be discussed in Ch.~\ref{sec:futurework}, it could be that HDT++ or GRP++ outperform general compressors in many more cases.
 
 Moreover, it becomes clear that compressing the dictionary has a much bigger impact on $CR_C$ than compressing the graph. So, for future work it would be reasonable to focus on dictionary compression. However, there are cases in which the dictionary is smaller and therefore the graph compression has a higher impact. A further idea is be to compress multiple RDF files, which all have a similar dictionary, together. This way, the influences of the graphs can become bigger.
 

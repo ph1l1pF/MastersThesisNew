@@ -1,7 +1,7 @@
 % !TeX spellcheck = en_US
 \chapter{Approach}\label{ch:approach}
 
-This chapter contains the solution approaches to the parts of the thesis. Firstly, a formal model of a compressor is defined. Based on that, the key performance indicators which will be used to measure the performance of the single compressors are introduced. Secondly, the two existing compressors HDT and GRP are compared. Finally, improvements of the compression will be suggested.
+This chapter contains the solution approaches to the parts of the thesis. Firstly, a formal model of a compressor is defined. Based on that, the key performance indicators which will be used to measure the performance of the single compressors are introduced. Secondly, approaches for comparing HDT and GRP are presented. Finally, improvements of the compression will be suggested.
 
 
 \section{Compressor Models}
@@ -55,7 +55,7 @@ Tab.~\ref{tab:compressorsOverview} shows an overview of the RDF compressors disc
 
 \section{Key Performance Indicators}
 
-In this chapter, key performance indicators for general and RDF compressors are introduced. Those indicators will be measured in order to determine the overall performance of the different compressors.
+In this chapter, key performance indicators for general and RDF compressors are introduced. Those indicators will be used in order to determine the overall performance of the different compressors.
 
 \subsection{Compression Ratio}
 
@@ -92,7 +92,7 @@ Analogously to $CR$, if is clear from the context which compressor is considered
 
 In this chapter, the two existing compressors - HDT and GRP - will be compared. Therefore, the features of the compressors and their applicability to certain features of RDF graphs are discussed.
 
-The question is whether there are certain features that an RDF graph can have, and which have a positive or negative impact on the compression ratio of one or both algorithms. 
+The question is whether there are certain features that an RDF graph can have, which have a positive or negative impact on the compression ratio of one or both algorithms. 
 
 As HDT and GRP use the same method for compressing the dictionary ($Dict_{HDT}$), we only compare $Graph_{HDT}$ and $Graph_{GRP}$ in this chapter.
 
@@ -148,6 +148,7 @@ In Ch.~\ref{sec:approachFeaturesGRP}, it has already been mentioned that GRP mak
 
 In the following chapters, some concepts of OWL are introduced and it is analyzed how they can be used in order to produce a graph structure which is favorable for GRP.
 
+\clearpage
 \subsubsection{Symmetric Properties}
 
 There is a class in~\cite{owl} called {\tt owl:SymmetricProperty}~\footnote{The prefix {\tt owl:} is used for every entity or property in the context of OWL.} which expresses that a certain property $p$ is symmetric. This means, if there is a triple $(s,p,o)$ in the graph, then there can also be a triple $(o,p,s)$ at the same time. In reality, however, it can happen that only one of the two triples is explicitly mentioned and the second triple is only implicitly present. The idea is to always add the other triple to the graph in such a case. This makes the graph larger at first, but more grammar rules can be found. This is because $ELR$ can be reduced by the adding, which can lead to a better compression ratio. Furthermore, digram occurrences like in Fig.~\ref{fig:symDirectReplacement} can be constructed after the edges are added. In this example, $p$ is the only symmetric property. Hence, the green edges were added to the graph on the left. This leads to a graph in which two occurrences of the digram A can be found. The compressed graph is shown on the right side. The A-edges are indirected, because the digram A contains only one external node. Therefore, it is clear that the nodes 3 and 6 each correspond to that external node, respectively. It can be seen that adding symmetric edges can produce digram occurrences which contain the two corresponding symmetric edges. It is likely that GRP finds many of those digrams after a huge amount of symmetric edges was added to a graph.
@@ -178,10 +179,10 @@ The replacement of the digram in Fig.~\ref{fig:symmetricMatDigram} is not illust
 
 One property of~\cite{owl} is {\tt owl:inverseOf}, which is defined for two properties $p_1, p_2$. If $(s,p_1,o)$ exists then $(o,p_2,s)$ should also exist and vice versa. Analogously to {\tt owl:SymmetricProperty}, it can be the case that only one of the two triples is explicitly mentioned. It is reasonable to argue in a similar way for adding those edges to the graph here. It can decrease $ELR$ if there are many occurrences of a few inverse properties. Also, the added edges can directly produce a high number of digram occurrences which the two edges are part of (similar to Fig.~\ref{fig:symDirectReplacement}). Furthermore, it will not create an unfavorable graph structure, but enable GRP to find other digram occurrences (similar to Fig.~\ref{fig:symmetricMatIndirect}).
 
-
+\clearpage
 \subsubsection{Transitive Properties}\label{sec:approachTransitive}
 
-In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $n$, as illustrated in Fig.~\ref{fig:transitiveMat}. Such a path, with the length of at least two, is called \tp from now on. If there exists a \tp between two nodes $i$ and $j$, then the edge $(i,j)$ is called \dtpp So, in Fig.~\ref{fig:transitiveMat}, the edges $(1,3)$ and $(1,n)$ are \dtpsp
+In~\cite{owl}, a predicate can be denoted as transitive ({\tt owl:TransitiveProperty}). Let $p$ be transitive. If the triples $(1,p,2),(2,p,3)$ exist then $(1,p,3)$ should also exist. Consequently, this holds also for an arbitrarily long path from $1$ to $n$, as illustrated in Fig.~\ref{fig:transitiveMat}. Such a path, with the length of at least two, is called \textit{transitive path}. If there exists a \tp between two nodes $i$ and $j$, then the edge $(i,j)$ is called \dtpp So, in Fig.~\ref{fig:transitiveMat}, the edges $(1,3)$ and $(1,n)$ are \dtpsp
 
 \begin{figure}[h]
 	\centering
@@ -208,7 +209,7 @@ The opposing approach is to add all \dtpsp But a strong argument against this ap
 
 Further properties of~\cite{owl} are {\tt owl:equivalentProperty} and {\tt owl:sameAs}. The first one denotes that two properties are equivalent, but that does not mean that they are equal. In contrast, the latter one is expressing equality. If there is a property $p$ which is equal to other properties $p_1,..,p_n$, then one approach could be to replace each occurrence of $p_1,..,p_n$ with $p$. This would reduce $ELR$ and, at the same time, not change the structure of the graph. However, this approach was not implemented, since the thesis focuses on compressing single RDF graphs and {\tt owl:sameAs} typically connects multiple graphs with each other. Compressing multiple graphs would lead to more complexity, because not only properties can be the same, but single nodes can be marked as the same as well.
 
-
+\clearpage
 \subsection{Dictionary Improvements}\label{sec:approachDictImprovements}
 
 
@@ -222,18 +223,19 @@ Since those strings can contain whole flow texts, a text compression would proba
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/4_rdf_specific_features/huffman}
+	\includegraphics[width=0.8\linewidth]{figures/4_rdf_specific_features/huffman}
 	\caption{An example of a Huffman Tree.}
 	\label{fig:huffmantree}
 \end{figure}
 
+
 \subsubsection{Blank Nodes}\label{sec:approachBlankNodes}
 
-As already mentioned in Ch.~\ref{sec:relatedworkRDF}, every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When reading an RDF graph with the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html} (which is used by HDT according to~\cite{hdt}) random strings are assigned to the blank nodes, which are quite long. They also have no common prefixes, which makes \DHDT{} ineffective here. 
+As already mentioned in Ch.~\ref{sec:relatedworkRDF}, every blank node gets an ID. These IDs are usually chosen arbitrarily and have no meaning beyond that. When HDT compresses an RDF graph it uses the Jena-API~\footnote{\label{foot:5}https://jena.apache.org/index.html}, which assigns random strings to the blank node IDs.~\cite{hdt} Those strings are quite long. They also have no common prefixes, which makes \DHDT{} ineffective here. 
 
 To improve the compression, the IDs of the blank nodes could be reassigned. For example, numbers from 1 to $n$ ($n=$ number of blank nodes) can be used to get short IDs. 
 
-Another possibility is not to save the IDs of the blank nodes at all. In HDT all strings in the dictionary (including the blank node IDs) are mapped to short IDs. Thus, the blank node IDs are in principle already stored. They can therefore be removed from the dictionary. 
+Another possibility is not to save the IDs of the blank nodes at all. In HDT, all strings in the dictionary (including the blank node IDs) are mapped to short IDs. Thus, the blank node IDs are in principle already stored. They can therefore be removed from the dictionary. 
 
 
 

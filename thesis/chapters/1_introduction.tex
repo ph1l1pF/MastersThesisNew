@@ -24,7 +24,7 @@ The idea is to make all these use cases easier or possible by compression, espec
 
 The third use case (Processing/Consumption) is about reading or writing access to data. The more common case of read access is typically the execution of queries on RDF data. These are most often neighborhood queries. A compression algorithm can help in this respect by making it possible to answer such queries directly on the compressed graphs. This may even be faster than on the original data due to the reduced size.
 
-As stated in~\cite{maneth}, a graph compressed by GRP is not well suited for those just mentioned neighborhood queries. Such queries will take much longer than on the original graph. Therefore, the thesis will focus on GRP's potential of compressing RDF data strongly and the query times will not be evaluated.
+As stated in~\cite{maneth}, a graph compressed by GRP is not well suited for those just mentioned neighborhood queries. Such queries will have quadratic run time on compressed graphs. Therefore, the thesis will focus on GRP's potential of compressing RDF data strongly and the query times will not be evaluated.
 
 
 

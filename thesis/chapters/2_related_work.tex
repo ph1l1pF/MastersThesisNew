@@ -15,7 +15,7 @@ RDF is a framework for structured data on the web. According to~\cite{hitzler}, 
 
 An RDF triple $(s,p,o) \in (U \cup B) \times U \times (U\cup B \cup L)$ displays the statement that the subject $s$ is related to the object $o$ via the predicate $p$. So, a subject can be anything but a literal. A predicate can only be a URI and an object can be anything.
 
-Similar to entities or properties, each blank node has a unique ID in order reference it in the graph. But in contrast to URIs, these IDs do not have a semantic meaning. That fact will be used in Ch.~\ref{sec:approachBlankNodes}.
+Similar to entities or properties, each blank node has a unique ID in order to reference it in the graph. But in contrast to URIs, these IDs do not have a semantic meaning. That fact will be used in Ch.~\ref{sec:approachBlankNodes}.
 
 \subsection{Ontology}\label{sec:relatedworkOntology}
 
@@ -72,14 +72,14 @@ HDT has also procedures for answering queries, but those will not be mentioned h
 
 \section{Grammar-based Graph Compression}\label{related_work_grammar_based}
 
-In this chapter, two different approaches to grammar-based graph compression are discussed. First, ~\cite{mattdk} is introduced and it is briefly explained why the approach is less suitable for RDF. Then GRP~(\cite{maneth}), which the thesis will focus on, is introduced.
+In this chapter, two different approaches to grammar-based graph compression are discussed. First, ~\cite{mattdk} is introduced and it is briefly explained why the approach is less suitable for RDF. Then, GRP~(\cite{maneth}), which the thesis will focus on, is introduced.
 
-In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually, small patterns are searched for, since it is possible to find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams, because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.
+In general, grammar-based compressors try to find patterns that occur multiple times in the graph. Such patterns are subgraphs that can be of different kinds. Usually, small patterns are searched for, since it is possible to find more occurrences of these. In addition, it is possible to combine several small patterns into one large one, so that even large parts can be compressed. These small patterns are often called digrams, because they consist of two elements. The exact shape of the digrams depends on the respective algorithm.~\cite{mattdk}
 
 \clearpage
 \subsection{Dürksen's Algorithm}
 
-An approach to grammar-based compression of graphs was developed in~\cite{mattdk}. Here, the authors assume a hyper graph with node and edge labels. Such a graph can be seen in Fig.~\ref{fig:transformation} on the left. To simplify the compression, a transformation is now executed, in which a new node is inserted for each edge $e$, which then has the same label as $e$. The original structure of the graph is obtained by connecting two nodes, which were previously connected by an edge, indirectly by the new node. The result of the transformation is a graph, which only has node labels, but no edge labels. Moreover, hyper edges (edges with more than two incident nodes) are no longer present due to the transformation.
+An approach to grammar-based compression of graphs was developed in~\cite{mattdk}. Here, the authors assume a hyper graph with node and edge labels. Such a graph can be seen in Fig.~\ref{fig:transformation} on the left. To simplify the compression, a transformation is executed, in which a new node is inserted for each edge $e$, which then has the same label as $e$. The original structure of the graph is obtained by connecting two nodes, which were previously connected by an edge, indirectly by the new node. The result of the transformation is a graph, which only has node labels, but no edge labels. Moreover, hyper edges (edges with more than two incident nodes) are no longer present due to the transformation.
 
 \begin{figure}[h]
 	\centering
@@ -166,7 +166,7 @@ In general, there are many more digram types which can be seen in~\cite{maneth}.
 
 \subsubsection{Algorithm}
 
-Algorithm~\ref{alg:GRP} is the main routine of GRP. The algorithm take a graph as the input and returns a grammar whereas $N$ is the set of non terminals, $P$ is the set of productions and $S \in P$ is the start production. It maintains a list of digram occurrences in $g$. As long as this list contains multiple occurrences for one digram the loop will continue. In the loop, the most frequent digram is found, then replaced and the grammar is extended. After a digram replacement, the occurrence list has to be updated, because the graph has changed and former digram occurrences may not exist anymore. Moreover, new digram occurrences can be present. This occurrence update is a complex process and will not be discussed here, since it is not relevant for the thesis.~\cite{maneth}
+Algorithm~\ref{alg:GRP} is the main routine of GRP. The algorithm takes a graph as the input and returns a grammar whereas $N$ is the set of non terminals, $P$ is the set of productions and $S \in P$ is the start production. It maintains a list of digram occurrences in $g$. As long as this list contains multiple occurrences for one digram the loop will continue. In the loop, the most frequent digram is found, then replaced and the grammar is extended. After a digram replacement, the occurrence list has to be updated, because the graph has changed and former digram occurrences may not exist anymore. Moreover, new digram occurrences can be present. This occurrence update is a complex process and will not be discussed here, since it is not relevant for the thesis.~\cite{maneth}
 
 \begin{algorithm}
 	\caption{GraphRePair (Graph $g=(V,E,att,lab,ext)$)}\label{alg:GRP}
@@ -193,7 +193,7 @@ After GRP has constructed a grammar for some graph, this grammar has to be store
 
 The start production is encoded using $k^2$ trees which is illustrated in Fig.~\ref{fig:encoding}. The adjacency matrix of the compressed graph (start rule of the grammar) is considered here. First, that matrix is extended with zeros to the next power of two. Next, it is partitioned into $k^2$ equally large partitions ($k=2$ here).
 
-The tree's root represents the whole matrix and its child order corresponds to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedure continues until there is zero-leaf for each path of the tree. Afterwards, the tree is represented by bit-strings which is shown in Fig.~\ref{fig:encoding}~(c). $T_1$ and $T_2$ encode the first and second level and $L$ encodes the level of the leaves. 
+The tree's root represents the whole matrix and its child order corresponds to the order of the just created partitions. If a partition only contains zeros, a zero leaf is added to the tree (e.g. in Fig.~\ref{fig:encoding} (a), partition 4, right bottom). Otherwise a one-node is added and the corresponding condition will be partitioned itself. The recursive procedure continues until there is a zero-leaf for each path of the tree. Afterwards, the tree is represented by bit-strings which is shown in Fig.~\ref{fig:encoding}~(c). $T_1$ and $T_2$ encode the first and second level and $L$ encodes the level of the leaves. 
 
 Since the graph has also edge labels, an adjacency matrix and its corresponding tree will be created for each of those labels. Furthermore, the compressed graph grammar contains hyper edges. An adjacency matrix only displays the nodes connected to the hyper edge, but not the order they are connected to it. Hence, for each hyper edge a permutation is stored, in addition.
 
@@ -215,7 +215,7 @@ The remaining productions of the grammar are encoded differently, because they a
 GRP has been implemented by the authors of~\cite{maneth} in the Scala language~\footnote{https://www.scala-lang.org/}. It has to be seen as a proof of concept implementation, i.e., it has quite a high run time for bigger graphs. The software can take an RDF file (in N-triples format) as the input and produces three different output files:
 
 \begin{description}
-	\item [Prod:] Contains all productions expect the start rule.
+	\item [Prod:] Contains all productions except the start rule.
 	\item [Perms:] Contains the hyper edge permutations.
 	\item [Start]: Contains the start rule.
 \end{description} 

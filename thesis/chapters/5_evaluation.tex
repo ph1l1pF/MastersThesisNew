@@ -33,10 +33,10 @@ Fig.~\ref{fig:ratiosBothWithDict} shows the values of \CR{HDT} and \CR{GRP}. It 
 	\label{fig:runtimes}
 \end{figure}
 
-Apart from the compression ratio, the run time is also important for the overall performance. Fig.~\ref{fig:runtimes} shows the average value of $CT$ for both compressors, respectively. Here, the same scenario with the star pattern (and only one distinct predicate) was used. It has been executed 100 times to get a sophisticated run time measurement, because $CT$ depends on the current CPU workload of the computer. Decompression is not supported by the currently implemented version of GRP and will therefore be omitted. It can be seen that $CT_{GRP}$ is on average 48 times higher than $CT_{HDT}$. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So, they are not on the same level in terms of quality. In theory, GRP should be able to compete with HDT, since it has linear run time with respect to the size of the graph~\cite{maneth}. In~\cite{hdt}, the authors do not mention HDT's run time in $\mathcal{O}$-notation.
+Apart from the compression ratio, the run time is also important for the overall performance. Fig.~\ref{fig:runtimes} shows the average value of $CT$ for both compressors, respectively. Here, the same scenario with the star pattern (and only one distinct predicate) was used. It has been executed 100 times to get a sophisticated run time measurement, because $CT$ depends on the current CPU workload of the computer. Decompression is not supported by the currently implemented version of GRP and will therefore be omitted. It can be seen that $CT_{GRP}$ is on average 48 times higher than $CT_{HDT}$. However, it should also be noted that the implementation of GRP is rather rudimentary  (according to the authors of~\cite{maneth}), while that of HDT has been under development for some time. So, they are not on the same level in terms of quality. In theory, GRP should be able to compete with HDT, since it has linear run time with respect to the size of the graph~\cite{maneth}. In~\cite{hdt}, the authors do not mention HDT's run time in $\mathcal{O}$-notation, but its run time cannot be faster than linear, since all triples have to traversed during the compression.
 \FloatBarrier
 
-In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as the number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed  four times with an increasing number of predicates each time. The plots for those executions are shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. The curves with same line styles have to be compared, since those pairs have the same number of predicates. The fourth execution is marked by the solid red lines and this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased. Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
+In Ch.~\ref{sec:implementationGRPvsHDT}, it was mentioned that only one distinct predicate will be used in the first comparison. However, in the following it is shown how the compressors behave as the number of predicates increases. To realize that, the whole procedure from Ch.~\ref{sec:implementationGRPvsHDT} is executed  four times with an increasing number of predicates each time. The plots for those executions are shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}. For both algorithms, the $CR_{Graph_C}$-values get bigger as the number of predicates increases. The curves with same line styles have to be compared, since those pairs have the same number of predicates. The fourth execution is marked by the solid red lines and this is the first case in which $CR_{Graph_{HDT}} <CR_{Graph_{GRP}} $ is true. So, there are cases in which \GHDT{} compresses better. That continues, as the number of predicates is further increased (which is not shown in Fig.~\ref{fig:bothwithoutdictincreasingpreds}). Hence, higher amounts of predicates have a higher impact on \GGRP{} than on \GHDT{}. However, the next chapter will show that there is no fixed value for $ELR$ at which \GHDT{} is always better.
 
 \begin{table}[ht]
 	\begin{minipage}[b]{1\linewidth}
@@ -199,11 +199,11 @@ This chapter shows the evaluation results for the compression improvements. Firs
 
 \subsection{Ontology Knowledge}\label{sec:evaluationOntKnowledge}
 
-In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. Here, not only the file size of the output ($|out_{graph}|$) will be measured. Since these approaches have the intention to improve the ability for $Graph_{GRP}$ to produce a smaller grammar, the features of that grammar will be presented in more detail. That is because the GRP's grammar encoding does not always produce a smaller result on a smaller graph (as mentioned in Ch.~\ref{sec:related_workGrammarEncoding}).
+In this chapter, it will be evaluated whether using meta data from the ontology can result in a better compression ratio for $Graph_{GRP}$. 
 
 \subsubsection{Dataset Overview}
 
-Tab.~\ref{tab:ontologyKnowledgeDatasets} shows an overview of the data used for the ontology-based manipulations. \textit{MBP} stands for \textit{mappingbased-properties\_en}. $DB_{full}$ is the full version of \textit{MBP} and $WN_{full}$ is the full version of Wordnet. The other datasets are adjusted to show the effects of the manipulations better. They contain a higher proportion of symmetric, inverse or transitive properties, respectively.
+Tab.~\ref{tab:ontologyKnowledgeDatasets} shows an overview of the data used for the ontology-based manipulations. \textit{MBP} stands for \textit{mappingbased-properties\_en}. $DB_{full}$ is the full version of \textit{MBP} and $WN_{full}$ is the full version of Wordnet. The other datasets are adjusted to show the effects of the manipulations better. They contain a higher proportion of symmetric, inverse or transitive properties, respectively (see Ch.~\ref{sec:implementationSubGraphs}).
 
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|c|}
@@ -265,7 +265,7 @@ Next, it is considered how often the relevant properties occur in the datasets. 
 	\label{fig:ontoccurrences}
 \end{figure}
 
-\pagebreak
+\clearpage
 \subsubsection{Evaluation Process}
 The overall process, which is used to evaluate the ontology-based manipulations, is illustrated in Fig.~\ref{fig:overallprocess}. First, the original graph or sub graph is given to GRP. That part is called $in_1$ in Fig.~\ref{fig:overallprocess} and it will deliver the first result $out_1$.
 
@@ -294,7 +294,7 @@ OER&=\frac {\text{\#edges in } out_2} {\text{\#edges in } out_1}
  
 $IER$ shows how many edges have been added or removed by the manipulation which indicates how big the impact of the manipulation is. $OER$  shows whether the manipulation results in a better ($OER<1$) or worse ($OER>1$) compression ratio.
 
-In order to measure the manipulation it is necessary to define a new metric instead of re-using \CRGraph{GRP} as defined in Ch.~\ref{sec:compressorModel}. For $out_1$, \CRGraph{GRP} would be in relation to $in_1$ (analogously for $out_2$ and $in_2$). But here it is necessary to compare $out_1$ and $out_2$. Therefore, the new metric Size Ratio ($SR$) is defined as follows:
+In order to measure the manipulation at the file size level, it is necessary to define a new metric instead of re-using \CRGraph{GRP} as defined in Ch.~\ref{sec:compressorModel}. For $out_1$, \CRGraph{GRP} would be in relation to $in_1$ (analogously for $out_2$ and $in_2$). But here it is necessary to compare $out_1$ and $out_2$. Therefore, the new metric Size Ratio ($SR$) is defined as follows:
 
 \begin{align*} 
 SR=\frac {|out_{graph_2}|} {|out_{graph_1}|}

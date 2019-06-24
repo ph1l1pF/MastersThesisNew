@@ -13,7 +13,7 @@ Based on those results, the next task was to improve the compression ratio. Here
 
 The second sub task was to improve the dictionary component of HDT ($Dict_{HDT}$) which is also used by GRP. As the results have shown, compressing long literals by using a Huffman Code brings a significant improvement. Also, handling blank node IDs more efficiently results in a much lower compression ratio if the graph contains a high number of blank nodes.
 
-The final evaluation results showed that the dictionary has a much higher effect on the compression ratio than the graph which is an important insight for future research on this topic.
+The final evaluation results showed that the dictionary has a much higher effect on the compression ratio than the graph, which is an important insight for future research on this topic.
 
 In conclusion, the thesis has shown that grammar-based graph compression is suitable for RDF and also delivers better results than HDT in most cases. Moreover, it was shown that there is much potential in terms of improving the dictionary compression.
 
@@ -28,7 +28,7 @@ The topic of RDF compression covered in this thesis can be divided into two aspe
 		\item [- Node-based compression:] GRP is an edge-based compressor, which means that it replaces edges of a graph by non terminal edges. However, there are also grammar-based compressors which are edge- and node-based, thus also replacing nodes by non terminal nodes. It would be interesting to see whether they can outperform GRP for RDF graphs. Currently, such a compressor is under development as an extension of~\cite{mattdk}.
 		\item [- Better grammar encoding:] In Ch.~\ref{sec:related_workGrammarEncoding}, it has already been stated that the grammar encoding method of GRP is not always working well (especially the $k^2$-tree for storing the start rule). Therefore, a different method can be chosen which maybe delivers better results.
 		\item [- Compress multiple graphs together:] As already mentioned in Ch.~\ref{sec:approachEqualProperties}, it is possible to compress multiple graphs at once. Then, properties or entities can be replaced by equal properties or entities, respectively. This would enable $Graph_{GRP}$ to produce a better compression.
-		\item [- Query evaluation:] This thesis did not investigate the query run times for GRP. The authors of~\cite{maneth} have already proven that neighborhood queries are very slow on graphs compressed by GRP. However, according to~\cite{maneth}, reachability queries are faster on compressed graphs than on original ones. Therefore, it could be worthwhile to compare those query run times to HDT's query speeds. That could show if GRP is also a good alternative to HDT with regard to reachability queries which can also be done using SPARQL.
+		\item [- Query evaluation:] This thesis did not investigate the query run times for GRP. The authors of~\cite{maneth} have already proven that neighborhood queries are very slow on graphs compressed by GRP. However, according to~\cite{maneth}, reachability queries are faster on compressed graphs than on original ones. Therefore, it could be worthwhile to compare those query run times to HDT's query speeds. That could show if GRP is also a good alternative to HDT with regard to reachability queries, which can also be done using SPARQL.
 	\end{description}
 	\item Dictionary Compression
 	\begin{description}

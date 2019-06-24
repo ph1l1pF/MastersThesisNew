@@ -324,7 +324,7 @@ In order to show that adding symmetric properties is more beneficial than removi
 
 
 
-The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:symmetricAddResults}, since a higher amount of edges has been added. The fact that both $OER$ and $SR$ are lower than 1, supports our hypothesis that adding symmetric edges is more beneficial than removing them. So, we conclude that adding symmetric edges enables $Graph_{GRP}$ to find more digrams, and thus producing a smaller graph.
+\clearpage
 
 \begin{figure}
 	\centering
@@ -332,6 +332,9 @@ The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. O
 	\caption{Results for adding symmetric properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$). In contrast to Fig.~\ref{fig:symmetricAddResults}, the input graph $in_1$ contains only one direction for each triple with a symmetric property.}
 	\label{fig:symmetricAddResults2}
 \end{figure}
+
+The evaluation results are illustrated in Fig.~\ref{fig:symmetricAddResults2}. Of course, $IER>1$ is true and $IER$ is bigger than in Fig.~\ref{fig:symmetricAddResults}, since a higher amount of edges has been added. The fact that both $OER$ and $SR$ are lower than 1, supports our hypothesis that adding symmetric edges is more beneficial than removing them. So, we conclude that adding symmetric edges enables $Graph_{GRP}$ to find more digrams, and thus producing a smaller graph.
+
 
 \clearpage
 \subsubsection{Inverse Properties}
@@ -354,15 +357,17 @@ In the case of DBPedia, a reason for the negative result can be that DBPedia has
 
 
 
+
+\clearpage
+The opposing approach (removing triples with inverse properties) is evaluated as well. Thus, the same technique, which was already used for symmetric properties, is used again. For DBPedia and Wordnet, the graphs are manipulated such that only one direction exists for each occurrence of inverse properties. Those graphs are then used as the input $in_1$ for a new evaluation. The results are illustrated in Fig.~\ref{fig:inverseAddResults2}. There, it can be seen that the values for $IER$ are higher than before, as expected. Correspondingly, the $OER$-values are lower, which supports the hypothesis that removing inverse triples leads to an unfavorable graph structure for GRP.
+
+
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/4_evaluation/ontology/ratiosInverseAdd2}
 	\caption{Results for adding inverse properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$). In contrast to Fig.~\ref{fig:inverseAddResults} and~\ref{fig:inverseAddResultsBigger}, the input graph $in_1$ contains only one direction for each triple with an inverse property.}
 	\label{fig:inverseAddResults2}
 \end{figure}
-
-
-The opposing approach (removing triples with inverse properties) is evaluated as well. Thus, the same technique, which was already used for symmetric properties, is used again. For DBPedia and Wordnet, the graphs are manipulated such that only one direction exists for each occurrence of inverse properties. Those graphs are then used as the input $in_1$ for a new evaluation. The results are illustrated in Fig.~\ref{fig:inverseAddResults2}. There, it can be seen that the values for $IER$ are higher than before, as expected. Correspondingly, the $OER$-values are lower, which supports the hypothesis that removing inverse triples leads to an unfavorable graph structure for GRP.
 
 \clearpage
 \subsubsection{Transitive Properties}
@@ -378,7 +383,7 @@ The results for removing \dtps can be seen in Fig.~\ref{fig:ratiotransitivesDele
 	\subfloat[Results for removing transitive properties.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/ratioTransitivesDelete}\label{fig:ratiotransitivesDelete}}
 	\hfill
 	\subfloat[Results for adding transitive properties.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/ontology/ratioTransitivesAdd}\label{fig:ratiotransitivesAdd}}
-	\caption{Results for deleting and adding transitive properties, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
+	\caption{Results for deleting and adding transitive properties in Wordnet, on the grammar level ($IER$, $OER$) and on the file size level ($SR$).}
 	\label{}
 \end{figure}
 
@@ -442,12 +447,12 @@ Thus, the results of the evaluation are presented. First, the Semantic Web Dog F
 
 It can be seen that the usage of the Huffman code only brings a small improvement in some cases. In other cases, Normal HDT even compresses better than HDT with Huffman.
 
-This is because the data does not have a very high proportion of literals. Also, literals are rather short here. This can be seen in Fig.~\ref{fig:dogfoodliteralanalysis} showing the relative literal amount ($\frac{\#literals}{\#triples}$) and the average length of a literal. The proportion of literals in the triples is never higher than 17.5\% and the highest average literal length is about 12. Hence, these are single words rather than whole texts. Only in cases where both the proportion and the literal length are relatively high, an improvement can be seen (e.g. DF9).
+This is because the data does not have a very high proportion of literals. Also, literals are rather short here. This can be seen in Fig.~\ref{fig:dogfoodliteralanalysis} showing the relative literal amount ($\frac{\#literals}{\#triples}$) and the average length of a literal. The proportion of literals in the triples is never higher than 17.5\% and the highest average literal length is about 100. Hence, these are single words rather than whole texts. Only in cases where both the proportion and the literal length are relatively high, an improvement can be seen (e.g. DF9).
 
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
+	\subfloat[\CRDict{HDT} for Normal HDT and HDT + Huffman]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodComprRatios}\label{fig:dogfoodcomprratiosSub}}
 	\hfill
 	\subfloat[Relative amounts of literals and average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dogFoodLiteralAnalysis}\label{fig:dogfoodliteralanalysis}}
 	\caption{Compression ratios~(\ref{fig:dogfoodcomprratiosSub}) and features of the same files~(\ref{fig:dogfoodliteralanalysis}) from Semantic Web Dog Food.}
@@ -463,7 +468,7 @@ Another phenomenon can also be seen here: Although the English file contains the
 
 \begin{figure}[h]
 	\centering
-	\subfloat[$CR(out_{dict})$ for Normal HDT and HDT + Huffman.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsComprRatios}\label{fig:dbAbstractscomprratiosSub}}
+	\subfloat[\CRDict{HDT} for Normal HDT and HDT + Huffman.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsComprRatios}\label{fig:dbAbstractscomprratiosSub}}
 	\hfill
 	\subfloat[Average literal length.]{\includegraphics[width=\subfigWidth\textwidth]{figures/4_evaluation/dbAbstractsLiteralAnalysis}\label{fig:dbAbstractsliteralanalysis}}
 	\caption{Compression ratios~(\ref{fig:dbAbstractscomprratiosSub}) and features of the same files~(\ref{fig:dbAbstractsliteralanalysis}) from DBPedia.}
@@ -490,7 +495,7 @@ Generally, it can be said that the usage of a standard Huffman code could be wor
 
 \subsubsection{Blank Nodes}\label{sec:evaluationBlankNodes}
 
-This chapter evaluates the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. Thus, the Nuts-RDF dataset is used as it contains much more blank nodes than many other datasets. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF (see Tab.~\ref{tab:BlankImproveDatasets}). It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs that are as long as those used by $Dict_{HDT}$. Using short IDs already leads to a significant improvement, as it delivers a compression ratio between 0.76 and 0.89. So, the compression is, in contrast to Normal HDT, really reducing the size of the files. Omitting blank node IDs results in a further slight improvement which is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
+This chapter shows the  evaluation results for the two approaches mentioned in Ch.~\ref{sec:approachBlankNodes} to store blank node IDs more efficiently. Thus, the Nuts-RDF dataset is used as it contains much more blank nodes than many other datasets. It is therefore prone to show the inefficiency of the prefix-based compression of $Dict_{HDT}$ with respect to blank nodes. Fig.~\ref{fig:blanknodes} shows the results for three different files from Nuts-RDF (see Tab.~\ref{tab:BlankImproveDatasets}). It can be seen that Normal HDT even produces the result $CR_{Dict_{HDT}}>1$. This is due to the fact that GC1-GC3 are in the turtle format which already reduces redundancy, since it does not store all triples extensively, like N-Triples does. Also, it does not use blank node IDs that are as long as those used by $Dict_{HDT}$. Using short IDs already leads to a significant improvement, as it delivers a compression ratio between 0.76 and 0.89. So, the compression is, in contrast to Normal HDT, really reducing the size of the files. Omitting blank node IDs results in a further slight improvement which is small, because storing the short IDs as numbers from 1 to $n$ costs almost no memory size. Hence, it could be sufficient to use shorter IDs, because omitting IDs would imply more programming effort, as explained in Ch.~\ref{sec:implementationBlankNodes}.
 
 
 \begin{figure}
@@ -540,7 +545,7 @@ GZip is used as a baseline. Since it is a general compressor, it does not have a
 
 In general, it can be concluded that the improved compressors (HDT++ and GRP++) achieve a significantly lower compression ratio than HDT and GRP. The resulted compression ratio is almost as low as GZip's ratio. Considering the fact that data compressed by GRP++ or HDT++ is still query-able, it is reasonable to use one of them instead of a general compressor. With further improvements, which will be discussed in Ch.~\ref{sec:futurework}, it could be that HDT++ or GRP++ outperform general compressors in many more cases.
 
-Moreover, it becomes clear that compressing the dictionary has a much bigger impact on $CR_C$ than compressing the graph. So, for future work it would be reasonable to focus on dictionary compression. However, there are cases in which the dictionary is smaller and therefore the graph compression has a higher impact. A further idea is be to compress multiple RDF files, which all have a similar dictionary, together. This way, the influences of the graphs can become bigger.
+Moreover, it becomes clear that compressing the dictionary has a much bigger impact on $CR_C$ than compressing the graph. So, for future work it would be reasonable to focus on dictionary compression. However, there are cases in which the dictionary is smaller and therefore the graph compression has a higher impact. A further idea is to compress multiple RDF files, which all have a similar dictionary, together. This way, the influences of the graphs can become bigger.
 
 
 
